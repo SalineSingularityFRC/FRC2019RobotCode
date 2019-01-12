@@ -15,4 +15,4 @@ Open Git in VS Code (on the leftmost bar). Click the item next to the search bar
 
 In terminal: git remote add origin https://github.com/SalineSingularityFRC/FRC2019RobotCode.git... or whatever the cloing URL is for the project.
 
-click the ellipsis in the upper left, pull from, choose the remote repo (origin)
+Click the ellipsis in the upper left, pull from, choose the remote repo (origin)
