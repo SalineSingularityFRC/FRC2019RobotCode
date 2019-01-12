@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.SPI;
 
 import com.kauailabs.navx.frc.*;
 import com.ctre.phoenix.*;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.revrobotics.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
