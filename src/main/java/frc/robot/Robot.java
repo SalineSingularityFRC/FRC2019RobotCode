@@ -12,9 +12,10 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import frc.controller.ControlScheme;
 import frc.singularityDrive.BasicDrive;
 import frc.singularityDrive.SingDrive;
+import frc.controller.controlSchemes.*;
 
 
 import com.kauailabs.navx.frc.*;
@@ -35,11 +36,15 @@ public class Robot extends IterativeRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-  AHRS gyro;
+  int driveLeft1, driveLeft2, driveRight1, driveRight2;
 
-  
+  ControlScheme currentScheme;
 
   SingDrive drive;
+
+  final int XBOX_PORT = 0;
+	final int BIG_JOYSTICK_PORT = 1;
+	final int SMALL_JOYSTICK_PORT = 2;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -51,12 +56,14 @@ public class Robot extends IterativeRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    gyro = new AHRS(SPI.Port.kMXP);
-    
+    driveLeft1 = 1;
+    driveLeft2 = 2;
+    driveRight1 = 3;
+    driveRight2 = 4;
 
+    currentScheme = new ArcadeDrive(XBOX_PORT);
     
-
-    //drive = new BasicDrive(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor, midRightMotor, midLeftMotor);
+    drive = new BasicDrive(driveLeft1, driveLeft2, driveRight1, driveRight2);
   }
 
   /**
@@ -114,6 +121,9 @@ public class Robot extends IterativeRobot {
    */
   @Override
   public void teleopPeriodic() {
+
+    currentScheme.drive(drive);
+
   }
 
   /**

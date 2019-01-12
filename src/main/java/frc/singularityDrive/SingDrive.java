@@ -9,13 +9,17 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 public abstract class SingDrive {
 	public double slowSpeedConstant, normalSpeedConstant, fastSpeedConstant;
 	public int mode = 0;
 	
 	 
-	protected TalonSRX m_frontLeftMotor, m_frontRightMotor, m_rearLeftMotor, m_rearRightMotor, m_leftMiddleMotor, m_rightMiddleMotor;
+	//protected TalonSRX m_leftMotor1, m_rightMotor1, m_leftMotor2, m_rightMotor2;
 	
+	protected CANSparkMax m_leftMotor1, m_leftMotor2, m_rightMotor1, m_rightMotor2;
 
 	private final static double DEFAULT_VELOCITY_MULTIPLIER = 1.0;
 	protected double velocityMultiplier = 1.0;
@@ -58,8 +62,17 @@ public abstract class SingDrive {
         FAST,
         NORMAL,
         SLOW
-    }
+	}
+	
+	public abstract void drive(double vertical, double horizontal, double rotation, boolean squaredInputs, SpeedMode speedMode);
 
+	public SingDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2) {
+
+		m_leftMotor1 = new CANSparkMax(leftMotor1, MotorType.kBrushless);
+		m_leftMotor2 = new CANSparkMax(leftMotor2, MotorType.kBrushless);
+		m_rightMotor1 = new CANSparkMax(rightMotor1, MotorType.kBrushless);
+		m_rightMotor2 = new CANSparkMax(rightMotor2, MotorType.kBrushless);
+	}
 
 	/**
 	 * Constructor for {@link org.usfirst.frc.team5066.library.SingularityDrive
@@ -74,6 +87,8 @@ public abstract class SingDrive {
 	 * @param rearRightMotor
 	 *            Channel for rear right motor
 	 */
+
+	 /*
 	public SingDrive(int frontLeftMotor, int rearLeftMotor, int frontRightMotor, int rearRightMotor,int midRightMotor,
 			int midLeftMotor) {
 		this(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor, midRightMotor,
@@ -85,6 +100,7 @@ public abstract class SingDrive {
 		this(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor,  DEFAULT_TALON_TYPE,
 				DEFAULT_SLOW_SPEED_CONSTANT, DEFAULT_NORMAL_SPEED_CONSTANT, DEFAULT_FAST_SPEED_CONSTANT);
 	}
+	*/
 
 	/**
 	 * Constructor for {@link org.usfirst.frc.team5066.library.SingularityDrive
@@ -123,7 +139,7 @@ public abstract class SingDrive {
 	 * getD / setD
 	 * pidGet
 	 */
-	
+	/*
 	public SingDrive(int frontLeftMotor, int rearLeftMotor, int frontRightMotor, int rearRightMotor, int rightMiddleMotor, int leftMiddleMotor,
 			int talonType, double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) {//Six wheel constructor
 
@@ -182,8 +198,8 @@ public abstract class SingDrive {
 		timer = new Timer();
 		//this.gyro = gyro;
 	}
-	
-	
+	*/
+	/*
 	//Encoder code:
 	public void resetAll(){
 		
@@ -207,7 +223,7 @@ public abstract class SingDrive {
 	public double leftOverRight() {
 		return getLeftPosition() / getRightPosition();
 	}
-	
+	*/
 	
 	
 	private double clamp(double velocityMultiplier) {
@@ -244,14 +260,14 @@ public abstract class SingDrive {
 	}
 	
 	
-	
+	/*
 	public void rampVoltage() {
 		
 		m_frontRightMotor.configOpenloopRamp(RAMP_RATE, 10);
 		m_frontLeftMotor.configOpenloopRamp(RAMP_RATE, 10);
 		
 	}
-	
+	*/
 	// reverse drive method for booleans. You have to hold the button to
 	// reverse. This method is used in control schemes to plug-in to SingDrive.
 	/*public static int booleanHoldReverse(boolean reverse) {
@@ -283,13 +299,13 @@ public abstract class SingDrive {
 	private double encTicToInches(double tics) {
 		return (4.0 * Math.PI * tics) / 4096.0;
 	}
-	
+	/*
 	public void displayEncoder() {
 		SmartDashboard.putNumber("encoder inches", encTicToInches(m_leftMiddleMotor.getSensorCollection().getQuadraturePosition()));
 		SmartDashboard.putNumber("encoder ticks", m_leftMiddleMotor.getSensorCollection().getQuadraturePosition());
 		
 	}
-	
+	*/
 	/**
 	 * Drive Straight with arcadeSixeWheel(), mostly for auton.
 	 * Use negative speed to drive backwards, distance should always be positive
@@ -369,7 +385,7 @@ public abstract class SingDrive {
 		
 		Timer.delay(0.2);
 	}
-	*/
+	
 	
 	public void encoderDriveStraight(double speed){
 		leftEncVal = this.getLeftPosition();
@@ -386,7 +402,7 @@ public abstract class SingDrive {
 		//wait 100 milliseconds
 		Timer.delay(100);
 	}
-	
+	*/
 	protected void setVelocityMultiplierBasedOnSpeedMode(SpeedMode speedMode) {
 		
 		switch(speedMode) {
@@ -404,6 +420,8 @@ public abstract class SingDrive {
 			break;
 		}
 	}
+
+
 	
-	public abstract void drive(double vertical, double horizontal, double rotation, boolean squaredInputs, SpeedMode speedMode);
+	
 }
