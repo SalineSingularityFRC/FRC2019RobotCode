@@ -12,11 +12,13 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.singularityDrive.BasicDrive;
 import frc.singularityDrive.SingDrive;
-import edu.wpi.first.wpilibj.SPI;
+
 
 import com.kauailabs.navx.frc.*;
+import edu.wpi.first.wpilibj.SPI;
 import com.ctre.phoenix.*;
 import com.revrobotics.*;
 
@@ -35,7 +37,7 @@ public class Robot extends IterativeRobot {
 
   AHRS gyro;
 
-  UsbCamera camera1, camera2;
+  
 
   SingDrive drive;
 
@@ -52,8 +54,7 @@ public class Robot extends IterativeRobot {
     gyro = new AHRS(SPI.Port.kMXP);
     
 
-    camera1 = CameraServer.getInstance().startAutomaticCapture();
-    camera2 = CameraServer.getInstance().startAutomaticCapture();
+    
 
     //drive = new BasicDrive(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor, midRightMotor, midLeftMotor);
   }
