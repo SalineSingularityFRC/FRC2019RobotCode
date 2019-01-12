@@ -7,10 +7,13 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import frc.singularityDrive.BasicDrive;
+import frc.singularityDrive.SingDrive;
 import edu.wpi.first.wpilibj.SPI;
 
 import com.kauailabs.navx.frc.*;
@@ -31,7 +34,10 @@ public class Robot extends IterativeRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   AHRS gyro;
-  VictorSPX motorController;
+
+  UsbCamera camera1, camera2;
+
+  SingDrive drive;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -44,7 +50,12 @@ public class Robot extends IterativeRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     gyro = new AHRS(SPI.Port.kMXP);
-    motorController = new VictorSPX(2);
+    
+
+    camera1 = CameraServer.getInstance().startAutomaticCapture();
+    camera2 = CameraServer.getInstance().startAutomaticCapture();
+
+    //drive = new BasicDrive(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor, midRightMotor, midLeftMotor);
   }
 
   /**
