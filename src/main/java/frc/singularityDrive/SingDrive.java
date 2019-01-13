@@ -25,6 +25,14 @@ public abstract class SingDrive {
 	protected CANSparkMax[] m_rightSparks;
 	protected CANSparkMax[] m_middleSparks;
 
+	protected TalonSRX[] m_leftTalons;
+	protected TalonSRX[] m_rightTalons;
+	protected TalonSRX[] m_middleTalons;
+	
+	protected VictorSPX[] m_leftVictors;
+	protected VictorSPX[] m_rightVictors;
+	protected VictorSPX[] m_middleVictors;
+
 	private final static double DEFAULT_VELOCITY_MULTIPLIER = 1.0;
 	protected double velocityMultiplier = 1.0;
 
@@ -59,8 +67,6 @@ public abstract class SingDrive {
 	private static double error = 0.0;
 	private static final double KP = 5;
 	private static double leftEncVal, rightEncVal;
-	
-    //AHRS gyro;
     
     public enum SpeedMode {
         FAST,
@@ -68,7 +74,40 @@ public abstract class SingDrive {
         SLOW
 	}
 	
-	public abstract void drive(double vertical, double horizontal, double rotation, boolean squaredInputs, SpeedMode speedMode);
+	/**
+	 * Abstract method to drive arcade style:
+	 * -a vertical joystick axis controls movement forwards/backwards
+	 * -a horizontal joystick axis controls rotational movement
+	 * -an optional horizontal joystick controls strafe, if allowed by physical configuration.
+	 * 
+	 * @param vertical controls movement forwards/backwards, -1 to 1
+	 * @param horizontal controls strafe, -1 to 1
+	 * @param rotation controls rotation, -1 to 1
+	 * @param squaredInputs true will square the above parameters, allowing for more precise
+	 * movement for low values
+	 * @param speedMode controls a multiplier for above parameters, slow, normal, or fast
+	 */
+	public abstract void arcadeDrive(double vertical, double horizontal, double rotation, boolean squaredInputs, SpeedMode speedMode);
+
+	/**
+	 * Abstract method to drive tank style:
+	 * -one vertical joystick axis controls movement for the left drivetrain
+	 * -another vertical joystick axis controls movement for the right drivetrain
+	 * 
+	 * @param left controls left drivetrain, -1 to 1
+	 * @param right controls right drivetrain, -1 to 1
+	 * @param squaredInputs true will square the above parameters, allowing for more precise
+	 * movement for low values
+	 * @param speedMode controls a multiplier for above parameters, slow, normal, or fast
+	 */
+	public abstract void tankDrive(double left, double right, boolean squaredInputs, SpeedMode speedMode);
+
+	public SingDrive(int[] leftSparkID, int[] rightSparkID, int[] middleSparkID,
+	int[] leftTalonID, int[] rightTalonID, int[] middleTalonID,
+	int[] leftVictorID, int[] rightVictorID, int[] middleVictorID) {
+
+		
+	}
 
 	public SingDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2) {
 

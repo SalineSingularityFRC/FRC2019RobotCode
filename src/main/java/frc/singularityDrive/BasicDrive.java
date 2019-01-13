@@ -14,7 +14,7 @@ public class BasicDrive extends SingDrive{
 		
 	}
 
-	public void drive(double vertical, double horizontal, double rotation, boolean squaredInputs, SpeedMode speedMode) {
+	public void arcadeDrive(double vertical, double horizontal, double rotation, boolean squaredInputs, SpeedMode speedMode) {
 
 		double translationVelocity = vertical, rotationVelocity = rotation;
 		
@@ -38,6 +38,9 @@ public class BasicDrive extends SingDrive{
 
 	}
 
+	public void tankDrive(double left, double right, boolean squaredInputs, SpeedMode speedMode) {
+
+	}
 	
 	
 	//TODO gradual acceleration
@@ -86,7 +89,7 @@ public class BasicDrive extends SingDrive{
 	 * @param right
 	 * @param squaredInputs
 	 * @param speedMode
-	 */
+	 
 	public void tankDrive(double left, double right, boolean squaredInputs, SpeedMode speedMode) {
 		double leftVelocity = left, rightVelocity = right;
 		
@@ -127,5 +130,5 @@ public class BasicDrive extends SingDrive{
 		*/
 		//SmartDashboard.putNumber("rightEncoder", m_rightMiddleMotor.getSensorCollection().getQuadraturePosition());
 		//SmartDashboard.putNumber("leftEncoder", m_leftMiddleMotor.getSensorCollection().getQuadraturePosition());
-	}
+	//}
 }

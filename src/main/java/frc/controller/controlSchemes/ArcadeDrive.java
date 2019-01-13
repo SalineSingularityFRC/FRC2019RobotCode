@@ -15,7 +15,7 @@ public class ArcadeDrive implements ControlScheme {
 
     public void drive(SingDrive drive) {
 
-        drive.drive(controller.getLS_Y(), 0.0, controller.getLS_X(), true, SpeedMode.FAST);
+        drive.arcadeDrive(controller.getLS_Y(), 0.0, controller.getLS_X(), true, SpeedMode.FAST);
 
     }
 
