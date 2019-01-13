@@ -41,6 +41,10 @@ public class Robot extends IterativeRobot {
 
   SingDrive drive;
 
+  
+
+
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -52,6 +56,7 @@ public class Robot extends IterativeRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     gyro = new AHRS(SPI.Port.kMXP);
+    
     
 
     
