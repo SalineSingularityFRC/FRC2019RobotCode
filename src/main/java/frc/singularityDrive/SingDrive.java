@@ -21,6 +21,10 @@ public abstract class SingDrive {
 	
 	protected CANSparkMax m_leftMotor1, m_leftMotor2, m_rightMotor1, m_rightMotor2;
 
+	protected CANSparkMax[] m_leftSparks;
+	protected CANSparkMax[] m_rightSparks;
+	protected CANSparkMax[] m_middleSparks;
+
 	private final static double DEFAULT_VELOCITY_MULTIPLIER = 1.0;
 	protected double velocityMultiplier = 1.0;
 
