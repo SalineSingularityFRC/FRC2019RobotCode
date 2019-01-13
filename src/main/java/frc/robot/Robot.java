@@ -36,13 +36,17 @@ public class Robot extends IterativeRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
+  //stores the motor controller IDs
   int driveLeft1, driveLeft2, driveRight1, driveRight2;
-
+  
+  //Declaration of our driving scheme, which can be initialized to
+  //any ControlScheme in robotInit()
   ControlScheme currentScheme;
 
+  //Declaration of mechanisms
   SingDrive drive;
 
-
+  //default ports of certain joysticks in DriverStation
   final int XBOX_PORT = 0;
 	final int BIG_JOYSTICK_PORT = 1;
 	final int SMALL_JOYSTICK_PORT = 2;
@@ -59,15 +63,16 @@ public class Robot extends IterativeRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
     
     
-
+    //initialize motor controller ports IDs
     driveLeft1 = 1;
     driveLeft2 = 2;
     driveRight1 = 3;
     driveRight2 = 4;
 
-
+    //initialize our driving scheme to a basic arcade drive
     currentScheme = new ArcadeDrive(XBOX_PORT);
     
+    //initialize mechanisms
     drive = new BasicDrive(driveLeft1, driveLeft2, driveRight1, driveRight2);
   }
 
@@ -127,6 +132,8 @@ public class Robot extends IterativeRobot {
   @Override
   public void teleopPeriodic() {
 
+    //Allow driver control based on current scheme
+    //(we shouldn't need to change this too often)
     currentScheme.drive(drive);
 
   }
