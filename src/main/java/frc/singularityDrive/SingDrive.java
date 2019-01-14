@@ -21,21 +21,10 @@ public abstract class SingDrive {
 	
 	protected CANSparkMax m_leftMotor1, m_leftMotor2, m_rightMotor1, m_rightMotor2;
 
+	//These MotorSets can be Sparks, Talons, Victors, or any combination thereof.
 	protected MotorSet leftMotors;
 	protected MotorSet rightMotors;
 	protected MotorSet middleMotors;
-
-	protected CANSparkMax[] m_leftSparks;
-	protected CANSparkMax[] m_rightSparks;
-	protected CANSparkMax[] m_middleSparks;
-
-	protected TalonSRX[] m_leftTalons;
-	protected TalonSRX[] m_rightTalons;
-	protected TalonSRX[] m_middleTalons;
-	
-	protected VictorSPX[] m_leftVictors;
-	protected VictorSPX[] m_rightVictors;
-	protected VictorSPX[] m_middleVictors;
 
 	private final static double DEFAULT_VELOCITY_MULTIPLIER = 1.0;
 	protected double velocityMultiplier = 1.0;
@@ -107,8 +96,10 @@ public abstract class SingDrive {
 	public abstract void tankDrive(double left, double right, boolean squaredInputs, SpeedMode speedMode);
 
 
-
-
+	/**
+	 * The basic, most general constructor for SingDrive, taking in arrays of all IDs for 
+	 * motor controllers. If a motor controller type is not used, enter an empty array.
+	 */
 	public SingDrive(int[] leftSparkID, int[] rightSparkID, int[] middleSparkID,
 	int[] leftTalonID, int[] rightTalonID, int[] middleTalonID,
 	int[] leftVictorID, int[] rightVictorID, int[] middleVictorID) {
@@ -116,15 +107,18 @@ public abstract class SingDrive {
 		leftMotors = new MotorSet(leftSparkID, leftTalonID, leftVictorID);
 		rightMotors = new MotorSet(rightSparkID, rightTalonID, rightVictorID);
 		middleMotors = new MotorSet(middleSparkID, middleTalonID, middleVictorID);
-
 	}
 
-	public SingDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2) {
+	/**
+	 * A SingDrive constructor that can be used when only using new (as of 2019)
+	 * Rev SparkMax motors and motor controllers in a non-hdrive setup.
+	 */
+	public SingDrive(int[] leftSparkMotors, int[] rightSparkMotors) {
 
-		m_leftMotor1 = new CANSparkMax(leftMotor1, MotorType.kBrushless);
-		m_leftMotor2 = new CANSparkMax(leftMotor2, MotorType.kBrushless);
-		m_rightMotor1 = new CANSparkMax(rightMotor1, MotorType.kBrushless);
-		m_rightMotor2 = new CANSparkMax(rightMotor2, MotorType.kBrushless);
+		this(leftSparkMotors, rightSparkMotors, new int[0],
+		new int[0], new int[0], new int[0],
+		new int[0], new int[0], new int[0]);
+		
 	}
 
 	/**
