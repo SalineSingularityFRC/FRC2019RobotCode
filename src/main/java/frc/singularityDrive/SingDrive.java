@@ -21,6 +21,10 @@ public abstract class SingDrive {
 	
 	protected CANSparkMax m_leftMotor1, m_leftMotor2, m_rightMotor1, m_rightMotor2;
 
+	protected MotorSet leftMotors;
+	protected MotorSet rightMotors;
+	protected MotorSet middleMotors;
+
 	protected CANSparkMax[] m_leftSparks;
 	protected CANSparkMax[] m_rightSparks;
 	protected CANSparkMax[] m_middleSparks;
@@ -109,74 +113,9 @@ public abstract class SingDrive {
 	int[] leftTalonID, int[] rightTalonID, int[] middleTalonID,
 	int[] leftVictorID, int[] rightVictorID, int[] middleVictorID) {
 
-		m_leftSparks = new CANSparkMax[leftSparkID.length];
-		m_rightSparks = new CANSparkMax[rightSparkID.length];
-		m_middleSparks = new CANSparkMax[middleSparkID.length];
-
-		m_leftTalons = new TalonSRX[leftTalonID.length];
-		m_rightTalons = new TalonSRX[rightTalonID.length];
-		m_middleTalons = new TalonSRX[middleTalonID.length];
-
-		m_leftVictors = new VictorSPX[leftVictorID.length];
-		m_rightVictors = new VictorSPX[rightVictorID.length];
-		m_middleVictors = new VictorSPX[middleVictorID.length];
-
-		for(int i = 0; i < leftSparkID.length; i++) {
-			m_leftSparks[i] = new CANSparkMax(leftSparkID[i], MotorType.kBrushless);
-			if(i >= 1) {
-				m_leftSparks[i].follow(m_leftSparks[0], false);
-			}
-		}
-		for(int i = 0; i < rightSparkID.length; i++) {
-			m_rightSparks[i] = new CANSparkMax(rightSparkID[i], MotorType.kBrushless);
-			if(i >= 1) {
-				m_rightSparks[i].follow(m_rightSparks[0], false);
-			}
-		}
-		for(int i = 0; i < middleSparkID.length; i++) {
-			m_middleSparks[i] = new CANSparkMax(middleSparkID[i], MotorType.kBrushless);
-			if(i >= 1) {
-				m_middleSparks[i].follow(m_middleSparks[0], false);
-			}
-		}
-
-		for(int i = 0; i < leftTalonID.length; i++) {
-			m_leftTalons[i] = new TalonSRX(leftTalonID[i]);
-			if (i >= 1) {
-				m_leftTalons[i].follow(m_leftTalons[0]);
-			}
-		}
-		for(int i = 0; i < rightTalonID.length; i++) {
-			m_rightTalons[i] = new TalonSRX(rightTalonID[i]);
-			if (i >= 1) {
-				m_rightTalons[i].follow(m_rightTalons[0]);
-			}
-		}
-		for(int i = 0; i < middleTalonID.length; i++) {
-			m_middleTalons[i] = new TalonSRX(middleTalonID[i]);
-			if (i >= 1) {
-				m_middleTalons[i].follow(m_middleTalons[0]);
-			}
-		}
-
-		for(int i = 0; i < leftVictorID.length; i++) {
-			m_leftVictors[i] = new VictorSPX(leftVictorID[i]);
-			if (i >= 1) {
-				m_leftVictors[i].follow(m_leftVictors[0]);
-			}
-		}
-		for(int i = 0; i < rightVictorID.length; i++) {
-			m_rightVictors[i] = new VictorSPX(rightVictorID[i]);
-			if (i >= 1) {
-				m_rightVictors[i].follow(m_rightVictors[0]);
-			}
-		}
-		for(int i = 0; i < middleVictorID.length; i++) {
-			m_middleVictors[i] = new VictorSPX(middleVictorID[i]);
-			if (i >= 1) {
-				m_middleVictors[i].follow(m_middleVictors[0]);
-			}
-		}
+		leftMotors = new MotorSet(leftSparkID, leftTalonID, leftVictorID);
+		rightMotors = new MotorSet(rightSparkID, rightTalonID, rightVictorID);
+		middleMotors = new MotorSet(middleSparkID, middleTalonID, middleVictorID);
 
 	}
 
