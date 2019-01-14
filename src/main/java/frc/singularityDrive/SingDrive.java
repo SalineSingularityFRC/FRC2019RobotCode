@@ -13,21 +13,21 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public abstract class SingDrive {
-	public double slowSpeedConstant, normalSpeedConstant, fastSpeedConstant;
-	public int mode = 0;
-	
-	 
-	//protected TalonSRX m_leftMotor1, m_rightMotor1, m_leftMotor2, m_rightMotor2;
-	
-	protected CANSparkMax m_leftMotor1, m_leftMotor2, m_rightMotor1, m_rightMotor2;
 
 	//These MotorSets can be Sparks, Talons, Victors, or any combination thereof.
 	protected MotorSet leftMotors;
 	protected MotorSet rightMotors;
 	protected MotorSet middleMotors;
 
+
+	public double slowSpeedConstant, normalSpeedConstant, fastSpeedConstant;
 	private final static double DEFAULT_VELOCITY_MULTIPLIER = 1.0;
-	protected double velocityMultiplier = 1.0;
+	protected double velocityMultiplier;
+
+	public int mode = 0;
+	
+
+	
 
 	protected boolean velocityReduceActivated = false;
 	protected double reducedVelocity;
@@ -102,82 +102,33 @@ public abstract class SingDrive {
 	 */
 	public SingDrive(int[] leftSparkID, int[] rightSparkID, int[] middleSparkID,
 	int[] leftTalonID, int[] rightTalonID, int[] middleTalonID,
-	int[] leftVictorID, int[] rightVictorID, int[] middleVictorID) {
+	int[] leftVictorID, int[] rightVictorID, int[] middleVictorID,
+	double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) {
 
 		leftMotors = new MotorSet(leftSparkID, leftTalonID, leftVictorID);
 		rightMotors = new MotorSet(rightSparkID, rightTalonID, rightVictorID);
 		middleMotors = new MotorSet(middleSparkID, middleTalonID, middleVictorID);
+
+		this.slowSpeedConstant = slowSpeedConstant;
+		this.normalSpeedConstant = normalSpeedConstant;
+		this.fastSpeedConstant = fastSpeedConstant;
+		this.velocityMultiplier = normalSpeedConstant;
 	}
 
 	/**
 	 * A SingDrive constructor that can be used when only using new (as of 2019)
 	 * Rev SparkMax motors and motor controllers in a non-hdrive setup.
 	 */
-	public SingDrive(int[] leftSparkMotors, int[] rightSparkMotors) {
+	public SingDrive(int[] leftSparkMotors, int[] rightSparkMotors,
+	double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) {
 
 		this(leftSparkMotors, rightSparkMotors, new int[0],
 		new int[0], new int[0], new int[0],
-		new int[0], new int[0], new int[0]);
+		new int[0], new int[0], new int[0], 
+		slowSpeedConstant, normalSpeedConstant, fastSpeedConstant);
 		
 	}
 
-	/**
-	 * Constructor for {@link org.usfirst.frc.team5066.library.SingularityDrive
-	 * SingularityDrive}. Takes in integers to use for motor ports.
-	 * 
-	 * @param frontLeftMotor
-	 *            Channel for front left motor
-	 * @param rearLeftMotor
-	 *            Channel for rear left motor
-	 * @param frontRightMotor
-	 *            Channel for front right motor
-	 * @param rearRightMotor
-	 *            Channel for rear right motor
-	 */
-
-	 /*
-	public SingDrive(int frontLeftMotor, int rearLeftMotor, int frontRightMotor, int rearRightMotor,int midRightMotor,
-			int midLeftMotor) {
-		this(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor, midRightMotor,
-				midLeftMotor, DEFAULT_TALON_TYPE,
-				DEFAULT_SLOW_SPEED_CONSTANT, DEFAULT_NORMAL_SPEED_CONSTANT, DEFAULT_FAST_SPEED_CONSTANT);
-	}
-	
-	public SingDrive(int frontLeftMotor, int rearLeftMotor, int frontRightMotor, int rearRightMotor) {
-		this(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor,  DEFAULT_TALON_TYPE,
-				DEFAULT_SLOW_SPEED_CONSTANT, DEFAULT_NORMAL_SPEED_CONSTANT, DEFAULT_FAST_SPEED_CONSTANT);
-	}
-	*/
-
-	/**
-	 * Constructor for {@link org.usfirst.frc.team5066.library.SingularityDrive
-	 * SingularityDrive}. Takes in {@link edu.wpi.first.wpilibj.SpeedController
-	 * SpeedControllers} as arguments.
-	 * 
-	 * @param frontLeftMotor
-	 *            SpeedController for front left motor
-	 * @param rearLeftMotor
-	 *            SpeedController for rear left motor
-	 * @param frontRightMotor
-	 *            SpeedController for front right motor
-	 * @param rearRightMotor
-	 *            SpeedController for rear right motor
-	 */
-
-	/*
-	 * public SingularityDrive(SpeedController frontLeftMotor, SpeedController
-	 * rearLeftMotor, SpeedController frontRightMotor, SpeedController
-	 * rearRightMotor, double velocityMultiplier) { m_frontLeftMotor =
-	 * frontLeftMotor; m_rearLeftMotor = rearLeftMotor; m_frontRightMotor =
-	 * frontRightMotor; m_rearRightMotor = rearRightMotor;
-	 * this.velocityMultiplier = velocityMultiplier; }
-	 * 
-	 * 
-	 * public SingularityDrive(SpeedController frontLeftMotor, SpeedController
-	 * rearLeftMotor, SpeedController frontRightMotor, SpeedController
-	 * rearRightMotor) { this(frontLeftMotor, rearLeftMotor, frontRightMotor,
-	 * rearRightMotor, DEFAULT_VELOCITY_MULTIPLIER); }
-	 */
 	
 	/*Possible methods to use:
 	 * configEncoderCodesPerRev()
@@ -187,41 +138,8 @@ public abstract class SingDrive {
 	 * pidGet
 	 */
 	/*
-	public SingDrive(int frontLeftMotor, int rearLeftMotor, int frontRightMotor, int rearRightMotor, int rightMiddleMotor, int leftMiddleMotor,
-			int talonType, double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) {//Six wheel constructor
+	
 
-		if (talonType == CANTALON_DRIVE) {
-			
-			m_frontLeftMotor = new TalonSRX(frontLeftMotor);
-			m_rearLeftMotor = new TalonSRX(rearLeftMotor);
-
-			//m_frontLeftMotor.set(ControlMode.Follower, frontLeftMotor);
-
-			m_leftMiddleMotor = new TalonSRX(leftMiddleMotor);
-			//m_leftMiddleMotor.set(ControlMode.Follower, frontLeftMotor);
-			
-			m_frontRightMotor = new TalonSRX(frontRightMotor);
-			
-			m_rearRightMotor = new TalonSRX(rearRightMotor);
-			//m_frontRightMotor.set(ControlMode.Follower, frontRightMotor);
-			m_rightMiddleMotor = new TalonSRX(rightMiddleMotor);
-			//m_rightMiddleMotor.set(ControlMode.Follower, frontRightMotor);
-
-		} else {
-			SmartDashboard.putNumber("INVALID VALUE FOR TALON TYPE.b\tvalue=", talonType);
-		}
-
-		this.velocityMultiplier = normalSpeedConstant;
-		this.talonType = talonType;
-		this.slowSpeedConstant = slowSpeedConstant;
-		this.normalSpeedConstant = normalSpeedConstant;
-		this.fastSpeedConstant = fastSpeedConstant;
-		this.driveStraight = driveStraight;
-		timer = new Timer();
-		//this.gyro = gyro;
-		
-		this.resetAll();
-	}
 	
 	public SingDrive(int frontLeftMotor, int rearLeftMotor, int frontRightMotor, int rearRightMotor,
 			int talonType, double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) { //Four wheel constructor
