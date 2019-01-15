@@ -12,10 +12,9 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.controller.ControlScheme;
+
 import frc.singularityDrive.BasicDrive;
 import frc.singularityDrive.SingDrive;
-import frc.controller.controlSchemes.*;
 
 
 import com.kauailabs.navx.frc.*;
@@ -34,23 +33,15 @@ public class Robot extends IterativeRobot {
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
-
-  //stores the motor controller IDs
-  int driveLeft1, driveLeft2, driveRight1, driveRight2;
+  private final SendableChooser<String> m_chooser = new Senda
+  bleChooser<>();
   
-  //Declaration of our driving scheme, which can be initialized to
-  //any ControlScheme in robotInit()
-  ControlScheme currentScheme;
 
-  //Declaration of mechanisms
+  AHRS gyro;
+
+  
+
   SingDrive drive;
-
-  //default ports of certain joysticks in DriverStation
-  final int XBOX_PORT = 0;
-	final int BIG_JOYSTICK_PORT = 1;
-	final int SMALL_JOYSTICK_PORT = 2;
-
 
   /**
    * This function is run when the robot is first started up and should be
@@ -61,19 +52,13 @@ public class Robot extends IterativeRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
-    
-    
-    //initialize motor controller ports IDs
-    driveLeft1 = 1;
-    driveLeft2 = 2;
-    driveRight1 = 3;
-    driveRight2 = 4;
 
-    //initialize our driving scheme to a basic arcade drive
-    currentScheme = new ArcadeDrive(XBOX_PORT);
+    gyro = new AHRS(SPI.Port.kMXP);
     
-    //initialize mechanisms
-    drive = new BasicDrive(driveLeft1, driveLeft2, driveRight1, driveRight2);
+
+    
+
+    //drive = new BasicDrive(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor, midRightMotor, midLeftMotor);
   }
 
   /**
@@ -131,11 +116,6 @@ public class Robot extends IterativeRobot {
    */
   @Override
   public void teleopPeriodic() {
-
-    //Allow driver control based on current scheme
-    //(we shouldn't need to change this too often)
-    currentScheme.drive(drive);
-
   }
 
   /**
