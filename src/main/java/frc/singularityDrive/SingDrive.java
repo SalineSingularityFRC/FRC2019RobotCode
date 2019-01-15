@@ -119,10 +119,10 @@ public abstract class SingDrive {
 	 * A SingDrive constructor that can be used when only using new (as of 2019)
 	 * Rev SparkMax motors and motor controllers in a non-hdrive setup.
 	 */
-	public SingDrive(int[] leftSparkMotors, int[] rightSparkMotors,
+	public SingDrive(int[] leftSparkID, int[] rightSparkID,
 	double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) {
 
-		this(leftSparkMotors, rightSparkMotors, new int[0],
+		this(leftSparkID, rightSparkID, new int[0],
 		new int[0], new int[0], new int[0],
 		new int[0], new int[0], new int[0], 
 		slowSpeedConstant, normalSpeedConstant, fastSpeedConstant);

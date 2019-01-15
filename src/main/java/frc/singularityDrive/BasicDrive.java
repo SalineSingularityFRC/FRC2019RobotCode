@@ -8,10 +8,40 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class BasicDrive extends SingDrive{
 	
-	
-	public BasicDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2) {
-		super(leftMotor1, leftMotor2, rightMotor1, rightMotor2);
+	/**
+	 * Essential constructor for BasicDrive that takes in ID arrays for all motor types and positions.
+	 * @param leftSparkID
+	 * @param rightSparkID
+	 * @param leftTalonID
+	 * @param rightTalonID
+	 * @param leftVictorID
+	 * @param rightVictorID
+	 * @param slowSpeedConstant multiplier for motor output at preferred slow speed
+	 * @param normalSpeedConstant multiplier for preferred normal speed
+	 * @param fastSpeedConstant multiplier for preffered fast speed
+	 * 
+	 * @author Cameron Tressler, 1/13/18
+	 */
+	public BasicDrive(int[] leftSparkID, int[] rightSparkID, int[] leftTalonID, int[] rightTalonID,
+	int[] leftVictorID, int[] rightVictorID,
+	double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) {
+
+		super(leftSparkID, rightSparkID, new int[0], leftTalonID, rightTalonID, new int[0], leftVictorID, rightVictorID, new int[0],
+		slowSpeedConstant, normalSpeedConstant, fastSpeedConstant);
 		
+	}
+
+	/**
+	 * Simplified constructor for BasicDrive that only takes in motor controller IDs for REV robotics.
+	 * 
+	 * @author Cameron Tressler, 1/13/18
+	 */
+	public BasicDrive(int[] leftSparkID, int[] rightSparkID,
+	double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) {
+		
+		super(leftSparkID, rightSparkID, new int[0], new int[0], new int[0], new int[0], new int[0], new int[0], new int[0],
+		slowSpeedConstant, normalSpeedConstant, fastSpeedConstant);
+
 	}
 
 	public void arcadeDrive(double vertical, double horizontal, double rotation, boolean squaredInputs, SpeedMode speedMode) {
