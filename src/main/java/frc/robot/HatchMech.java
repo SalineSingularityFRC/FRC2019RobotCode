@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
  * setIn pushes air ino the other side of the piston to contract it
  * setOff doesn't set air into any part of the piston
  * 
- * Author: Travis Crigger
+ * @author Travis Crigger
  */
 public class HatchMech{
     DoubleSolonoid swatterSolenoid;
