@@ -2,6 +2,14 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
+/**
+ * The hatch mechanism class allows us to set up a double soleoid valve to forward, reverse, and off.
+ * setOut pushes air into the bottom of the piston to extend it 
+ * setIn pushes air ino the other side of the piston to contract it
+ * setOff doesn't set air into any part of the piston
+ * 
+ * Author: Travis Crigger
+ */
 public class HatchMech{
     DoubleSolonoid swatterSolenoid;
 
