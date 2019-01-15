@@ -8,14 +8,40 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class BasicDrive extends SingDrive{
 	
-	public BasicDrive(int frontLeftMotor, int rearLeftMotor, int frontRightMotor, int rearRightMotor,
-			int midRightMotor, int midLeftMotor) {
-		super(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor, midRightMotor, midLeftMotor);
+	
+	public BasicDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2) {
+		super(leftMotor1, leftMotor2, rightMotor1, rightMotor2);
 		
 	}
+
+	public void drive(double vertical, double horizontal, double rotation, boolean squaredInputs, SpeedMode speedMode) {
+
+		double translationVelocity = vertical, rotationVelocity = rotation;
+		
+		translationVelocity = threshold(translationVelocity);
+		rotationVelocity = threshold(rotationVelocity);
+
+		// Do squared inputs if necessary
+		if (squaredInputs) {
+			translationVelocity *= Math.abs(vertical);
+			rotationVelocity *= Math.abs(rotation);
+		}
+
+		// Guard against illegal values
+		double maximum = Math.max(1, Math.abs(translationVelocity) + Math.abs(rotationVelocity));
+
+
+		m_leftMotor1.set((translationVelocity + rotationVelocity) / maximum);
+		m_leftMotor2.set((translationVelocity + rotationVelocity) / maximum);
+		m_rightMotor1.set((-translationVelocity + rotationVelocity) / maximum);
+		m_rightMotor2.set((-translationVelocity + rotationVelocity) / maximum);
+
+	}
+
+	
 	
 	//TODO gradual acceleration
-
+/*
 	public void drive(double vertical, double horizontal, double rotation, boolean squaredInputs, SpeedMode speedMode) {
 		double translationVelocity = vertical, rotationVelocity = rotation;
 		
@@ -35,7 +61,7 @@ public class BasicDrive extends SingDrive{
 			translationVelocity = -translationVelocity;
 			rotationVelocity = -rotationVelocity;
 		}
-		*/
+		
 		// Guard against illegal values
 		double maximum = Math.max(1, Math.abs(translationVelocity) + Math.abs(rotationVelocity));
 
@@ -89,6 +115,7 @@ public class BasicDrive extends SingDrive{
 		rightVelocity = threshold(rightVelocity);
 
 		// Set the motors
+		/*
 	    m_leftMiddleMotor.set(ControlMode.PercentOutput, this.velocityMultiplier * ((leftVelocity) / leftMaximum));
 		m_rightMiddleMotor.set(ControlMode.PercentOutput, this.velocityMultiplier * ((rightVelocity) / rightMaximum));
 	
@@ -97,7 +124,7 @@ public class BasicDrive extends SingDrive{
 
 		m_frontLeftMotor.set(ControlMode.PercentOutput, this.velocityMultiplier * ((leftVelocity) / leftMaximum));
 		m_frontRightMotor.set(ControlMode.PercentOutput, this.velocityMultiplier * -((rightVelocity) / rightMaximum));
-		
+		*/
 		//SmartDashboard.putNumber("rightEncoder", m_rightMiddleMotor.getSensorCollection().getQuadraturePosition());
 		//SmartDashboard.putNumber("leftEncoder", m_leftMiddleMotor.getSensorCollection().getQuadraturePosition());
 	}
