@@ -1,7 +1,8 @@
 # FRC2019RobotCode
 First attempt at creating a repo for 2019 robot code
 
-1/11/2019 - We got VSCode working with GitHub
+
+1/11/2019 - We got VSCode working with GitHub..
 
 Installing Git:
 
@@ -9,7 +10,7 @@ Download and install Git-2.20.1-64-bit, running it as the administrator. Make su
 Notepad++ as the default editor (you may have to download Notepad++).
 
 
-Create a new folder in VS Code: File -> add folder to workspace
+Create a new folder in VS Code: File -> add folder to workspace.
 Open Git in VS Code (on the leftmost bar). Click the item next to the search bar.
  choose your new folder, initializing the local repo.
 
