@@ -1,11 +1,15 @@
 package frc.robot;
 
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-
+/**
+ * This Class alows the LimeLight camera 
+ * to be displayed in driver station and 
+ * create tx and ty variable to show the 
+ * position of the targets
+ */
 public class Vision{
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     NetworkTableEntry tx = table.getEntry("tx");
