@@ -144,4 +144,12 @@ public class Robot extends IterativeRobot {
   @Override
   public void testPeriodic() {
   }
+
+  /**
+   * This Function pushes data directly to the RoboRio and diplays it in Driver Station
+   */
+  public void robotEye() {
+    CameraServer.getInstance().startAutomaticCapture();
+    
+  }
 }
