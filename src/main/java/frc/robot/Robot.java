@@ -61,7 +61,7 @@ public class Robot extends IterativeRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
-    
+    CameraServer.getInstance().startAutomaticCapture();
     
     //initialize motor controller ports IDs
     driveLeft1 = 1;
@@ -143,13 +143,5 @@ public class Robot extends IterativeRobot {
    */
   @Override
   public void testPeriodic() {
-  }
-
-  /**
-   * This Function pushes data directly to the RoboRio and diplays it in Driver Station
-   */
-  public void robotEye() {
-    CameraServer.getInstance().startAutomaticCapture();
-    
   }
 }
