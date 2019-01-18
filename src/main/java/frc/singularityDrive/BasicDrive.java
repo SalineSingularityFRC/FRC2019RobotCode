@@ -20,7 +20,7 @@ public class BasicDrive extends SingDrive{
 	 * @param normalSpeedConstant multiplier for preferred normal speed
 	 * @param fastSpeedConstant multiplier for preffered fast speed
 	 * 
-	 * @author Cameron Tressler, 1/13/18
+	 * @author Cameron Tressler, 1/13/19
 	 */
 	public BasicDrive(int[] leftSparkID, int[] rightSparkID, int[] leftTalonID, int[] rightTalonID,
 	int[] leftVictorID, int[] rightVictorID,
@@ -34,7 +34,7 @@ public class BasicDrive extends SingDrive{
 	/**
 	 * Simplified constructor for BasicDrive that only takes in motor controller IDs for REV robotics.
 	 * 
-	 * @author Cameron Tressler, 1/13/18
+	 * @author Cameron Tressler, 1/13/19
 	 */
 	public BasicDrive(int[] leftSparkID, int[] rightSparkID,
 	double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) {
@@ -53,23 +53,31 @@ public class BasicDrive extends SingDrive{
 
 		// Do squared inputs if necessary
 		if (squaredInputs) {
-			translationVelocity *= Math.abs(vertical);
-			rotationVelocity *= Math.abs(rotation);
+			translationVelocity *= Math.abs(translationVelocity);
+			rotationVelocity *= Math.abs(rotationVelocity);
 		}
 
 		// Guard against illegal values
 		double maximum = Math.max(1, Math.abs(translationVelocity) + Math.abs(rotationVelocity));
 
 
-		m_leftMotor1.set((translationVelocity + rotationVelocity) / maximum);
-		m_leftMotor2.set((translationVelocity + rotationVelocity) / maximum);
-		m_rightMotor1.set((-translationVelocity + rotationVelocity) / maximum);
-		m_rightMotor2.set((-translationVelocity + rotationVelocity) / maximum);
+		leftMotors.m_sparks[0].set((translationVelocity + rotationVelocity) / maximum);
+		rightMotors.m_sparks[0].set((-translationVelocity + rotationVelocity) / maximum);
 
 	}
 
 	public void tankDrive(double left, double right, boolean squaredInputs, SpeedMode speedMode) {
 
+		double leftVelocity = left, rightVelocity = right;
+
+		leftVelocity = threshold(leftVelocity);
+		rightVelocity = threshold(rightVelocity);
+
+		//Do squared inpujts if necessary
+		if (squaredInputs) {
+			leftVelocity *= Math.abs(leftVelocity);
+			rightVelocity *= Math.abs(rightVelocity);
+		}
 	}
 	
 	

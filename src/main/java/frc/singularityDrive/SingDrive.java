@@ -79,6 +79,8 @@ public abstract class SingDrive {
 	 * @param squaredInputs true will square the above parameters, allowing for more precise
 	 * movement for low values
 	 * @param speedMode controls a multiplier for above parameters, slow, normal, or fast
+	 * 
+	 * @author Cameron Tressler, 1/13/19
 	 */
 	public abstract void arcadeDrive(double vertical, double horizontal, double rotation, boolean squaredInputs, SpeedMode speedMode);
 
@@ -92,6 +94,8 @@ public abstract class SingDrive {
 	 * @param squaredInputs true will square the above parameters, allowing for more precise
 	 * movement for low values
 	 * @param speedMode controls a multiplier for above parameters, slow, normal, or fast
+	 * 
+	 * @author Cameron Tressler 1/13/19
 	 */
 	public abstract void tankDrive(double left, double right, boolean squaredInputs, SpeedMode speedMode);
 
@@ -99,6 +103,8 @@ public abstract class SingDrive {
 	/**
 	 * The basic, most general constructor for SingDrive, taking in arrays of all IDs for 
 	 * motor controllers. If a motor controller type is not used, enter an empty array.
+	 * 
+	 * @author Cameron Tressler, 1/13/19
 	 */
 	public SingDrive(int[] leftSparkID, int[] rightSparkID, int[] middleSparkID,
 	int[] leftTalonID, int[] rightTalonID, int[] middleTalonID,
@@ -118,6 +124,8 @@ public abstract class SingDrive {
 	/**
 	 * A SingDrive constructor that can be used when only using new (as of 2019)
 	 * Rev SparkMax motors and motor controllers in a non-hdrive setup.
+	 * 
+	 * @author Cameron Tressler, 1/13/19
 	 */
 	public SingDrive(int[] leftSparkID, int[] rightSparkID,
 	double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) {
