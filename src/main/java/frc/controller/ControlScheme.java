@@ -1,5 +1,9 @@
 package frc.controller;
 
+import frc.robot.DrivePneumatics;
+import frc.robot.HatchMech;
+import frc.robot.Intake;
+import frc.robot.PneumaticEjector;
 import frc.singularityDrive.SingDrive;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -12,6 +16,8 @@ import edu.wpi.first.wpilibj.Timer;
 
 public interface ControlScheme {
 	
-	public void drive(SingDrive drive);
+	public void drive(SingDrive drive, DrivePneumatics pneumatics);
+	public void controlHatchMech(HatchMech hatchMech, PneumaticEjector ejector);
+	public void intake(Intake intake);
 	
 }
