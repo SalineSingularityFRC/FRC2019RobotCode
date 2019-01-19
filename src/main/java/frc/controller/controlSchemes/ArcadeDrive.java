@@ -14,22 +14,25 @@ public class ArcadeDrive implements ControlScheme {
     XboxController controller;
 
     boolean fastGear;
-    boolean buttonNow, buttonPrevious;
+    boolean buttonDPneuNow, buttonDPneuPrevious;
+
+    boolean hatchMechExtended;
+    boolean buttonHatchMechNow, buttonHatchMechPrevious;
 
     public ArcadeDrive(int controllerPort) {
         controller = new XboxController(controllerPort);
 
         fastGear = false;
-        buttonPrevious = false;
+        buttonDPneuPrevious = false;
     }
 
     public void drive(SingDrive drive, DrivePneumatics pneumatics) {
 
         drive.drive(controller.getLS_Y(), 0.0, controller.getLS_X(), true, SpeedMode.FAST);
 
-        buttonNow = controller.getRB();
+        buttonDPneuNow = controller.getRB();
 
-        if (buttonNow && !buttonPrevious) {
+        if (buttonDPneuNow && !buttonDPneuPrevious) {
             fastGear = !fastGear;
         }
         
@@ -40,11 +43,26 @@ public class ArcadeDrive implements ControlScheme {
             pneumatics.setReverse();
         }
 
-        buttonPrevious = buttonNow;
+        buttonDPneuPrevious = buttonDPneuNow;
 
     }
 
     public void controlHatchMech(HatchMech hatchMech, PneumaticEjector ejector) {
+
+        buttonHatchMechNow = controller.getAButton();
+
+        if (buttonHatchMechNow && !buttonHatchMechPrevious) {
+            hatchMechExtended = !hatchMechExtended;
+        }
+
+        if (hatchMechExtended) {
+            hatchMech.setForward();
+        }
+        else {
+            hatchMech.setReverse();
+        }
+
+        buttonHatchMechPrevious = buttonHatchMechNow;
 
     }
 

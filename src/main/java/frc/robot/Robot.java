@@ -47,6 +47,7 @@ public class Robot extends TimedRobot {
 
   //Declaration of mechanisms
   SingDrive drive;
+  DrivePneumatics drivePneumatics;
 
   //default ports of certain joysticks in DriverStation
   final int XBOX_PORT = 0;
@@ -76,6 +77,7 @@ public class Robot extends TimedRobot {
     
     //initialize mechanisms
     drive = new BasicDrive(driveLeft1, driveLeft2, driveRight1, driveRight2);
+    drivePneumatics = new DrivePneumatics(0, 1);
   }
 
   /**
@@ -136,7 +138,7 @@ public class Robot extends TimedRobot {
 
     //Allow driver control based on current scheme
     //(we shouldn't need to change this too often)
-    currentScheme.drive(drive);
+    currentScheme.drive(drive, drivePneumatics);
 
   }
 
