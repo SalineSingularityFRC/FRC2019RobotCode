@@ -35,4 +35,18 @@ public class EncoderController extends MotorController{
 
     }
 
+    public void setPosition(double position) {
+
+        switch(currentType) {
+
+            case TALON:
+                talon.set(ControlMode.Position, position);
+                break;
+
+            case SPARK:
+                
+        }
+
+    }
+
 }
