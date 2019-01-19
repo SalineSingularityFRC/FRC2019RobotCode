@@ -40,7 +40,11 @@ public class Robot extends TimedRobot {
 
   //stores the motor controller IDs
   int driveLeft1, driveLeft2, driveRight1, driveRight2;
-  
+  int drivePneuHigh, drivePneuLow;
+  int ejectorPneuPush, ejectorPneuHold;
+  int hatchMechDown, hatchMechUp;
+  int intakeMotor;
+
   //Declaration of our driving scheme, which can be initialized to
   //any ControlScheme in robotInit()
   ControlScheme currentScheme;
@@ -48,6 +52,10 @@ public class Robot extends TimedRobot {
   //Declaration of mechanisms
   SingDrive drive;
   DrivePneumatics drivePneumatics;
+  Intake intake;
+  HatchMech hatchMech;
+  PneumaticEjector ejectorPneu;
+
 
   //default ports of certain joysticks in DriverStation
   final int XBOX_PORT = 0;
@@ -67,10 +75,7 @@ public class Robot extends TimedRobot {
     
     
     //initialize motor controller ports IDs
-    driveLeft1 = 1;
-    driveLeft2 = 2;
-    driveRight1 = 3;
-    driveRight2 = 4;
+    setDefaultProperties();
 
     //initialize our driving scheme to a basic arcade drive
     currentScheme = new ArcadeDrive(XBOX_PORT);
@@ -78,6 +83,9 @@ public class Robot extends TimedRobot {
     //initialize mechanisms
     drive = new BasicDrive(driveLeft1, driveLeft2, driveRight1, driveRight2);
     drivePneumatics = new DrivePneumatics(0, 1);
+    intake = new Intake(intakeMotor);
+    hatchMech = new HatchMech(hatchMechDown, hatchMechUp);
+    ejectorPneu = new PneumaticEjector(ejectorPneuPush, ejectorPneuHold);
   }
 
   /**
@@ -148,6 +156,37 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
   }
+
+  
+  /**
+   * Assigning port numbers to components
+   * 
+   * To be run at beginning of robotInit 
+   * 
+   * @author Max P.
+   */
+  private void setDefaultProperties() {
+    
+    //Motors
+    driveLeft1 = 1;
+    driveLeft2 = 2;
+    driveRight1 = 3;
+    driveRight2 = 4;
+    intakeMotor = 5;
+    
+    //Pneumatics
+    drivePneuHigh = 1;
+    drivePneuLow = 2;
+    ejectorPneuPush = 3;
+    ejectorPneuHold = 4;
+    hatchMechDown = 5;
+    hatchMechUp = 6;
+    
+
+  }
+
+
+
 }
 
 
