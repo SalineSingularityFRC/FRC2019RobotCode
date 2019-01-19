@@ -2,8 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
-import edu.wpi.*;
-
 
 public class HatchMech
  {
@@ -14,22 +12,24 @@ public class HatchMech
    {
       hatchSolenoid = new DoubleSolenoid(forHatch, revHatch);
     
-    public void SetForward()
+   }
+
+    public void setForward()
      {
-        hatchSolenoid.set(DoubleSolenoid.Value.kforward);
+        hatchSolenoid.set(DoubleSolenoid.Value.kForward);
      }
       
-    public void SetReverse()
+    public void setReverse()
      {
-        hatchSolenoid.set(DoubleSolenoid.Value.kforward);
+        hatchSolenoid.set(DoubleSolenoid.Value.kReverse);
      }
 
     public void setOff()
      {
-        hatchSolenoid.set(DoubleSolenoid.Value.kforward);
+        hatchSolenoid.set(DoubleSolenoid.Value.kOff);
      }
 
 
-   }
+   
 
  }
