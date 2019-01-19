@@ -6,8 +6,6 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.SpeedController;
-
 public class MotorController {
 
     public enum ControllerType {
@@ -17,7 +15,6 @@ public class MotorController {
     }
 
     ControllerType currentType;
-    int portNumber;
 
     VictorSPX victor;
     TalonSRX talon;
