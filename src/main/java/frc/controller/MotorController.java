@@ -11,7 +11,8 @@ public class MotorController {
     public enum ControllerType {
         VICTOR,
         TALON,
-        SPARK
+        SPARK,
+        SPARKBRUSHED
     }
 
     ControllerType currentType;
@@ -38,6 +39,9 @@ public class MotorController {
             case SPARK:
                 spark = new CANSparkMax(portNumber, MotorType.kBrushless);
                 break;
+            case SPARKBRUSHED:
+                spark = new CANSparkMax(portNumber, MotorType.kBrushed);
+                break;
         }
     }
 
@@ -51,6 +55,9 @@ public class MotorController {
                 talon.set(ControlMode.PercentOutput, speed);
                 break;
             case SPARK:
+                spark.set(speed);
+                break;
+            case SPARKBRUSHED:
                 spark.set(speed);
                 break;
         }
