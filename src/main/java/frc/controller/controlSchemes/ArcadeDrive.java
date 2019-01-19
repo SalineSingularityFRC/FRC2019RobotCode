@@ -8,10 +8,14 @@ import frc.robot.PneumaticEjector;
 import frc.controller.ControlScheme;
 import frc.singularityDrive.SingDrive;
 import frc.singularityDrive.SingDrive.SpeedMode;
+import edu.wpi.first.wpilibj.Timer;
 
 public class ArcadeDrive implements ControlScheme {
 
     XboxController controller;
+
+    Timer ejectorTimer;
+    double ejectorTimerValue;
 
     boolean fastGear;
     boolean buttonDPneuNow, buttonDPneuPrevious;
@@ -19,11 +23,14 @@ public class ArcadeDrive implements ControlScheme {
     boolean hatchMechExtended;
     boolean buttonHatchMechNow, buttonHatchMechPrevious;
 
+    boolean ejectorButtonNow, ejectorButtonPrevious;
+
     public ArcadeDrive(int controllerPort) {
         controller = new XboxController(controllerPort);
 
         fastGear = false;
         buttonDPneuPrevious = false;
+        ejectorTimer = new Timer();
     }
 
     public void drive(SingDrive drive, DrivePneumatics pneumatics) {
@@ -50,6 +57,7 @@ public class ArcadeDrive implements ControlScheme {
     public void controlHatchMech(HatchMech hatchMech, PneumaticEjector ejector) {
 
         buttonHatchMechNow = controller.getAButton();
+        ejectorButtonNow = controller.getBButton();
 
         if (buttonHatchMechNow && !buttonHatchMechPrevious) {
             hatchMechExtended = !hatchMechExtended;
@@ -62,7 +70,25 @@ public class ArcadeDrive implements ControlScheme {
             hatchMech.setReverse();
         }
 
+        if (ejectorButtonNow && !ejectorButtonPrevious) {
+            ejector.setForward();
+            ejectorTimer.reset();
+            ejectorTimer.start();           
+        }
+
+        ejectorTimerValue = ejectorTimer.get();
+
+        if(ejectorTimerValue > 5) {
+            ejectorTimer.stop();
+            ejector.setReverse();
+        }
+
         buttonHatchMechPrevious = buttonHatchMechNow;
+        ejectorButtonPrevious = ejectorButtonNow;
+        
+
+
+
 
     }
 

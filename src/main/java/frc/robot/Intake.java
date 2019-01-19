@@ -33,6 +33,18 @@ public class Intake {
         }
     }
 
+    public void intakeOn() {
+        intake.setMotorSpeed(intakeSpeed);
+    }
+
+    public void intakeOff() {
+        intake.setMotorSpeed(intakeOffSpeed);
+    }
+
+    public void intakeReverse() {
+        intake.setMotorSpeed(intakeReverseSpeed);
+    }
+
     public void intakeSpeed(int intakeSpeedInput) {
         intake.setMotorSpeed(intakeSpeedInput);
     }
