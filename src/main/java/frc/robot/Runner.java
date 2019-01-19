@@ -4,7 +4,23 @@ public class Runner {
 
 public static void main(String [] args) {
 
-    NinthGrader travis = new NinthGrader(4.0, "Travis", false, true);
+    Student travis;
+
+
+
+
+
+
+
+
+    travis = new TenthGrader(3.9, "Travis", false);
+
+        this.suspend(travis);
+    
+    public static void suspend(Student s) {
+        s.suspend(30);
+    }
+
 
     }
 

@@ -31,7 +31,7 @@ public class NinthGrader extends Student {
                     super.course = "biology";
                 }
                 else if (randomNumber >= 0.33 && randomNumber <= 0.67) {
-                    suoer.course = "Algebra II";
+                    super.course = "Algebra II";
                 }
                 else {
                     super.course = "health";
