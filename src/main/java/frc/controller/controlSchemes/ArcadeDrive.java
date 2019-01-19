@@ -78,7 +78,7 @@ public class ArcadeDrive implements ControlScheme {
 
         ejectorTimerValue = ejectorTimer.get();
 
-        if(ejectorTimerValue > 5) {
+        if(ejectorTimerValue > 1) {
             ejectorTimer.stop();
             ejector.setReverse();
         }
@@ -87,12 +87,11 @@ public class ArcadeDrive implements ControlScheme {
         ejectorButtonPrevious = ejectorButtonNow;
         
 
-
-
-
     }
 
     public void intake(Intake intake) {
+
+        intake.controlIntake(controller.getPOVDown(), controller.getPOVUp());
 
     }
 

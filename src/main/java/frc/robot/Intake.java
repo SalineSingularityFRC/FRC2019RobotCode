@@ -11,25 +11,23 @@ public class Intake {
 
 
     private final double intakeSpeed = 0.5;
-    private final double intakeReverseSpeed = -0.5;
+    private final double intakeReverseSpeed = -1.0;
     private final double intakeOffSpeed = 0;
 
     public Intake(int rotatePort) {
         intake = new MotorController(ControllerType.SPARK, rotatePort);
     }
 
-    public void controlIntake(boolean intakeOn, boolean intakeOff, boolean intakeReverse) {
+    public void controlIntake(boolean intakeOn, boolean intakeReverse) {
 
         if(intakeOn) {
             intake.setMotorSpeed(intakeSpeed);
         }
-
-        else if(intakeOff) {
-            intake.setMotorSpeed(intakeOffSpeed);
-        }
-
         else if(intakeReverse) {
             intake.setMotorSpeed(intakeReverseSpeed);
+        }
+        else {
+            intake.setMotorSpeed(intakeOffSpeed);
         }
     }
 
