@@ -5,6 +5,7 @@ import frc.robot.DrivePneumatics;
 import frc.robot.HatchMech;
 import frc.robot.Intake;
 import frc.robot.Vision;
+import frc.robot.Elevator;
 import frc.robot.PneumaticEjector;
 import frc.controller.ControlScheme;
 import frc.singularityDrive.SingDrive;
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class ArcadeDrive implements ControlScheme {
 
     XboxController controller;
+    XboxController armController;
 
     Timer ejectorTimer;
     double ejectorTimerValue;
@@ -29,6 +31,13 @@ public class ArcadeDrive implements ControlScheme {
 
     boolean ejectorButtonNow, ejectorButtonPrevious;
 
+    boolean elevatorButton1Now, elevatorButton1Previous;
+    boolean elevatorButton2Now, elevatorButton2Previous;
+    boolean elevatorButton3Now, elevatorButton3Previous;
+
+    final int elevatorLow = 20;
+    final int elevatorMid = 50;
+    final int elevatorHigh = 100;
     final double endPosition = 10.0;
     double tx, ta, ty;
     final double driveSpeed = 0.3;
@@ -36,8 +45,9 @@ public class ArcadeDrive implements ControlScheme {
 
     
 
-    public ArcadeDrive(int controllerPort) {
+    public ArcadeDrive(int controllerPort, int armControllerPort) {
         controller = new XboxController(controllerPort);
+        armController = new XboxController(armControllerPort);
 
         fastGear = false;
         buttonDPneuPrevious = false;
@@ -131,6 +141,31 @@ public class ArcadeDrive implements ControlScheme {
 
         } 
     }
+
+    public void elevator(Elevator elevator) {
+
+        elevatorButton1Now = armController.getAButton();
+        if(elevatorButton1Now && !elevatorButton1Previous) {
+            elevator.setElevatorPosition(elevatorLow);
+        }
+
+        elevatorButton2Now = armController.getBButton();
+        if(elevatorButton2Now && !elevatorButton2Previous) {
+            elevator.setElevatorPosition(elevatorMid);
+        }
+
+        elevatorButton3Now = armController.getXButton();
+        if(elevatorButton3Now && !elevatorButton3Previous) {
+            elevator.setElevatorPosition(elevatorHigh);
+        }
+
+        elevatorButton1Previous = elevatorButton1Now;
+        elevatorButton2Previous = elevatorButton2Now;
+        elevatorButton3Previous = elevatorButton3Now;
+
+        }
+
+    }
     //TODO: finish this method
 /*     
 
@@ -139,4 +174,3 @@ public class ArcadeDrive implements ControlScheme {
         
     }
 */
-}

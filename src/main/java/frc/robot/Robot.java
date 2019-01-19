@@ -73,7 +73,7 @@ public class Robot extends TimedRobot {
     driveRight2 = 4;
 
     //initialize our driving scheme to a basic arcade drive
-    currentScheme = new ArcadeDrive(XBOX_PORT);
+    currentScheme = new ArcadeDrive(XBOX_PORT, XBOX_PORT +1);
     
     //initialize mechanisms
     drive = new BasicDrive(driveLeft1, driveLeft2, driveRight1, driveRight2);
