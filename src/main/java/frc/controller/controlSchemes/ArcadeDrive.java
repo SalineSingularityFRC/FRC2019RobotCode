@@ -4,10 +4,14 @@ import frc.controller.XboxController;
 import frc.robot.DrivePneumatics;
 import frc.robot.HatchMech;
 import frc.robot.Intake;
+import frc.robot.Vision;
 import frc.robot.PneumaticEjector;
 import frc.controller.ControlScheme;
 import frc.singularityDrive.SingDrive;
 import frc.singularityDrive.SingDrive.SpeedMode;
+
+import java.util.Map;
+
 import edu.wpi.first.wpilibj.Timer;
 
 public class ArcadeDrive implements ControlScheme {
@@ -24,6 +28,13 @@ public class ArcadeDrive implements ControlScheme {
     boolean buttonHatchMechNow, buttonHatchMechPrevious;
 
     boolean ejectorButtonNow, ejectorButtonPrevious;
+
+    final double endPosition = 10.0;
+    double tx, ta, ty;
+    final double driveSpeed = 0.3;
+    final double tuningConstant = 50;
+
+    
 
     public ArcadeDrive(int controllerPort) {
         controller = new XboxController(controllerPort);
@@ -44,10 +55,10 @@ public class ArcadeDrive implements ControlScheme {
         }
         
         if (fastGear) {
-            pneumatics.setForward();
+            pneumatics.setHigh();
         }
         else {
-            pneumatics.setReverse();
+            pneumatics.setLow();
         }
 
         buttonDPneuPrevious = buttonDPneuNow;
@@ -95,4 +106,37 @@ public class ArcadeDrive implements ControlScheme {
 
     }
 
+    public void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, PneumaticEjector ejector, HatchMech hatchMech) {
+        if(controller.getXButton() && vision.table.getEntry("tv").getDouble(0.0) == 1.0) {
+
+            dPneumatics.setLow();
+            hatchMech.setForward();
+
+
+            while(!controller.getYButton() && vision.table.getEntry("ta").getDouble(0.0) < endPosition) {
+                this.ta = vision.table.getEntry("ta").getDouble(0.0);
+                this.tx = vision.table.getEntry("tx").getDouble(0.0);
+                this.ty = vision.table.getEntry("ty").getDouble(0.0);
+
+                
+
+                drive.drive(driveSpeed, 0, tx/tuningConstant, false, SpeedMode.FAST);
+            } 
+            ejector.setForward();
+            ejectorTimer.reset();
+            ejectorTimer.start();
+
+            
+
+
+        } 
+    }
+    //TODO: finish this method
+/*     
+
+    private double clip(double input, double inputMin, double inputMax, double outputMin, double outputMax) {
+        input = input/(inputMin+inputMax);
+        
+    }
+*/
 }
