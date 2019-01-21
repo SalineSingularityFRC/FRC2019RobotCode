@@ -45,28 +45,28 @@ public class Elevator {
         m_pid.setOutputRange(kMinOutput, kMaxOutput);
 
         // display PID coefficients on SmartDashboard
-        SmartDashboard.putNumber("P Gain", kP);
-        SmartDashboard.putNumber("I Gain", kI);
-        SmartDashboard.putNumber("D Gain", kD);
-        SmartDashboard.putNumber("I Zone", kIz);
-        SmartDashboard.putNumber("Feed Forward", kFF);
-        SmartDashboard.putNumber("Max Output", kMaxOutput);
-        SmartDashboard.putNumber("Min Output", kMinOutput);
-        SmartDashboard.putNumber("Set Rotations", 0);
+        SmartDashboard.putNumber("Elevator P Gain", kP);
+        SmartDashboard.putNumber("Elevator I Gain", kI);
+        SmartDashboard.putNumber("Elevator D Gain", kD);
+        SmartDashboard.putNumber("Elevator I Zone", kIz);
+        SmartDashboard.putNumber("Elevator Feed Forward", kFF);
+        SmartDashboard.putNumber("Elevator Max Output", kMaxOutput);
+        SmartDashboard.putNumber("Elevator Min Output", kMinOutput);
+        //SmartDashboard.putNumber("Elevator Set Rotations", 0);
     }
 
 
     public void setElevatorPosition(double position) {
 
         // read PID coefficients from SmartDashboard
-        double p = SmartDashboard.getNumber("P Gain", 0);
-        double i = SmartDashboard.getNumber("I Gain", 0);
-        double d = SmartDashboard.getNumber("D Gain", 0);
-        double iz = SmartDashboard.getNumber("I Zone", 0);
-        double ff = SmartDashboard.getNumber("Feed Forward", 0);
-        double max = SmartDashboard.getNumber("Max Output", 0);
-        double min = SmartDashboard.getNumber("Min Output", 0);
-        double rotations = SmartDashboard.getNumber("Set Rotations", 0);
+        double p = SmartDashboard.getNumber("Elevator P Gain", 0);
+        double i = SmartDashboard.getNumber("Elevator I Gain", 0);
+        double d = SmartDashboard.getNumber("Elevator D Gain", 0);
+        double iz = SmartDashboard.getNumber("Elevator I Zone", 0);
+        double ff = SmartDashboard.getNumber("Elevator Feed Forward", 0);
+        double max = SmartDashboard.getNumber("Elevator Max Output", 0);
+        double min = SmartDashboard.getNumber("Elevator Min Output", 0);
+        //double rotations = SmartDashboard.getNumber("Elevator Set Rotations", 0);
 
         // if PID coefficients on SmartDashboard have changed, write new values to controller
         if ((p != kP)) {
