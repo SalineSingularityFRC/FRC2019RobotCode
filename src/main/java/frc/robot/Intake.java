@@ -43,7 +43,7 @@ public class Intake {
         intake.setMotorSpeed(intakeReverseSpeed);
     }
 
-    public void intakeSpeed(int intakeSpeedInput) {
+    public void intakeSpeed(double intakeSpeedInput) {
         intake.setMotorSpeed(intakeSpeedInput);
     }
 

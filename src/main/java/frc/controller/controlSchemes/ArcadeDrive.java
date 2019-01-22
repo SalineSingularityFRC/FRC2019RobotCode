@@ -35,6 +35,10 @@ public class ArcadeDrive implements ControlScheme {
     boolean elevatorButton2Now, elevatorButton2Previous;
     boolean elevatorButton3Now, elevatorButton3Previous;
 
+    //Need to be adjusted for our robot
+    float Kp = -0.1f;
+    float min_command = 0.05f;
+
     final int elevatorLow = 20;
     final int elevatorMid = 50;
     final int elevatorHigh = 100;
@@ -116,11 +120,17 @@ public class ArcadeDrive implements ControlScheme {
 
     }
 
+    
     public void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, PneumaticEjector ejector, HatchMech hatchMech) {
+
+
+        ///*
         if(controller.getXButton() && vision.table.getEntry("tv").getDouble(0.0) == 1.0) {
 
             dPneumatics.setLow();
             hatchMech.setForward();
+
+            
 
 
             while(!controller.getYButton() && vision.table.getEntry("ta").getDouble(0.0) < endPosition) {
@@ -135,7 +145,7 @@ public class ArcadeDrive implements ControlScheme {
             ejector.setForward();
             ejectorTimer.reset();
             ejectorTimer.start();
-
+        //*/
             
 
 
