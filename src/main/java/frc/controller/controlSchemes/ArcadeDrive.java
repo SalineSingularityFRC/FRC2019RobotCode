@@ -36,8 +36,9 @@ public class ArcadeDrive implements ControlScheme {
     boolean elevatorButton3Now, elevatorButton3Previous;
 
     //Need to be adjusted for our robot
-    float Kp = -0.1f;
-    float min_command = 0.05f;
+    double Kp = -0.1;
+    double min_command = 0.05;
+    double driveSpeedConstant = 0.2;
 
     final int elevatorLow = 20;
     final int elevatorMid = 50;
@@ -46,6 +47,8 @@ public class ArcadeDrive implements ControlScheme {
     double tx, ta, ty;
     final double driveSpeed = 0.3;
     final double tuningConstant = 50;
+
+    Vision vision;
 
     
 
@@ -56,6 +59,8 @@ public class ArcadeDrive implements ControlScheme {
         fastGear = false;
         buttonDPneuPrevious = false;
         ejectorTimer = new Timer();
+
+        vision = new Vision();
     }
 
     public void drive(SingDrive drive, DrivePneumatics pneumatics) {
@@ -127,8 +132,8 @@ public class ArcadeDrive implements ControlScheme {
         ///*
         if(controller.getXButton() && vision.table.getEntry("tv").getDouble(0.0) == 1.0) {
 
-            dPneumatics.setLow();
-            hatchMech.setForward();
+            //dPneumatics.setLow();
+            //hatchMech.setForward();
 
             
 
@@ -138,11 +143,26 @@ public class ArcadeDrive implements ControlScheme {
                 this.tx = vision.table.getEntry("tx").getDouble(0.0);
                 this.ty = vision.table.getEntry("ty").getDouble(0.0);
 
-                
+                double heading_error =( this.tx * -1 );
+                double steering_adjust = 0.0;
 
-                drive.drive(driveSpeed, 0, tx/tuningConstant, false, SpeedMode.FAST);
+                double left_comand = driveSpeedConstant;
+                double right_comand = driveSpeedConstant;
+
+                if(tx > 1.0){
+                    steering_adjust = Kp*heading_error - min_command;
+                }
+                else if(tx < 1.0){
+                    steering_adjust = Kp*heading_error + min_command;
+                }
+                left_comand -= steering_adjust;
+                right_comand += steering_adjust;
+
+                drive.tankDrive(left_comand, right_comand, false, SpeedMode.FAST);
+
+              //  drive.drive(driveSpeed, 0, tx/tuningConstant, false, SpeedMode.FAST);
             } 
-            ejector.setForward();
+            //8ejector.setForward();
             ejectorTimer.reset();
             ejectorTimer.start();
         //*/

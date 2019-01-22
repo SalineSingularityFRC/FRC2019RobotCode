@@ -41,6 +41,8 @@ public class BasicDrive extends SingDrive{
 	}
 
 	
+
+	
 	
 	//TODO gradual acceleration
 /*
@@ -108,26 +110,10 @@ public class BasicDrive extends SingDrive{
 		double leftMaximum = Math.max(1, Math.abs(leftVelocity));
 		double rightMaximum = Math.max(1, Math.abs(rightVelocity));
 
-		if (velocityReduceActivated) {
-			leftMaximum *= 1 / reducedVelocity;
-			rightMaximum *= 1 / reducedVelocity;
-		}
 
-		leftVelocity = threshold(leftVelocity);
-		rightVelocity = threshold(rightVelocity);
+		m_leftMotor1.set(super.velocityMultiplier * (leftVelocity) / leftMaximum);
 
-		// Set the motors
-		/*
-	    m_leftMiddleMotor.set(ControlMode.PercentOutput, this.velocityMultiplier * ((leftVelocity) / leftMaximum));
-		m_rightMiddleMotor.set(ControlMode.PercentOutput, this.velocityMultiplier * ((rightVelocity) / rightMaximum));
-	
-		m_rearLeftMotor.set(ControlMode.PercentOutput, this.velocityMultiplier * ((leftVelocity) / leftMaximum));
-		m_rearRightMotor.set(ControlMode.PercentOutput, this.velocityMultiplier * -((rightVelocity) / rightMaximum));
+		m_rightMotor1.set(super.velocityMultiplier * (rightVelocity) / rightMaximum);
 
-		m_frontLeftMotor.set(ControlMode.PercentOutput, this.velocityMultiplier * ((leftVelocity) / leftMaximum));
-		m_frontRightMotor.set(ControlMode.PercentOutput, this.velocityMultiplier * -((rightVelocity) / rightMaximum));
-		*/
-		//SmartDashboard.putNumber("rightEncoder", m_rightMiddleMotor.getSensorCollection().getQuadraturePosition());
-		//SmartDashboard.putNumber("leftEncoder", m_leftMiddleMotor.getSensorCollection().getQuadraturePosition());
 	}
 }

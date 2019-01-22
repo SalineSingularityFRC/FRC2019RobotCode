@@ -16,6 +16,8 @@ import frc.controller.ControlScheme;
 import frc.singularityDrive.BasicDrive;
 import frc.singularityDrive.SingDrive;
 import frc.controller.controlSchemes.*;
+import frc.controller.controlSchemes.ArcadeDrive;
+import frc.robot.Vision;
 
 
 import com.kauailabs.navx.frc.*;
@@ -55,6 +57,7 @@ public class Robot extends TimedRobot {
   Intake intake;
   HatchMech hatchMech;
   PneumaticEjector ejectorPneu;
+  Vision vision;
 
 
   //default ports of certain joysticks in DriverStation
@@ -82,10 +85,11 @@ public class Robot extends TimedRobot {
     
     //initialize mechanisms
     drive = new BasicDrive(driveLeft1, driveLeft2, driveRight1, driveRight2);
-    drivePneumatics = new DrivePneumatics(0, 1);
+    /*drivePneumatics = new DrivePneumatics(0, 1);
     intake = new Intake(intakeMotor);
     hatchMech = new HatchMech(hatchMechDown, hatchMechUp);
     ejectorPneu = new PneumaticEjector(ejectorPneuPush, ejectorPneuHold);
+    */
   }
 
   /**
@@ -146,7 +150,9 @@ public class Robot extends TimedRobot {
 
     //Allow driver control based on current scheme
     //(we shouldn't need to change this too often)
-    currentScheme.drive(drive, drivePneumatics);
+    //currentScheme.drive(drive, drivePneumatics);
+    // parcial autonomy via vision
+    currentScheme.visionDrive(vision, drive, drivePneumatics, ejectorPneu, hatchMech);
 
   }
 
