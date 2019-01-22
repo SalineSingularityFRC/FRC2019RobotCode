@@ -21,6 +21,8 @@ public class BasicDrive extends SingDrive{
 		translationVelocity = threshold(translationVelocity);
 		rotationVelocity = threshold(rotationVelocity);
 
+		setVelocityMultiplierBasedOnSpeedMode(speedMode);
+
 		// Do squared inputs if necessary
 		if (squaredInputs) {
 			translationVelocity *= Math.abs(vertical);
@@ -31,10 +33,10 @@ public class BasicDrive extends SingDrive{
 		double maximum = Math.max(1, Math.abs(translationVelocity) + Math.abs(rotationVelocity));
 
 
-		m_leftMotor1.set((translationVelocity + rotationVelocity) / maximum);
-		m_leftMotor2.set((translationVelocity + rotationVelocity) / maximum);
-		m_rightMotor1.set((-translationVelocity + rotationVelocity) / maximum);
-		m_rightMotor2.set((-translationVelocity + rotationVelocity) / maximum);
+		m_leftMotor1.set(super.velocityMultiplier * (translationVelocity + rotationVelocity) / maximum);
+		
+		m_rightMotor1.set(super.velocityMultiplier * (-translationVelocity + rotationVelocity) / maximum);
+		
 
 	}
 
