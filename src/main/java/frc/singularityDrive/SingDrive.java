@@ -122,6 +122,7 @@ public abstract class SingDrive {
 		this.m_rightMotor2 = new CANSparkMax(rightMotor2, DEFAULT_MOTOR_TYPE);
 		this.m_rightMotor2.follow(this.m_rightMotor1, false);
 
+
 		// Set speed constants.
 		this.slowSpeedConstant = slowSpeedConstant;
 		this.normalSpeedConstant = normalSpeedConstant;
@@ -131,17 +132,6 @@ public abstract class SingDrive {
 
 		// Ramp the voltage of the motor output before normal driving (can be changed for auton, or special circumstances).
 		this.rampDefaultVoltage();
-	}
-
-
-	/**
-	 * This is the more basic constructor for SingDrive. Its parameters are only motor controller ports, and they must
-	 * correspond to the ports in the above constructor.
-	 * 
-	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes!
-	 */
-	public SingDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2) {
-		this(leftMotor1, leftMotor2, rightMotor1, rightMotor2, DEFAULT_SLOW_SPEED_CONSTANT, DEFAULT_NORMAL_SPEED_CONSTANT, DEFAULT_FAST_SPEED_CONSTANT);
 	}
 
 
