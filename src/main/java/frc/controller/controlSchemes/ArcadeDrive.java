@@ -65,7 +65,7 @@ public class ArcadeDrive implements ControlScheme {
 
     public void drive(SingDrive drive, DrivePneumatics pneumatics) {
 
-        drive.drive(controller.getLS_Y(), 0.0, controller.getLS_X(), true, SpeedMode.FAST);
+        drive.arcadeDrive(controller.getLS_Y(), controller.getLS_X(), 0.0, true, SpeedMode.FAST);
 
         buttonDPneuNow = controller.getRB();
 
@@ -158,7 +158,7 @@ public class ArcadeDrive implements ControlScheme {
                 left_comand -= steering_adjust;
                 right_comand += steering_adjust;
 
-                drive.tankDrive(left_comand, right_comand, false, SpeedMode.FAST);
+                drive.tankDrive(left_comand, right_comand, 0.0, false, SpeedMode.FAST);
 
               //  drive.drive(driveSpeed, 0, tx/tuningConstant, false, SpeedMode.FAST);
             } 

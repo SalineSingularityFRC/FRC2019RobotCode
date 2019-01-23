@@ -14,7 +14,7 @@ public class BasicDrive extends SingDrive{
 		
 	}
 
-	public void drive(double vertical, double horizontal, double rotation, boolean squaredInputs, SpeedMode speedMode) {
+	public void arcadeDrive(double vertical, double rotation, double horizontal, boolean squaredInputs, SpeedMode speedMode) {
 
 		double translationVelocity = vertical, rotationVelocity = rotation;
 		
@@ -91,7 +91,7 @@ public class BasicDrive extends SingDrive{
 	 * @param squaredInputs
 	 * @param speedMode
 	 */
-	public void tankDrive(double left, double right, boolean squaredInputs, SpeedMode speedMode) {
+	public void tankDrive(double left, double right, double horizontal, boolean squaredInputs, SpeedMode speedMode) {
 		double leftVelocity = left, rightVelocity = right;
 		
 		leftVelocity = threshold(leftVelocity);
