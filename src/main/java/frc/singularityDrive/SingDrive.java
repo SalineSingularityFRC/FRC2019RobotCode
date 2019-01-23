@@ -243,4 +243,12 @@ public abstract class SingDrive {
 	}
 
 
+
+	/*
+	For information on driving straight certain distances, or different angles, go to:
+
+	SalineSingularityFRC Github, FRC2018
+	Branch: Offseason1
+	src...team5066 > controller2018 > AutonControlScheme.java
+	*/
 }
