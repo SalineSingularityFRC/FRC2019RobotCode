@@ -29,9 +29,13 @@ public abstract class SingDrive {
 	 */
 	protected CANSparkMax m_leftMotor1, m_leftMotor2, m_rightMotor1, m_rightMotor2;
 
+	//When using CANSparkMax motor controllers, use the default motor type to either
+	//brushless or brushed motors, depending on hardware.
+	private final static MotorType DEFAULT_MOTOR_TYPE = MotorType.kBrushless;
+
 
 	//The following fields change speed relative to input, and are to be set in the constructor
-	public double slowSpeedConstant, normalSpeedConstant, fastSpeedConstant;
+	private double slowSpeedConstant, normalSpeedConstant, fastSpeedConstant;
 
 	//default speed constants to be used when not specified by the constructor:
 	private final static double DEFAULT_SLOW_SPEED_CONSTANT = 0.4;
@@ -64,7 +68,7 @@ public abstract class SingDrive {
 
 	//RAMP_RATE is used to limit jerks in motor output. Drive Motors starting at 0 output can ramp up to full power
 	//in RAMP_RATE seconds. Suggested value: 0.2
-	private final static double RAMP_RATE = 0.2;
+	private final static double DEFAULT_RAMP_RATE = 0.2;
 	
     
     
@@ -76,7 +80,7 @@ public abstract class SingDrive {
 
 
 	/**
-	 * This is the essential constructor for SingDrive. Its parameters are all motor controller ports, as well as all three
+	 * This is the essential constructor for SingDrive. Its parameters are motor controller ports and the
 	 * driving speed constants.
 	 * 
 	 * The number and position of motor controllers will likely change from year to year, and likely from season to season,
@@ -94,61 +98,48 @@ public abstract class SingDrive {
 	public SingDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2,
 	double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) {
 
-		m_leftMotor1 = new CANSparkMax(leftMotor1, MotorType.kBrushless);
-		m_leftMotor2 = new CANSparkMax(leftMotor2, MotorType.kBrushless);
+		m_leftMotor1 = new CANSparkMax(leftMotor1, DEFAULT_MOTOR_TYPE);
+		m_leftMotor2 = new CANSparkMax(leftMotor2, DEFAULT_MOTOR_TYPE);
+		//setting one motor controller to follow another means that it will automatically set output voltage
+		//of the follower controller to the value of the followee motor controller.
 		m_leftMotor2.follow(m_leftMotor1);
 
-		m_rightMotor1 = new CANSparkMax(rightMotor1, MotorType.kBrushless);
-		m_rightMotor2 = new CANSparkMax(rightMotor2, MotorType.kBrushless);
+		m_rightMotor1 = new CANSparkMax(rightMotor1, DEFAULT_MOTOR_TYPE);
+		m_rightMotor2 = new CANSparkMax(rightMotor2, DEFAULT_MOTOR_TYPE);
 		m_rightMotor2.follow(m_rightMotor1);
 
-		this.velocityMultiplier = normalSpeedConstant;
+		//Set speed constants, and set velocity multiplier to the normalSpeedConstant to begin the match
 		this.slowSpeedConstant = slowSpeedConstant;
 		this.normalSpeedConstant = normalSpeedConstant;
 		this.fastSpeedConstant = fastSpeedConstant;
+		this.velocityMultiplier = this.normalSpeedConstant;
+
+		//ramp the voltage of the motor output before normal driving (can be changed for auton, special circumstances)
+		this.rampDefaultVoltage();
 	}
 
+
+	/**
+	 * This is the more basic constructor for SingDrive. Its parameters are only motor controller ports, and they must
+	 * correspond to the ports in the above constructor.
+	 */
 	public SingDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2) {
 		this(leftMotor1, leftMotor2, rightMotor1, rightMotor2, DEFAULT_SLOW_SPEED_CONSTANT, DEFAULT_NORMAL_SPEED_CONSTANT, DEFAULT_FAST_SPEED_CONSTANT);
 	}
 
 
-	
-	private double clamp(double velocityMultiplier) {
-		if (velocityMultiplier > 1.0) {
-			return 1.0;
-		} else if (velocityMultiplier < -1.0) {
-			return -1.0;
-		} else {
-			return velocityMultiplier;
-		}
-	}
 
-	public void setVelocityMultiplier(double velocityMultiplier) {
-		this.velocityMultiplier = this.clamp(velocityMultiplier);
-	}
-
+	/**
+	 * @return the velocityMultiplier, used to scale motor speed
+	 */
 	public double getVelocityMultiplier() {
 		return this.velocityMultiplier;
 	}
 
-
-	public double threshold(double velocity) {
-		if (Math.abs(velocity) <= MINIMUM_THRESHOLD) {
-			return 0;
-		}
-		return velocity;
-	}
-
-	public void rampVoltage(double rampRate) {
-		m_leftMotor1.setRampRate(rampRate);
-		m_rightMotor1.setRampRate(rampRate);
-	}
-	public void rampDefaultVoltage() {
-		m_leftMotor1.setRampRate(RAMP_RATE);
-		m_rightMotor1.setRampRate(RAMP_RATE);
-	}
-	
+	/**
+	 * Set velocityMultiplier, which is used to scale the motor speed, based on speed constants set with the constructor
+	 * @param speedMode of an enum of type SpeedMode, set to either SLOW, MEDIUM, or FAST
+	 */
 	protected void setVelocityMultiplierBasedOnSpeedMode(SpeedMode speedMode) {
 		
 		switch(speedMode) {
@@ -167,4 +158,56 @@ public abstract class SingDrive {
 		}
 	}
 
+	/**
+	 * Allows other classes to set the velocityMultiplier manually (instead of through the speed constants).
+	 * this.clamp (seen just below) is used to ensure a valid multiiplier.
+	 * 
+	 * @param velocityMultiplier motor speed is always multiplied by velocityMultiplier
+	 */
+	public void setVelocityMultiplier(double velocityMultiplier) {
+		this.velocityMultiplier = this.clamp(velocityMultiplier);
+	}
+	private double clamp(double velocityMultiplier) {
+		if (velocityMultiplier > 1.0) {
+			return 1.0;
+		} else if (velocityMultiplier < -1.0) {
+			return -1.0;
+		} else {
+			return velocityMultiplier;
+		}
+	}
+
+	
+	/**
+	 * Threshold is intended to be used by subclasses to limit the drift on joystick axes
+	 * @param joystickInput input any joystick value meant to be used as motor output, before squaring
+	 * the input or scaling it with velocityMultiplier
+	 * @return an adjusted joystick input
+	 */
+	public double threshold(double joystickInput) {
+		if (Math.abs(joystickInput) <= MINIMUM_THRESHOLD) {
+			return 0;
+		}
+		return joystickInput;
+	}
+
+
+	/**
+	 * Used to manually control the rampRate manually. For example, if you are preparing to stop the robot
+	 * in autonomous mode, it is recommended you set rampRate to 0.0 to avoid sliding through the intended position.
+	 * @param rampRate describes how fast drive motors can ramp from 0 to full power, in seconds
+	 */
+	public void rampVoltage(double rampRate) {
+		m_leftMotor1.setRampRate(rampRate);
+		m_rightMotor1.setRampRate(rampRate);
+	}
+	/**
+	 * Used to return rampRate of motors to the default to avoid wear on motors (recommended for any normal driving).
+	 */
+	public void rampDefaultVoltage() {
+		m_leftMotor1.setRampRate(DEFAULT_RAMP_RATE);
+		m_rightMotor1.setRampRate(DEFAULT_RAMP_RATE);
+	}
+	
+	
 }
