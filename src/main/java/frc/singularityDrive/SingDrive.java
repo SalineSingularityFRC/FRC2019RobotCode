@@ -1,10 +1,10 @@
 package frc.singularityDrive;
 
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 
 /**
  * SingDrive (short for Singularity Drive) is the base class for all drive trains for 5066. It is
@@ -26,6 +26,8 @@ public abstract class SingDrive {
 	 * VictorSPX (imported from com.ctre.phoenix.motorcontrol.can.VictorSPX)
 	 * 
 	 * Or, add any classes that the team ends up adding.
+	 * 
+	 * WARNING: These objects will need to be changed if the number, type, or orientation of motor controllers changes
 	 */
 	protected CANSparkMax m_leftMotor1, m_leftMotor2, m_rightMotor1, m_rightMotor2;
 
@@ -94,6 +96,8 @@ public abstract class SingDrive {
 	 * @param slowSpeedConstant suggested values: 0.2 - 0.5
 	 * @param normalSpeedConstant suggested values: 0.6 - 1.0
 	 * @param fastSpeedConstant suggest value: 1.0
+	 * 
+	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes
 	 */
 	public SingDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2,
 	double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) {
@@ -122,6 +126,8 @@ public abstract class SingDrive {
 	/**
 	 * This is the more basic constructor for SingDrive. Its parameters are only motor controller ports, and they must
 	 * correspond to the ports in the above constructor.
+	 * 
+	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes
 	 */
 	public SingDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2) {
 		this(leftMotor1, leftMotor2, rightMotor1, rightMotor2, DEFAULT_SLOW_SPEED_CONSTANT, DEFAULT_NORMAL_SPEED_CONSTANT, DEFAULT_FAST_SPEED_CONSTANT);
@@ -196,6 +202,8 @@ public abstract class SingDrive {
 	 * Used to manually control the rampRate manually. For example, if you are preparing to stop the robot
 	 * in autonomous mode, it is recommended you set rampRate to 0.0 to avoid sliding through the intended position.
 	 * @param rampRate describes how fast drive motors can ramp from 0 to full power, in seconds
+	 * 
+	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes
 	 */
 	public void rampVoltage(double rampRate) {
 		m_leftMotor1.setRampRate(rampRate);
@@ -203,6 +211,8 @@ public abstract class SingDrive {
 	}
 	/**
 	 * Used to return rampRate of motors to the default to avoid wear on motors (recommended for any normal driving).
+	 * 
+	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes
 	 */
 	public void rampDefaultVoltage() {
 		m_leftMotor1.setRampRate(DEFAULT_RAMP_RATE);
