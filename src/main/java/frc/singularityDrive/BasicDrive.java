@@ -1,14 +1,11 @@
 package frc.singularityDrive;
 
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-
 /**
  * The simplest subclass of SingDrive, meant to represent a drivetrain with two sets of in-line
  * wheels and motors (for examples, 3 motors on the left and 3 on the right).
  */
-public class BasicDrive extends SingDrive{
+public class BasicDrive extends SingDrive {
 	
 	
 	/**
@@ -57,23 +54,23 @@ public class BasicDrive extends SingDrive{
 
 		double translationVelocity = vertical, rotationVelocity = rotation;
 		
-		// Account for joystick drift
+		// Account for joystick drift.
 		translationVelocity = threshold(translationVelocity);
 		rotationVelocity = threshold(rotationVelocity);
 
-		// Do squared inputs if necessary
+		// Do squared inputs if necessary.
 		if (squaredInputs) {
 			translationVelocity *= Math.abs(translationVelocity);
 			rotationVelocity *= Math.abs(rotationVelocity);
 		}
 
-		// Changes veloctiyMultiplier
+		// Change veloctiyMultiplier.
 		setVelocityMultiplierBasedOnSpeedMode(speedMode);
 
-		// If translation + rotation > 1, we will divide by this value in order to only set motors to power -1 to 1
+		// If translation + rotation > 1, we will divide by this value, maximum, in order to only set motors to power -1 to 1.
 		double maximum = Math.max(1, Math.abs(translationVelocity) + Math.abs(rotationVelocity));
 
-		
+		// Drive the motors, and all subsequent motors through following.
 		m_leftMotor1.set(super.velocityMultiplier * (translationVelocity + rotationVelocity) / maximum);
 		m_rightMotor1.set(super.velocityMultiplier * (-translationVelocity + rotationVelocity) / maximum);
 		
@@ -88,27 +85,28 @@ public class BasicDrive extends SingDrive{
 	 * @param speedMode
 	 */
 	public void tankDrive(double left, double right, double horizontal, boolean squaredInputs, SpeedMode speedMode) {
+		
 		double leftVelocity = left, rightVelocity = right;
 		
+		// Account for joystick drift.
 		leftVelocity = threshold(leftVelocity);
 		rightVelocity = threshold(rightVelocity);
-		
-		setVelocityMultiplierBasedOnSpeedMode(speedMode);
-		
-		// Do squared inputs if necessary
+
+		// Do squared inputs if necessary.
 		if (squaredInputs) {
-			leftVelocity *= Math.abs(left);
-			rightVelocity *= Math.abs(right);
+			leftVelocity *= Math.abs(leftVelocity);
+			rightVelocity *= Math.abs(rightVelocity);
 		}
 		
+		// Change velocityMultiplier.
+		setVelocityMultiplierBasedOnSpeedMode(speedMode);
 		
-		// Guard against illegal values
+		// If a velocity > 1, we will divide by this value, maximum, in order to only set motors to power -1 to 1.
 		double leftMaximum = Math.max(1, Math.abs(leftVelocity));
 		double rightMaximum = Math.max(1, Math.abs(rightVelocity));
 
-
+		// Drive the motors, and all subsequent motors through following.
 		m_leftMotor1.set(super.velocityMultiplier * (leftVelocity) / leftMaximum);
-
 		m_rightMotor1.set(super.velocityMultiplier * (rightVelocity) / rightMaximum);
 
 	}

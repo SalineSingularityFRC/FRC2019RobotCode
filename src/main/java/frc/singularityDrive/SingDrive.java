@@ -27,24 +27,28 @@ public abstract class SingDrive {
 	 * 
 	 * Or, add any classes that the team ends up adding.
 	 * 
-	 * WARNING: These objects will need to be changed if the number, type, or orientation of motor controllers changes
+	 * WARNING: These objects will need to be changed if the number, type, or orientation of motor controllers changes!
 	 */
 	protected CANSparkMax m_leftMotor1, m_leftMotor2, m_rightMotor1, m_rightMotor2;
 
-	//When using CANSparkMax motor controllers, use the default motor type to either
-	//brushless or brushed motors, depending on hardware.
+	/**
+	 * When using CANSparkMax motor controllers, change the default motor type to either brushless or brushed
+	 * motors, depending on hardware. For example, the neo spark motors are brushless, so set DEFAULT_MOTOR_TYPE
+	 * to kBrushless. 775Pros, however, require that DEFAULT_MOTOR_TYPE is set to kBrushed.
+	 */
 	private final static MotorType DEFAULT_MOTOR_TYPE = MotorType.kBrushless;
 
 
-	//The following fields change speed relative to input, and are to be set in the constructor
+	// The following fields change speed relative to input, and are to be set in the constructor.
 	private double slowSpeedConstant, normalSpeedConstant, fastSpeedConstant;
 
-	//default speed constants to be used when not specified by the constructor:
+	// Default speed constants to be used when not specified by the constructor:
 	private final static double DEFAULT_SLOW_SPEED_CONSTANT = 0.4;
 	private final static double DEFAULT_NORMAL_SPEED_CONSTANT = 0.8;
 	private final static double DEFAULT_FAST_SPEED_CONSTANT = 1.0;
 
-	//All motor control inputs are multiplied by velocityMultiplier, which is set equal to a speedConstant 
+	// All motor control inputs are multiplied by velocityMultiplier. Often, velocityMultiplier will be set to a speed
+	// constant (listed above), or it can be set manually.
 	protected double velocityMultiplier;
 
 	/**
@@ -64,17 +68,17 @@ public abstract class SingDrive {
 	}
 
 
-	//MINIMUM_THRESHOLD limits unintended drift from joystick axes. Any joystick input less than MINIMUM_THRESHOLD
-	//will be set to 0 using this.threshold(double velocity). Suggested value: 0.07
+	// MINIMUM_THRESHOLD limits unintended drift from joystick axes. Any joystick input less than MINIMUM_THRESHOLD
+	// will be set to 0 using this.threshold(double velocity). Suggested value: 0.07
 	private final static double MINIMUM_THRESHOLD = 0.07;
 
-	//RAMP_RATE is used to limit jerks in motor output. Drive Motors starting at 0 output can ramp up to full power
-	//in RAMP_RATE seconds. Suggested value: 0.2
+	// RAMP_RATE is used to limit jerks in motor output. Drive Motors starting at 0 output can ramp up to full power
+	// in a time denoted by RAMP_RATE (measured in seconds). Suggested value: 0.2
 	private final static double DEFAULT_RAMP_RATE = 0.2;
 	
     
     
-	//All subclasses must implement the following drive methods:
+	// All subclasses must implement the following drive methods:
 	
 	public abstract void arcadeDrive(double vertical, double rotation, double horizontal, boolean squaredInputs, SpeedMode speedMode);
 
@@ -97,28 +101,29 @@ public abstract class SingDrive {
 	 * @param normalSpeedConstant suggested values: 0.6 - 1.0
 	 * @param fastSpeedConstant suggest value: 1.0
 	 * 
-	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes
+	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes!
 	 */
 	public SingDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2,
 	double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) {
 
 		m_leftMotor1 = new CANSparkMax(leftMotor1, DEFAULT_MOTOR_TYPE);
 		m_leftMotor2 = new CANSparkMax(leftMotor2, DEFAULT_MOTOR_TYPE);
-		//setting one motor controller to follow another means that it will automatically set output voltage
-		//of the follower controller to the value of the followee motor controller.
+		// Setting one motor controller to follow another means that it will automatically set output voltage
+		// of the follower controller to the value of the followee motor controller.
 		m_leftMotor2.follow(m_leftMotor1);
 
 		m_rightMotor1 = new CANSparkMax(rightMotor1, DEFAULT_MOTOR_TYPE);
 		m_rightMotor2 = new CANSparkMax(rightMotor2, DEFAULT_MOTOR_TYPE);
 		m_rightMotor2.follow(m_rightMotor1);
 
-		//Set speed constants, and set velocity multiplier to the normalSpeedConstant to begin the match
+		// Set speed constants.
 		this.slowSpeedConstant = slowSpeedConstant;
 		this.normalSpeedConstant = normalSpeedConstant;
 		this.fastSpeedConstant = fastSpeedConstant;
+		// Set velocity multiplier to the normalSpeedConstant to begin the match.
 		this.velocityMultiplier = this.normalSpeedConstant;
 
-		//ramp the voltage of the motor output before normal driving (can be changed for auton, special circumstances)
+		// Ramp the voltage of the motor output before normal driving (can be changed for auton, or special circumstances).
 		this.rampDefaultVoltage();
 	}
 
@@ -127,7 +132,7 @@ public abstract class SingDrive {
 	 * This is the more basic constructor for SingDrive. Its parameters are only motor controller ports, and they must
 	 * correspond to the ports in the above constructor.
 	 * 
-	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes
+	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes!
 	 */
 	public SingDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2) {
 		this(leftMotor1, leftMotor2, rightMotor1, rightMotor2, DEFAULT_SLOW_SPEED_CONSTANT, DEFAULT_NORMAL_SPEED_CONSTANT, DEFAULT_FAST_SPEED_CONSTANT);
@@ -143,7 +148,7 @@ public abstract class SingDrive {
 	}
 
 	/**
-	 * Set velocityMultiplier, which is used to scale the motor speed, based on speed constants set with the constructor
+	 * This method sets velocityMultiplier, which is used to scale the motor speed, based on speed constants set with the constructor.
 	 * @param speedMode of an enum of type SpeedMode, set to either SLOW, MEDIUM, or FAST
 	 */
 	protected void setVelocityMultiplierBasedOnSpeedMode(SpeedMode speedMode) {
@@ -185,7 +190,7 @@ public abstract class SingDrive {
 
 	
 	/**
-	 * Threshold is intended to be used by subclasses to limit the drift on joystick axes
+	 * Threshold is intended to be used by subclasses to limit the drift on joystick axes.
 	 * @param joystickInput input any joystick value meant to be used as motor output, before squaring
 	 * the input or scaling it with velocityMultiplier
 	 * @return an adjusted joystick input
@@ -199,11 +204,11 @@ public abstract class SingDrive {
 
 
 	/**
-	 * Used to manually control the rampRate manually. For example, if you are preparing to stop the robot
+	 * Used to manually control the rampRate. For example, if you are preparing to stop the robot
 	 * in autonomous mode, it is recommended you set rampRate to 0.0 to avoid sliding through the intended position.
 	 * @param rampRate describes how fast drive motors can ramp from 0 to full power, in seconds
 	 * 
-	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes
+	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes!
 	 */
 	public void rampVoltage(double rampRate) {
 		m_leftMotor1.setRampRate(rampRate);
@@ -212,7 +217,7 @@ public abstract class SingDrive {
 	/**
 	 * Used to return rampRate of motors to the default to avoid wear on motors (recommended for any normal driving).
 	 * 
-	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes
+	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes!
 	 */
 	public void rampDefaultVoltage() {
 		m_leftMotor1.setRampRate(DEFAULT_RAMP_RATE);
