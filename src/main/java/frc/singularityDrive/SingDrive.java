@@ -36,7 +36,7 @@ public abstract class SingDrive {
 	 * motors, depending on hardware. For example, the neo spark motors are brushless, so set DEFAULT_MOTOR_TYPE
 	 * to kBrushless. 775Pros, however, require that DEFAULT_MOTOR_TYPE is set to kBrushed.
 	 */
-	private final static MotorType DEFAULT_MOTOR_TYPE = MotorType.kBrushless;
+	protected final static MotorType DEFAULT_MOTOR_TYPE = MotorType.kBrushless;
 
 
 	// The following fields change speed relative to input, and are to be set in the constructor.
@@ -68,21 +68,26 @@ public abstract class SingDrive {
 	}
 
 
+	// RAMP_RATE is used to limit jerks in motor output. Drive Motors starting at 0 output can ramp up to full power
+	// in a time denoted by RAMP_RATE (measured in seconds). Suggested value: 0.2 (still needs testing)
+	private final static double DEFAULT_RAMP_RATE = 0.2;
+
 	// MINIMUM_THRESHOLD limits unintended drift from joystick axes. Any joystick input less than MINIMUM_THRESHOLD
-	// will be set to 0 using this.threshold(double velocity). Suggested value: 0.07
+	// will be set to 0 using this.threshold(double velocity). Suggested value: 0.07 (still needs testing)
 	private final static double MINIMUM_THRESHOLD = 0.07;
 
-	// RAMP_RATE is used to limit jerks in motor output. Drive Motors starting at 0 output can ramp up to full power
-	// in a time denoted by RAMP_RATE (measured in seconds). Suggested value: 0.2
-	private final static double DEFAULT_RAMP_RATE = 0.2;
+	// DEFAULT_INPUT_POWER is the default for what a joystick input will be raised to. For example, when the value
+	// is 2.0, joystick inputs will be squared when DEFAULT_INPUT_POWER is passed to this.setInputToPower().
+	// Suggested values: 1.0 to 3.0 (still needs testing)
+	public final static double DEFAULT_INPUT_POWER = 2.0;
 	
     
     
 	// All subclasses must implement the following drive methods:
 	
-	public abstract void arcadeDrive(double vertical, double rotation, double horizontal, boolean squaredInputs, SpeedMode speedMode);
+	public abstract void arcadeDrive(double vertical, double rotation, double horizontal, boolean poweredInputs, SpeedMode speedMode);
 
-	public abstract void tankDrive(double left, double right, double horizontal, boolean squaredInputs, SpeedMode speedMode);
+	public abstract void tankDrive(double left, double right, double horizontal, boolean poweredInputs, SpeedMode speedMode);
 
 
 	/**
@@ -106,15 +111,15 @@ public abstract class SingDrive {
 	public SingDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2,
 	double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) {
 
-		m_leftMotor1 = new CANSparkMax(leftMotor1, DEFAULT_MOTOR_TYPE);
-		m_leftMotor2 = new CANSparkMax(leftMotor2, DEFAULT_MOTOR_TYPE);
+		this.m_leftMotor1 = new CANSparkMax(leftMotor1, DEFAULT_MOTOR_TYPE);
+		this.m_leftMotor2 = new CANSparkMax(leftMotor2, DEFAULT_MOTOR_TYPE);
 		// Setting one motor controller to follow another means that it will automatically set output voltage
 		// of the follower controller to the value of the followee motor controller.
-		m_leftMotor2.follow(m_leftMotor1);
+		this.m_leftMotor2.follow(this.m_leftMotor1);
 
-		m_rightMotor1 = new CANSparkMax(rightMotor1, DEFAULT_MOTOR_TYPE);
-		m_rightMotor2 = new CANSparkMax(rightMotor2, DEFAULT_MOTOR_TYPE);
-		m_rightMotor2.follow(m_rightMotor1);
+		this.m_rightMotor1 = new CANSparkMax(rightMotor1, DEFAULT_MOTOR_TYPE);
+		this.m_rightMotor2 = new CANSparkMax(rightMotor2, DEFAULT_MOTOR_TYPE);
+		this.m_rightMotor2.follow(this.m_rightMotor1);
 
 		// Set speed constants.
 		this.slowSpeedConstant = slowSpeedConstant;
@@ -155,15 +160,15 @@ public abstract class SingDrive {
 		
 		switch(speedMode) {
 		case SLOW:
-			velocityMultiplier = this.slowSpeedConstant;
+			this.velocityMultiplier = this.slowSpeedConstant;
 			SmartDashboard.putString("DB/String 8", "Using slow speed constant");
 			break;
 		case NORMAL:
-			velocityMultiplier = this.normalSpeedConstant;
+			this.velocityMultiplier = this.normalSpeedConstant;
 			SmartDashboard.putString("DB/String 8", "Using normal speed constant");
 			break;
 		case FAST:
-			velocityMultiplier = this.fastSpeedConstant;
+			this.velocityMultiplier = this.fastSpeedConstant;
 			SmartDashboard.putString("DB/String 8", "Using fast speed constant");
 			break;
 		}
@@ -188,9 +193,32 @@ public abstract class SingDrive {
 		}
 	}
 
+
+	/**
+	 * Used to manually control the rampRate. For example, if you are preparing to stop the robot
+	 * in autonomous mode, it is recommended you set rampRate to 0.0 to avoid sliding through the intended position.
+	 * @param rampRate describes how fast drive motors can ramp from 0 to full power, in seconds
+	 * 
+	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes!
+	 */
+	public void rampVoltage(double rampRate) {
+		this.m_leftMotor1.setRampRate(rampRate);
+		this.m_rightMotor1.setRampRate(rampRate);
+	}
+	/**
+	 * Used to return rampRate of motors to the default to avoid wear on motors (recommended for any normal driving).
+	 * 
+	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes!
+	 */
+	public void rampDefaultVoltage() {
+		this.m_leftMotor1.setRampRate(DEFAULT_RAMP_RATE);
+		this.m_rightMotor1.setRampRate(DEFAULT_RAMP_RATE);
+	}
+	
 	
 	/**
 	 * Threshold is intended to be used by subclasses to limit the drift on joystick axes.
+	 * 
 	 * @param joystickInput input any joystick value meant to be used as motor output, before squaring
 	 * the input or scaling it with velocityMultiplier
 	 * @return an adjusted joystick input
@@ -202,27 +230,16 @@ public abstract class SingDrive {
 		return joystickInput;
 	}
 
+	/**
+	 * Similar to squaring inputs, this method allows inputs to be set to a specific power.
+	 * 
+	 * @param joystickInput pass a joystick value to be set to a power
+	 * @param power specify the power (recommended: DEFAULT_INPUT_POWER)
+	 * @return the input raised to the power with the original sign
+	 */
+	public double setInputToPower(double joystickInput, double power) {
+		return joystickInput * Math.abs(Math.pow(joystickInput, power - 1));
+	}
 
-	/**
-	 * Used to manually control the rampRate. For example, if you are preparing to stop the robot
-	 * in autonomous mode, it is recommended you set rampRate to 0.0 to avoid sliding through the intended position.
-	 * @param rampRate describes how fast drive motors can ramp from 0 to full power, in seconds
-	 * 
-	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes!
-	 */
-	public void rampVoltage(double rampRate) {
-		m_leftMotor1.setRampRate(rampRate);
-		m_rightMotor1.setRampRate(rampRate);
-	}
-	/**
-	 * Used to return rampRate of motors to the default to avoid wear on motors (recommended for any normal driving).
-	 * 
-	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes!
-	 */
-	public void rampDefaultVoltage() {
-		m_leftMotor1.setRampRate(DEFAULT_RAMP_RATE);
-		m_rightMotor1.setRampRate(DEFAULT_RAMP_RATE);
-	}
-	
-	
+
 }

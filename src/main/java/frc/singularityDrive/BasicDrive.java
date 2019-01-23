@@ -26,6 +26,7 @@ public class BasicDrive extends SingDrive {
 	 */
 	public BasicDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2,
 	double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) {
+
 		super(leftMotor1, leftMotor2, rightMotor1, rightMotor2, slowSpeedConstant, normalSpeedConstant, fastSpeedConstant);
 	}
 
@@ -35,56 +36,60 @@ public class BasicDrive extends SingDrive {
 	 * correspond to the ports in the above constructor.
 	 */
 	public BasicDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2) {
+
 		super(leftMotor1, leftMotor2, rightMotor1, rightMotor2);
-		
 	}
 
 
 
 	/**
-	 * Standard method for driving based on arcade
+	 * Standard method for driving based on arcade, which means that one joystick controls translational speed and
+	 * another controls rotational velocity.
 	 * 
 	 * @param vertical the forward/reverse constraint for robot movement
 	 * @param rotation the turning constraint for robot movement
 	 * @param horizontal the side-to-side constrain for robot movement: pass in 0.0, as BasicDrive cannot handle strafing movement
-	 * @param squaredInputs pass true if inputs should be squared, thus improving sensitivity for slower driving
+	 * @param poweredInputs pass true if inputs should be raised to the default power, thus improving sensitivity during slower driving
 	 * @param speedMode controls the velocityMultiplier in order to scale motor velocity
 	 */
-	public void arcadeDrive(double vertical, double rotation, double horizontal, boolean squaredInputs, SpeedMode speedMode) {
+	public void arcadeDrive(double vertical, double rotation, double horizontal, boolean poweredInputs, SpeedMode speedMode) {
 
-		double translationVelocity = vertical, rotationVelocity = rotation;
+		double forwardVelocity = vertical, rotationVelocity = rotation;
 		
 		// Account for joystick drift.
-		translationVelocity = threshold(translationVelocity);
+		forwardVelocity = threshold(forwardVelocity);
 		rotationVelocity = threshold(rotationVelocity);
 
-		// Do squared inputs if necessary.
-		if (squaredInputs) {
-			translationVelocity *= Math.abs(translationVelocity);
-			rotationVelocity *= Math.abs(rotationVelocity);
+		// Do powered inputs if necessary.
+		if (poweredInputs) {
+			forwardVelocity = super.setInputToPower(forwardVelocity, DEFAULT_INPUT_POWER);
+			rotationVelocity = super.setInputToPower(rotationVelocity, DEFAULT_INPUT_POWER);
 		}
 
 		// Change veloctiyMultiplier.
 		setVelocityMultiplierBasedOnSpeedMode(speedMode);
 
 		// If translation + rotation > 1, we will divide by this value, maximum, in order to only set motors to power -1 to 1.
-		double maximum = Math.max(1, Math.abs(translationVelocity) + Math.abs(rotationVelocity));
+		double maximum = Math.max(1, Math.abs(forwardVelocity) + Math.abs(rotationVelocity));
 
 		// Drive the motors, and all subsequent motors through following.
-		m_leftMotor1.set(super.velocityMultiplier * (translationVelocity + rotationVelocity) / maximum);
-		m_rightMotor1.set(super.velocityMultiplier * (-translationVelocity + rotationVelocity) / maximum);
+		super.m_leftMotor1.set(super.velocityMultiplier * (forwardVelocity + rotationVelocity) / maximum);
+		super.m_rightMotor1.set(super.velocityMultiplier * (-forwardVelocity + rotationVelocity) / maximum);
 		
 	}
 
 	
 	/**
+	 * Standard method for driving based on tank, which means that one joystick controls the left
+	 * drivetrain and another controls the right drivetrain.
 	 * 
-	 * 6 wheel tank drive
-	 * @param right
-	 * @param squaredInputs
-	 * @param speedMode
+	 * @param left the constraint for the left drivetrain
+	 * @param right the constraint for the right drivetrain
+	 * @param horizontal the side-to-side constraint for robot movement: pass in 0.0, as BasicDrive cannot handle strafing movement
+	 * @param poweredInputs pass true if inputs should be raised to the default power, thus improving sensitivity during slower driving
+	 * @param speedMode controls the velocityMultiplier in order to scale motor velocity
 	 */
-	public void tankDrive(double left, double right, double horizontal, boolean squaredInputs, SpeedMode speedMode) {
+	public void tankDrive(double left, double right, double horizontal, boolean poweredInputs, SpeedMode speedMode) {
 		
 		double leftVelocity = left, rightVelocity = right;
 		
@@ -92,10 +97,10 @@ public class BasicDrive extends SingDrive {
 		leftVelocity = threshold(leftVelocity);
 		rightVelocity = threshold(rightVelocity);
 
-		// Do squared inputs if necessary.
-		if (squaredInputs) {
-			leftVelocity *= Math.abs(leftVelocity);
-			rightVelocity *= Math.abs(rightVelocity);
+		// Do powered inputs if necessary.
+		if (poweredInputs) {
+			leftVelocity = super.setInputToPower(leftVelocity, DEFAULT_INPUT_POWER);
+			rightVelocity = super.setInputToPower(rightVelocity, DEFAULT_INPUT_POWER);
 		}
 		
 		// Change velocityMultiplier.
@@ -106,8 +111,8 @@ public class BasicDrive extends SingDrive {
 		double rightMaximum = Math.max(1, Math.abs(rightVelocity));
 
 		// Drive the motors, and all subsequent motors through following.
-		m_leftMotor1.set(super.velocityMultiplier * (leftVelocity) / leftMaximum);
-		m_rightMotor1.set(super.velocityMultiplier * (rightVelocity) / rightMaximum);
+		super.m_leftMotor1.set(super.velocityMultiplier * (leftVelocity) / leftMaximum);
+		super.m_rightMotor1.set(super.velocityMultiplier * (rightVelocity) / rightMaximum);
 
 	}
 }
