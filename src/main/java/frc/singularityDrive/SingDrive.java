@@ -17,7 +17,7 @@ public abstract class SingDrive {
 
 
 	/**
-	 * Declare all motor controllers on the drive train for the year here.
+	 * Declare motor controllers on the drive train for the year here, not including those meant to strafe.
 	 * 
 	 * Depending on the hardware placed on the robot, use:
 	 * 
@@ -43,9 +43,9 @@ public abstract class SingDrive {
 	private double slowSpeedConstant, normalSpeedConstant, fastSpeedConstant;
 
 	// Default speed constants to be used when not specified by the constructor:
-	private final static double DEFAULT_SLOW_SPEED_CONSTANT = 0.4;
-	private final static double DEFAULT_NORMAL_SPEED_CONSTANT = 0.8;
-	private final static double DEFAULT_FAST_SPEED_CONSTANT = 1.0;
+	protected final static double DEFAULT_SLOW_SPEED_CONSTANT = 0.4;
+	protected final static double DEFAULT_NORMAL_SPEED_CONSTANT = 0.8;
+	protected final static double DEFAULT_FAST_SPEED_CONSTANT = 1.0;
 
 	// All motor control inputs are multiplied by velocityMultiplier. Often, velocityMultiplier will be set to a speed
 	// constant (listed above), or it can be set manually.
@@ -113,13 +113,14 @@ public abstract class SingDrive {
 
 		this.m_leftMotor1 = new CANSparkMax(leftMotor1, DEFAULT_MOTOR_TYPE);
 		this.m_leftMotor2 = new CANSparkMax(leftMotor2, DEFAULT_MOTOR_TYPE);
-		// Setting one motor controller to follow another means that it will automatically set output voltage
-		// of the follower controller to the value of the followee motor controller.
-		this.m_leftMotor2.follow(this.m_leftMotor1);
+		// Setting one motor controller to follow another means that it will automatically set output voltage of the follower
+		// controller to the value of the followee motor controller. Setting the boolean value to true inverts the signal
+		// in case that the motor controllers are naturally reversed.
+		this.m_leftMotor2.follow(this.m_leftMotor1, false);
 
 		this.m_rightMotor1 = new CANSparkMax(rightMotor1, DEFAULT_MOTOR_TYPE);
 		this.m_rightMotor2 = new CANSparkMax(rightMotor2, DEFAULT_MOTOR_TYPE);
-		this.m_rightMotor2.follow(this.m_rightMotor1);
+		this.m_rightMotor2.follow(this.m_rightMotor1, false);
 
 		// Set speed constants.
 		this.slowSpeedConstant = slowSpeedConstant;
