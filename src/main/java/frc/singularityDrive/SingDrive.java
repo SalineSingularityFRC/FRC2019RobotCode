@@ -3,8 +3,8 @@ package frc.singularityDrive;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import frc.controller.MotorController;
+import frc.controller.motorControllers.*;
 
 /**
  * SingDrive (short for Singularity Drive) is the base class for all drive trains for 5066. It is
@@ -29,14 +29,14 @@ public abstract class SingDrive {
 	 * 
 	 * WARNING: These objects will need to be changed if the number, type, or orientation of motor controllers changes!
 	 */
-	protected CANSparkMax m_leftMotor1, m_leftMotor2, m_rightMotor1, m_rightMotor2;
+	protected MotorController m_leftMotor1, m_leftMotor2, m_rightMotor1, m_rightMotor2;
 
 	/**
-	 * When using CANSparkMax motor controllers, change the default motor type to either brushless or brushed
-	 * motors, depending on hardware. For example, the neo spark motors are brushless, so set DEFAULT_MOTOR_TYPE
-	 * to kBrushless. 775Pros, however, require that DEFAULT_MOTOR_TYPE is set to kBrushed.
+	 * When using CANSparkMax motor controllers, change DEFAULT_TO_BRUSHLESS based on the drivetrain
+	 * motors, depending on hardware. For example, the neo spark motors are brushless, so set DEFAULT_TO_BRUSHLESS
+	 * to true. 775Pros, however, require that DEFAULT_TO_BRUSHLESS is set to false.
 	 */
-	protected final static MotorType DEFAULT_MOTOR_TYPE = MotorType.kBrushless;
+	protected final static boolean DEFAULT_TO_BRUSHLESS = true;
 
 
 	// The following fields change speed relative to input, and are to be set in the constructor.
@@ -85,9 +85,30 @@ public abstract class SingDrive {
     
 	// All subclasses must implement the following drive methods:
 	
+	/**
+	 * Standard method for driving based on arcade, which means that one joystick axis controls translational speed and
+	 * another controls rotational velocity. A third joystick axis can control strafing, if allowed by driving configuration.
+	 * 
+	 * @param vertical the forward/reverse constraint for robot movement
+	 * @param rotation the turning constraint for robot movement
+	 * @param horizontal the side-to-side constraint for robot movement
+	 * @param poweredInputs pass true if inputs should be raised to the default power, thus improving sensitivity during slower driving
+	 * @param speedMode controls the velocityMultiplier in order to scale motor velocity
+	 */
 	public abstract void arcadeDrive(double vertical, double rotation, double horizontal, boolean poweredInputs, SpeedMode speedMode);
 
+	/**
+	 * Standard method for driving based on tank, which means that one joystick controls the left drivetrain and another controls
+	 * the right drivetrain. A third joystick axis can control strafing, if allowed by driving configuration.
+	 * 
+	 * @param left the constraint for the left drivetrain
+	 * @param right the constraint for the right drivetrain
+	 * @param horizontal the side-to-side constraint for robot movement: pass in 0.0, as BasicDrive cannot handle strafing movement
+	 * @param poweredInputs pass true if inputs should be raised to the default power, thus improving sensitivity during slower driving
+	 * @param speedMode controls the velocityMultiplier in order to scale motor velocity
+	 */
 	public abstract void tankDrive(double left, double right, double horizontal, boolean poweredInputs, SpeedMode speedMode);
+
 
 
 	/**
@@ -111,15 +132,15 @@ public abstract class SingDrive {
 	public SingDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2,
 	double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) {
 
-		this.m_leftMotor1 = new CANSparkMax(leftMotor1, DEFAULT_MOTOR_TYPE);
-		this.m_leftMotor2 = new CANSparkMax(leftMotor2, DEFAULT_MOTOR_TYPE);
+		this.m_leftMotor1 = new Spark(leftMotor1, DEFAULT_TO_BRUSHLESS);
+		this.m_leftMotor2 = new Spark(leftMotor2, DEFAULT_TO_BRUSHLESS);
 		// Setting one motor controller to follow another means that it will automatically set output voltage of the follower
 		// controller to the value of the followee motor controller. Setting the boolean value to true inverts the signal
 		// in case that the motor controllers are naturally reversed.
 		this.m_leftMotor2.follow(this.m_leftMotor1, false);
 
-		this.m_rightMotor1 = new CANSparkMax(rightMotor1, DEFAULT_MOTOR_TYPE);
-		this.m_rightMotor2 = new CANSparkMax(rightMotor2, DEFAULT_MOTOR_TYPE);
+		this.m_rightMotor1 = new Spark(rightMotor1, DEFAULT_TO_BRUSHLESS);
+		this.m_rightMotor2 = new Spark(rightMotor2, DEFAULT_TO_BRUSHLESS);
 		this.m_rightMotor2.follow(this.m_rightMotor1, false);
 
 
@@ -194,7 +215,9 @@ public abstract class SingDrive {
 	 */
 	public void rampVoltage(double rampRate) {
 		this.m_leftMotor1.setRampRate(rampRate);
+		this.m_leftMotor2.setRampRate(rampRate);
 		this.m_rightMotor1.setRampRate(rampRate);
+		this.m_rightMotor2.setRampRate(rampRate);
 	}
 	/**
 	 * Used to return rampRate of motors to the default to avoid wear on motors (recommended for any normal driving).
@@ -203,7 +226,9 @@ public abstract class SingDrive {
 	 */
 	public void rampDefaultVoltage() {
 		this.m_leftMotor1.setRampRate(DEFAULT_RAMP_RATE);
+		this.m_leftMotor2.setRampRate(DEFAULT_RAMP_RATE);
 		this.m_rightMotor1.setRampRate(DEFAULT_RAMP_RATE);
+		this.m_rightMotor2.setRampRate(DEFAULT_RAMP_RATE);
 	}
 	
 	

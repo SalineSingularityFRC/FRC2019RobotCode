@@ -2,6 +2,9 @@ package frc.singularityDrive;
 
 import com.revrobotics.CANSparkMax;
 
+import frc.controller.MotorController;
+import frc.controller.motorControllers.*;
+
 
 /**
  * HDrive is a sibclass of SingDrive that is meant to respresent a drivetrain that uses omni-wheels
@@ -22,7 +25,7 @@ public class HDrive extends SingDrive {
 	 * 
 	 * WARNING: These objects will need to be changed if the number, type, or orientation of motor controllers changes!
 	 */
-	private CANSparkMax m_middleMotor1, m_middleMotor2;
+	private MotorController m_middleMotor1, m_middleMotor2;
 
 
     /**
@@ -36,6 +39,8 @@ public class HDrive extends SingDrive {
 	 * @param leftMotor2 motor controller port # for one motor controller on the left drive train
 	 * @param rightMotor1 motor controller port # for one motor controller on the right drive train
 	 * @param rightMotor2 motor controller port # for one motor controller on the right drive train
+	 * @param middleMotor1 motor controller port # for one motor controller on the middle drive train
+	 * @param middleMotor2 motor controller port # for one motor controller on the middle drive train
 	 * 
 	 * @param slowSpeedConstant suggested values: 0.2 - 0.5
 	 * @param normalSpeedConstant suggested values: 0.6 - 1.0
@@ -48,8 +53,8 @@ public class HDrive extends SingDrive {
 
         super(leftMotor1, leftMotor2, rightMotor1, rightMotor2, slowSpeedConstant, normalSpeedConstant, fastSpeedConstant);
         
-        this.m_middleMotor1 = new CANSparkMax(middleMotor1, DEFAULT_MOTOR_TYPE);
-        this.m_middleMotor2 = new CANSparkMax(middleMotor2, DEFAULT_MOTOR_TYPE);
+        this.m_middleMotor1 = new Spark(middleMotor1, DEFAULT_TO_BRUSHLESS);
+        this.m_middleMotor2 = new Spark(middleMotor2, DEFAULT_TO_BRUSHLESS);
         // Setting one motor controller to follow another means that it will automatically set output voltage of the follower
 		// controller to the value of the followee motor controller. Setting the boolean value to true inverts the signal
 		// in case that the motor controllers are naturally reversed.
@@ -104,9 +109,9 @@ public class HDrive extends SingDrive {
         double hWheelMaximum = Math.max(1, Math.abs(strafeVelocity));
         
         // Drive the motors, and all subsequent motors through following.
-        super.m_leftMotor1.set(super.velocityMultiplier * (forwardVelocity + rotationVelocity) / mainWheelMaximum);
-		super.m_rightMotor1.set(super.velocityMultiplier * (-forwardVelocity + rotationVelocity) / mainWheelMaximum);
-		this.m_middleMotor1.set(super.velocityMultiplier * strafeVelocity / hWheelMaximum);
+        super.m_leftMotor1.setSpeed(super.velocityMultiplier * (forwardVelocity + rotationVelocity) / mainWheelMaximum);
+		super.m_rightMotor1.setSpeed(super.velocityMultiplier * (-forwardVelocity + rotationVelocity) / mainWheelMaximum);
+		this.m_middleMotor1.setSpeed(super.velocityMultiplier * strafeVelocity / hWheelMaximum);
 
     }
     
@@ -146,9 +151,9 @@ public class HDrive extends SingDrive {
         double strafeMaximum = Math.max(1, Math.abs(strafeVelocity));
 
 		// Drive the motors, and all subsequent motors through following.
-		super.m_leftMotor1.set(super.velocityMultiplier * leftVelocity / leftMaximum);
-        super.m_rightMotor1.set(super.velocityMultiplier * rightVelocity / rightMaximum);
-        this.m_middleMotor1.set(super.velocityMultiplier * strafeVelocity / strafeMaximum);
+		super.m_leftMotor1.setSpeed(super.velocityMultiplier * leftVelocity / leftMaximum);
+        super.m_rightMotor1.setSpeed(super.velocityMultiplier * rightVelocity / rightMaximum);
+        this.m_middleMotor1.setSpeed(super.velocityMultiplier * strafeVelocity / strafeMaximum);
         
 	}
 

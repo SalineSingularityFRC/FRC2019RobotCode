@@ -7,8 +7,6 @@ import frc.robot.PneumaticEjector;
 import frc.singularityDrive.SingDrive;
 import frc.robot.Vision;
 
-import edu.wpi.first.wpilibj.Timer;
-
 /**
  * This interface forces it's subclasses to have all the
  * necessary methods for controlling the robot. These methods 

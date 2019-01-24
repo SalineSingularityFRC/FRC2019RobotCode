@@ -1,72 +1,32 @@
 package frc.controller;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-public class MotorController {
+/**
+ * The MotorController interface allows us to create MotorController classes (implememnting this interface)
+ * with standard methods. This should allow handling sudden changes in motor controller types on the robot
+ * to be much more painless... Simply change the instantiation to a new type.
+ */
+public interface MotorController {
 
-    public enum ControllerType {
-        
-        SPARK,
-        SPARKBRUSHED,
-        VICTOR,
-        TALON
-    }
+    /**
+     * using the followw() method slaves a motor controller to another motor controller so that we only have
+     * to change the speed of the base.
+     * @param baseController the motor controller that we will actually control
+     * @param invert pass true if the direction of the motors are opposite
+     */
+    public void follow(MotorController baseController, boolean invert);
 
-    ControllerType currentType;
+    /**
+     * Set the motor controller to percent of the available voltage
+     * @param percentOutput between -1.0 and 1.0
+     */
+    public void setSpeed(double percentOutput);
 
-    CANSparkMax spark;
-    VictorSPX victor;
-    TalonSRX talon;
-    
-
-    public MotorController(ControllerType currentType, int portNumber) {
-
-
-        this.currentType = currentType;
-
-        switch(currentType) {
-
-            case SPARK:
-                spark = new CANSparkMax(portNumber, MotorType.kBrushless);
-                break;
-            case SPARKBRUSHED:
-                spark = new CANSparkMax(portNumber, MotorType.kBrushed);
-                break;
-
-            case VICTOR:
-                victor = new VictorSPX(portNumber);
-                break;
-            case TALON:
-                talon = new TalonSRX(portNumber);
-                break;
-        }
-    }
-
-    public void setMotorSpeed(double speed) {
-
-        switch(currentType) {
-
-            case SPARK:
-                spark.set(speed);
-                break;
-            case SPARKBRUSHED:
-                spark.set(speed);
-                break;
-                
-            case VICTOR:
-                victor.set(ControlMode.PercentOutput, speed);
-                break;
-            case TALON:
-                talon.set(ControlMode.PercentOutput, speed);
-                break;
-            
-        }
-
-    }
+    /**
+     * Allows adjustiability in motor ramping to limit wear on motors
+     * @param rampRate number of seconds to go from 0 to full power
+     */
+    public void setRampRate(double rampRate);
 
 
     

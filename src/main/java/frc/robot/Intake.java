@@ -1,11 +1,13 @@
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
 import frc.controller.MotorController;
-import frc.controller.MotorController.ControllerType;
+import frc.controller.motorControllers.Spark;
 
 
 public class Intake {
+    
+    
     MotorController intake;
     
 
@@ -15,36 +17,36 @@ public class Intake {
     private final double intakeOffSpeed = 0;
 
     public Intake(int rotatePort) {
-        intake = new MotorController(ControllerType.SPARK, rotatePort);
+        intake = new Spark(rotatePort, true);
     }
 
     public void controlIntake(boolean intakeOn, boolean intakeReverse) {
 
         if(intakeOn) {
-            intake.setMotorSpeed(intakeSpeed);
+            intake.setSpeed(intakeSpeed);
         }
         else if(intakeReverse) {
-            intake.setMotorSpeed(intakeReverseSpeed);
+            intake.setSpeed(intakeReverseSpeed);
         }
         else {
-            intake.setMotorSpeed(intakeOffSpeed);
+            intake.setSpeed(intakeOffSpeed);
         }
     }
 
     public void intakeOn() {
-        intake.setMotorSpeed(intakeSpeed);
+        intake.setSpeed(intakeSpeed);
     }
 
     public void intakeOff() {
-        intake.setMotorSpeed(intakeOffSpeed);
+        intake.setSpeed(intakeOffSpeed);
     }
 
     public void intakeReverse() {
-        intake.setMotorSpeed(intakeReverseSpeed);
+        intake.setSpeed(intakeReverseSpeed);
     }
 
     public void intakeSpeed(double intakeSpeedInput) {
-        intake.setMotorSpeed(intakeSpeedInput);
+        intake.setSpeed(intakeSpeedInput);
     }
 
     //public void intakeOff(boolean intakeOff) {
