@@ -15,25 +15,37 @@
         
         double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
 
+        String name;
 
+        public abstract void setP(double kP);
         public void recordP(double kP) {
             this.kP = kP;
-            SmartDashboard.putNumber("P Gain", this.kP);
+            SmartDashboard.putNumber(name + " P Gain", this.kP);
         }
 
-        public void setI(double kI) {
+        public abstract void setI(double kI);
+        public void recordI(double kI) {
             this.kI = kI;
-            pidController.setI(this.kI);
-            SmartDashboard.putNumber("I Gain", this.kI);
+            SmartDashboard.putNumber(name + " I Gain", this.kI);
         }
 
-        public void setD(double kD) {
+        public abstract void setD(double kD);
+        public void recordD(double kD) {
             this.kD = kD;
-            pidController.setD(this.kD);
-            SmartDashboard.putNumber("D Gain", this.kD);
+            SmartDashboard.putNumber(name + " D Gain", this.kD);
         }
 
+        public abstract void setIz(double kIz);
+        public void recordIz(double kIz) {
+            this.kIz = kIz;
+            SmartDashboard.putNumber(name + " I Zone", this.kIz);
+        }
 
+        public abstract void setFF(double kFF);
+        public void recordFF(double kFF) {
+            this.kFF = kFF;
+            SmartDashboard.putNumber(name + " Feed Forward", this.kFF);
+        }
 
 
         

@@ -12,7 +12,7 @@ import frc.controller.MotorController;
 /**
  * Class written by 5066 to control Spark motor controllers.
  */
-public class Spark extends EncoderController {
+public class Spark implements MotorController {
 
     // Declare a single CANSparkMax motor controller.
     private CANSparkMax m_motor;
@@ -76,23 +76,21 @@ public class Spark extends EncoderController {
         return this.m_encoder;
     }
 
+    /*
     public void setP(double kP) {
-        super.kP = kP;
-        this.m_pidController.setP(this.kP);
-        SmartDashboard.putNumber("P Gain", this.kP);
+        this.m_pidController.setP(kP);
+        super.recordP(kP);
     }
 
     public void setI(double kI) {
-        this.kI = kI;
-        pidController.setI(this.kI);
-        SmartDashboard.putNumber("I Gain", this.kI);
+        this.m_pidController.setI(kI);
+        super.recordI(kI);
     }
 
     public void setD(double kD) {
-        this.kD = kD;
-        pidController.setD(this.kD);
-        SmartDashboard.putNumber("D Gain", this.kD);
+        this.m_pidController.setD(kD);
+        super.recordD(kD);
     }
-
+*/
 
 }
