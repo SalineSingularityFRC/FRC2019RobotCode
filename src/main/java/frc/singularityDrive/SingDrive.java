@@ -129,7 +129,7 @@ public abstract class SingDrive {
 	 * 
 	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes!
 	 */
-	public SingDrive(int leftMotor1, int leftMotor2, int leftMotor3, int rightMotor1, int rightMotor2, int rightMotor3,000
+	public SingDrive(int leftMotor1, int leftMotor2, int leftMotor3, int rightMotor1, int rightMotor2, int rightMotor3,
 	double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) {
 
 		this.m_leftMotor1 = new Spark(leftMotor1, DEFAULT_TO_BRUSHLESS);

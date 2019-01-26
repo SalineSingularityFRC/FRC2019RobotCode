@@ -85,7 +85,7 @@ public class Robot extends TimedRobot {
     currentScheme = new ArcadeDrive(XBOX_PORT, XBOX_PORT +1);
     
     //initialize mechanisms
-    drive = new BasicDrive(driveLeft1, driveLeft2, driveRight1, driveRight2);
+    drive = new BasicDrive(driveLeft1, driveLeft2, driveLeft3, driveRight1, driveRight2, driveRight3);
     drivePneumatics = new DrivePneumatics(0, 1);
     /*intake = new Intake(intakeMotor);
     hatchMech = new HatchMech(hatchMechDown, hatchMechUp);
@@ -154,7 +154,7 @@ public class Robot extends TimedRobot {
     //(we shouldn't need to change this too often)
     currentScheme.drive(drive, drivePneumatics);
     // partial autonomy via vision
-    currentScheme.visionDrive(vision, drive, drivePneumatics, ejectorPneu, hatchMech);
+    //currentScheme.visionDrive(vision, drive, drivePneumatics, ejectorPneu, hatchMech);
     
   }
 
@@ -176,11 +176,11 @@ public class Robot extends TimedRobot {
   private void setDefaultProperties() {
     
     //Motors
-    driveLeft1 = 3;
-    driveLeft2 = 4;
-    driveLeft3 = 5;
-    driveRight1 = 1;
-    driveRight2 = 2;
+    driveLeft1 = 1;
+    driveLeft2 = 2;
+    driveLeft3 = 3;
+    driveRight1 = 4;
+    driveRight2 = 5;
     driveRight3 = 6;
     intakeMotor = 7;
     

@@ -48,10 +48,10 @@ public class HDrive extends SingDrive {
 	 * 
 	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes!
 	 */
-	public HDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2, int middleMotor1, int middleMotor2,
+	public HDrive(int leftMotor1, int leftMotor2, int leftMotor3, int rightMotor1, int rightMotor2, int rightMotor3, int middleMotor1, int middleMotor2,
 	double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) {
 
-        super(leftMotor1, leftMotor2, rightMotor1, rightMotor2, slowSpeedConstant, normalSpeedConstant, fastSpeedConstant);
+        super(leftMotor1, leftMotor2, leftMotor3, rightMotor1, rightMotor2, rightMotor3, slowSpeedConstant, normalSpeedConstant, fastSpeedConstant);
         
         this.m_middleMotor1 = new Spark(middleMotor1, DEFAULT_TO_BRUSHLESS);
         this.m_middleMotor2 = new Spark(middleMotor2, DEFAULT_TO_BRUSHLESS);
@@ -67,9 +67,9 @@ public class HDrive extends SingDrive {
 	 * 
 	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes!
 	 */
-    public HDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2, int middleMotor1, int middleMotor2) {
+    public HDrive(int leftMotor1, int leftMotor2, int leftMotor3, int rightMotor1, int rightMotor2, int rightMotor3, int middleMotor1, int middleMotor2) {
 
-        this(leftMotor1, leftMotor2, rightMotor1, rightMotor2, middleMotor1, middleMotor2,
+        this(leftMotor1, leftMotor2, leftMotor3, rightMotor1, rightMotor2, rightMotor3, middleMotor1, middleMotor2,
         DEFAULT_SLOW_SPEED_CONSTANT, DEFAULT_NORMAL_SPEED_CONSTANT, DEFAULT_FAST_SPEED_CONSTANT);
 	}
 

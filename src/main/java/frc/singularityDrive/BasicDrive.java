@@ -27,10 +27,10 @@ public class BasicDrive extends SingDrive {
 	 * 
 	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes!
 	 */
-	public BasicDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2,
+	public BasicDrive(int leftMotor1, int leftMotor2, int leftMotor3, int rightMotor1, int rightMotor2, int rightMotor3,
 	double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) {
 
-		super(leftMotor1, leftMotor2, rightMotor1, rightMotor2, slowSpeedConstant, normalSpeedConstant, fastSpeedConstant);
+		super(leftMotor1, leftMotor2, leftMotor3, rightMotor1, rightMotor2, rightMotor3, slowSpeedConstant, normalSpeedConstant, fastSpeedConstant);
 	}
 
 
@@ -40,9 +40,9 @@ public class BasicDrive extends SingDrive {
 	 * 
 	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes!
 	 */
-	public BasicDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2) {
+	public BasicDrive(int leftMotor1, int leftMotor2, int leftMotor3, int rightMotor1, int rightMotor2,  int rightMotor3) {
 
-		this(leftMotor1, leftMotor2, rightMotor1, rightMotor2,
+		this(leftMotor1, leftMotor2, leftMotor3, rightMotor1, rightMotor2, rightMotor3,
 		DEFAULT_SLOW_SPEED_CONSTANT, DEFAULT_NORMAL_SPEED_CONSTANT, DEFAULT_FAST_SPEED_CONSTANT);
 	}
 
