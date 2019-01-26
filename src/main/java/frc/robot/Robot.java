@@ -77,6 +77,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
     
     
+    
     //initialize motor controller ports IDs
     setDefaultProperties();
 
@@ -90,6 +91,7 @@ public class Robot extends TimedRobot {
     hatchMech = new HatchMech(hatchMechDown, hatchMechUp);
     ejectorPneu = new PneumaticEjector(ejectorPneuPush, ejectorPneuHold);
     */
+    vision = new Vision();
   }
 
   /**
