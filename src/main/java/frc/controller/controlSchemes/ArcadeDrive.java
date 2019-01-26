@@ -46,8 +46,8 @@ public class ArcadeDrive implements ControlScheme {
     
 
     //Need to be adjusted for our robot
-    double Kp = -0.04;
-    double min_command = 0.04;
+    double Kp = 0.02;
+    double min_command = 0.02;
     double driveSpeedConstant = 0.2;
 
     //Positions for elevator encoder, these are just placeholder values, need to test with robot
@@ -82,8 +82,8 @@ public class ArcadeDrive implements ControlScheme {
     public void drive(SingDrive drive, DrivePneumatics pneumatics) {
 
         leftJoyY = controller.getLS_Y();
-        rightJoyX = controller.getRS_X();
-        drive.arcadeDrive(leftJoyY, rightJoyX, 0.0, false, SpeedMode.FAST);
+        rightJoyX = controller.getRS_Y();
+        drive.tankDrive(leftJoyY, rightJoyX, 0.0, false, SpeedMode.FAST);
 
         SmartDashboard.putNumber("left joystick", leftJoyY);
         SmartDashboard.putNumber("right joystick", rightJoyX);
@@ -172,17 +172,17 @@ public class ArcadeDrive implements ControlScheme {
             //while(!controller.getYButton() && vision.table.getEntry("ta").getDouble(0.0) < endPosition) {
                 
 
-                double heading_error =( this.tx * -1 );
+                double heading_error =( this.tx);
                 double steering_adjust = 0.0;
 
                 if(tx > 1.0){
-                    steering_adjust = Kp*heading_error - min_command;
+                    steering_adjust = Kp * (this.tx) - min_command;
                 }
                 else if(tx < 1.0){
-                    steering_adjust = Kp*heading_error + min_command;
+                    steering_adjust = Kp * (this.tx) + min_command;
                 }
-                left_command -= steering_adjust;
-                right_command += steering_adjust;
+                left_command += steering_adjust;
+                right_command -= steering_adjust;
 
                 
 

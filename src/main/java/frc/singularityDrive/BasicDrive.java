@@ -1,5 +1,6 @@
 package frc.singularityDrive;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The simplest subclass of SingDrive, meant to represent a drivetrain with two sets of in-line
@@ -96,8 +97,11 @@ public class BasicDrive extends SingDrive {
 	 */
 	public void tankDrive(double left, double right, double horizontal, boolean poweredInputs, SpeedMode speedMode) {
 		
-		double leftVelocity = left, rightVelocity = right;
-		
+		SmartDashboard.putNumber("left", left);
+		SmartDashboard.putNumber("right", right);
+
+		double leftVelocity = -left, rightVelocity = -right;
+
 		// Account for joystick drift.
 		leftVelocity = threshold(leftVelocity);
 		rightVelocity = threshold(rightVelocity);

@@ -72,7 +72,7 @@ public class XboxController extends Joystick{
 	}
 	
 	public double getLS_Y() {
-		return this.getRawAxis(1);
+		return -1 * this.getRawAxis(1);
 	}
 	
 	public double getRS_X() {
@@ -80,7 +80,7 @@ public class XboxController extends Joystick{
 	}
 	
 	public double getRS_Y() {
-		return this.getRawAxis(5);
+		return -1 * this.getRawAxis(5);
 	}
 	
 	public double getTriggerRight() {
