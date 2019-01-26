@@ -59,7 +59,7 @@ public class BasicDrive extends SingDrive {
 	 */
 	public void arcadeDrive(double vertical, double rotation, double horizontal, boolean poweredInputs, SpeedMode speedMode) {
 
-		double forwardVelocity = vertical, rotationVelocity = rotation;
+		double forwardVelocity = vertical, rotationVelocity = -rotation;
 		
 		// Account for joystick drift.
 		forwardVelocity = threshold(forwardVelocity);

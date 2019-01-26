@@ -7,9 +7,9 @@
 
 package frc.robot;
 
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.IterativeRobot;
+//import edu.wpi.cscore.UsbCamera;
+//import edu.wpi.first.cameraserver.CameraServer;
+//import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controller.ControlScheme;
@@ -86,8 +86,8 @@ public class Robot extends TimedRobot {
     
     //initialize mechanisms
     drive = new BasicDrive(driveLeft1, driveLeft2, driveRight1, driveRight2);
-    /*drivePneumatics = new DrivePneumatics(0, 1);
-    intake = new Intake(intakeMotor);
+    drivePneumatics = new DrivePneumatics(0, 1);
+    /*intake = new Intake(intakeMotor);
     hatchMech = new HatchMech(hatchMechDown, hatchMechUp);
     ejectorPneu = new PneumaticEjector(ejectorPneuPush, ejectorPneuHold);
     */
@@ -153,7 +153,7 @@ public class Robot extends TimedRobot {
     //Allow driver control based on current scheme
     //(we shouldn't need to change this too often)
     currentScheme.drive(drive, drivePneumatics);
-    // parcial autonomy via vision
+    // partial autonomy via vision
     currentScheme.visionDrive(vision, drive, drivePneumatics, ejectorPneu, hatchMech);
     
   }
@@ -176,10 +176,10 @@ public class Robot extends TimedRobot {
   private void setDefaultProperties() {
     
     //Motors
-    driveLeft1 = 1;
-    driveLeft2 = 2;
-    driveRight1 = 3;
-    driveRight2 = 4;
+    driveLeft1 = 3;
+    driveLeft2 = 4;
+    driveRight1 = 1;
+    driveRight2 = 2;
     intakeMotor = 5;
     
     //Pneumatics

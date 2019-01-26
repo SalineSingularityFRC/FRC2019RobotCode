@@ -9,6 +9,7 @@ import frc.robot.Wrist;
 import frc.robot.Elevator;
 import frc.robot.PneumaticEjector;
 import frc.controller.ControlScheme;
+import frc.singularityDrive.BasicDrive;
 import frc.singularityDrive.SingDrive;
 import frc.singularityDrive.SingDrive.SpeedMode;
 
@@ -40,6 +41,8 @@ public class ArcadeDrive implements ControlScheme {
 
     boolean wristButton1Now, wristButton1Previous;
     boolean wristButton2Now, wristButton2Previous;
+
+    double leftJoyY, rightJoyX;
     
 
     //Need to be adjusted for our robot
@@ -67,7 +70,7 @@ public class ArcadeDrive implements ControlScheme {
 
     public ArcadeDrive(int controllerPort, int armControllerPort) {
         controller = new XboxController(controllerPort);
-        armController = new XboxController(armControllerPort);
+        //armController = new XboxController(armControllerPort);
 
         fastGear = false;
         buttonDPneuPrevious = false;
@@ -78,20 +81,25 @@ public class ArcadeDrive implements ControlScheme {
 
     public void drive(SingDrive drive, DrivePneumatics pneumatics) {
 
-        drive.arcadeDrive(controller.getLS_Y(), controller.getLS_X(), 0.0, true, SpeedMode.FAST);
+        leftJoyY = controller.getLS_Y();
+        rightJoyX = controller.getRS_X();
+        drive.arcadeDrive(leftJoyY, rightJoyX, 0.0, false, SpeedMode.FAST);
+
+        SmartDashboard.putNumber("left joystick", leftJoyY);
+        SmartDashboard.putNumber("right joystick", rightJoyX);
 
         buttonDPneuNow = controller.getRB();
 
         if (buttonDPneuNow && !buttonDPneuPrevious) {
             fastGear = !fastGear;
         }
-        
-        if (fastGear) {
-            pneumatics.setHigh();
-        }
-        else {
-            pneumatics.setLow();
-        }
+  // 20190126 PNEUMATICS NOT ON ROBOT AT THIS TIME       
+  //      if (fastGear) {
+  //          pneumatics.setHigh();
+  //      }
+  //      else {
+  //          pneumatics.setLow();
+  //      }
 
         buttonDPneuPrevious = buttonDPneuNow;
 
@@ -178,7 +186,7 @@ public class ArcadeDrive implements ControlScheme {
 
                 
 
-                
+                drive.tankDrive(left_command, right_command, 0.0, false, SpeedMode.FAST);
 
               //  drive.drive(driveSpeed, 0, tx/tuningConstant, false, SpeedMode.FAST);
             //} 
@@ -187,15 +195,12 @@ public class ArcadeDrive implements ControlScheme {
             ejectorTimer.start();
         //*/
         } // end of X button and target
-        else {
-            left_command = 0;
-            right_command = 0;
-        }
+        
 
         SmartDashboard.putNumber("Left_command", left_command);
         SmartDashboard.putNumber("Right_command", right_command);
 
-        drive.tankDrive(left_command, right_command, 0.0, false, SpeedMode.FAST);
+        
 
     }
 
