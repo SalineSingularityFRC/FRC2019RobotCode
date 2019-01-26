@@ -152,7 +152,7 @@ public class Robot extends TimedRobot {
 
     //Allow driver control based on current scheme
     //(we shouldn't need to change this too often)
-    //currentScheme.drive(drive, drivePneumatics);
+    currentScheme.drive(drive, drivePneumatics);
     // parcial autonomy via vision
     currentScheme.visionDrive(vision, drive, drivePneumatics, ejectorPneu, hatchMech);
     
