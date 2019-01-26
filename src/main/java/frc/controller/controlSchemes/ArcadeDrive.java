@@ -82,8 +82,8 @@ public class ArcadeDrive implements ControlScheme {
     public void drive(SingDrive drive, DrivePneumatics pneumatics) {
 
         leftJoyY = controller.getLS_Y();
-        rightJoyX = controller.getRS_Y();
-        drive.tankDrive(leftJoyY, rightJoyX, 0.0, false, SpeedMode.FAST);
+        rightJoyX = controller.getRS_X();
+        drive.arcadeDrive(leftJoyY, rightJoyX, 0.0, false, SpeedMode.FAST);
 
         SmartDashboard.putNumber("left joystick", leftJoyY);
         SmartDashboard.putNumber("right joystick", rightJoyX);
