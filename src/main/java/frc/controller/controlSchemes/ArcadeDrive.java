@@ -5,6 +5,7 @@ import frc.robot.DrivePneumatics;
 import frc.robot.HatchMech;
 import frc.robot.Intake;
 import frc.robot.Vision;
+import frc.robot.Wrist;
 import frc.robot.Elevator;
 import frc.robot.PneumaticEjector;
 import frc.controller.ControlScheme;
@@ -35,14 +36,24 @@ public class ArcadeDrive implements ControlScheme {
     boolean elevatorButton2Now, elevatorButton2Previous;
     boolean elevatorButton3Now, elevatorButton3Previous;
 
+    boolean wristButton1Now, wristButton1Previous;
+    boolean wristButton2Now, wristButton2Previous;
+    
+
     //Need to be adjusted for our robot
     double Kp = -0.1;
     double min_command = 0.05;
     double driveSpeedConstant = 0.2;
 
+    //Positions for elevator encoder, these are just placeholder values, need to test with robot
     final int elevatorLow = 20;
     final int elevatorMid = 50;
     final int elevatorHigh = 100;
+
+    final int wristStartinPos = 0;
+    final int wristHatchPos = 90;
+    final int wristCargoPos = 180;
+
     final double endPosition = 10.0;
     double tx, ta, ty;
     final double driveSpeed = 0.3;
@@ -195,7 +206,30 @@ public class ArcadeDrive implements ControlScheme {
 
         }
 
+    public void wrist(Wrist wrist) {
+
+        wristButton1Now = armController.getPOVDown();
+        if(wristButton1Now && !wristButton1Previous)  {
+            wrist.setWristPosition(wristCargoPos);
+        }
+        
+        wristButton2Now = armController.getPOVUp();
+        if(wristButton2Now && !wristButton2Previous) {
+            wrist.setWristPosition(wristHatchPos);
+        }
+
+        wristButton1Previous = wristButton1Now;
+        wristButton2Previous = wristButton2Now;
+
+
+
     }
+
+    }
+    
+
+
+
     //TODO: finish this method
 /*     
 
