@@ -8,27 +8,36 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 //TODO: fix NetworkTables
 public class Vision{
-    public NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-    NetworkTableEntry tx = table.getEntry("tx");
-    NetworkTableEntry ty = table.getEntry("ty");
-    NetworkTableEntry ta = table.getEntry("ta");
-    NetworkTableEntry tlong = table.getEntry("tlong");
-    NetworkTableEntry tshort = table.getEntry("tshort");
+
+    public NetworkTable table;
+    public NetworkTableEntry tx, ty, ta, tv;
+
+    public Vision() {
+        table = NetworkTableInstance.getDefault().getTable("limelight");
+        tx = table.getEntry("tx");
+        ty = table.getEntry("ty");
+        ta = table.getEntry("ta");
+        tv = table.getEntry("tv");
+        //NetworkTableEntry tlong = table.getEntry("tlong");
+        //NetworkTableEntry tshort = table.getEntry("tshort");
+    }
 
     //read values periodically
-    double x = tx.getDouble(0.0);
-    double y = ty.getDouble(0.0);
-    double area = ta.getDouble(0.0);
-    double longSide = tlong.getDouble(0.0);
-    double shortSide = tshort.getDouble(0.0);
 
-    public void visionTest(){
+    
+   // double x = tx.getDouble(0.0);
+    //double y = ty.getDouble(0.0);
+    //double area = ta.getDouble(0.0);
+    //double longSide = tlong.getDouble(0.0);
+    //double shortSide = tshort.getDouble(0.0);
+
+    //public void visionTest(){
         //post to smart dashboard periodically
-        SmartDashboard.putNumber("LimelightX", x);
-        SmartDashboard.putNumber("LimelightY", y);
-        SmartDashboard.putNumber("LimelightArea", area);
-        SmartDashboard.putNumber("LimeloghtLongSide", longSide);
-        SmartDashboard.putNumber("LimelightShortSide", shortSide);
-    }
+        //SmartDashboard.putNumber("LimelightX", x);
+        //SmartDashboard.putNumber("LimelightY", y);
+        //SmartDashboard.putNumber("LimelightArea", area);
+        //SmartDashboard.putNumber("LimeloghtLongSide", longSide);
+        //SmartDashboard.putNumber("LimelightShortSide", shortSide);
+    //}
 }
 

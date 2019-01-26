@@ -12,6 +12,8 @@ import frc.controller.ControlScheme;
 import frc.singularityDrive.SingDrive;
 import frc.singularityDrive.SingDrive.SpeedMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.*;
+
 //import java.util.Map;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -41,8 +43,8 @@ public class ArcadeDrive implements ControlScheme {
     
 
     //Need to be adjusted for our robot
-    double Kp = -0.1;
-    double min_command = 0.05;
+    double Kp = -0.04;
+    double min_command = 0.04;
     double driveSpeedConstant = 0.2;
 
     //Positions for elevator encoder, these are just placeholder values, need to test with robot
@@ -55,7 +57,7 @@ public class ArcadeDrive implements ControlScheme {
     final int wristCargoPos = 180;
 
     final double endPosition = 10.0;
-    double tx, ta, ty;
+    double tx, ta, ty, tv;
     final double driveSpeed = 0.3;
     final double tuningConstant = 50;
 
@@ -138,18 +140,29 @@ public class ArcadeDrive implements ControlScheme {
 
     
     public void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, PneumaticEjector ejector, HatchMech hatchMech) {
-        double left_comand = driveSpeedConstant;
-        double right_comand = driveSpeedConstant;
+        double left_command = driveSpeedConstant;
+        double right_command = driveSpeedConstant;
 
         ///*
+        this.ta = vision.table.getEntry("ta").getDouble(0.0);
+        this.tx = vision.table.getEntry("tx").getDouble(0.0);
+        this.ty = vision.table.getEntry("ty").getDouble(0.0);
+        this.tv = vision.table.getEntry("tv").getDouble(0.0);
+
+
+        SmartDashboard.putNumber("tx", tx);
+        SmartDashboard.putNumber("ty", ty);
+        SmartDashboard.putNumber("ta", ta);
+        SmartDashboard.putNumber("tv", tv);
+        
+
+
         if(controller.getXButton() && vision.table.getEntry("tv").getDouble(0.0) == 1.0) {
 
             //dPneumatics.setLow();
             //hatchMech.setForward();
             //while(!controller.getYButton() && vision.table.getEntry("ta").getDouble(0.0) < endPosition) {
-                this.ta = vision.table.getEntry("ta").getDouble(0.0);
-                this.tx = vision.table.getEntry("tx").getDouble(0.0);
-                this.ty = vision.table.getEntry("ty").getDouble(0.0);
+                
 
                 double heading_error =( this.tx * -1 );
                 double steering_adjust = 0.0;
@@ -160,10 +173,12 @@ public class ArcadeDrive implements ControlScheme {
                 else if(tx < 1.0){
                     steering_adjust = Kp*heading_error + min_command;
                 }
-                left_comand -= steering_adjust;
-                right_comand += steering_adjust;
+                left_command -= steering_adjust;
+                right_command += steering_adjust;
 
-                drive.tankDrive(left_comand, right_comand, 0.0, false, SpeedMode.FAST);
+                
+
+                
 
               //  drive.drive(driveSpeed, 0, tx/tuningConstant, false, SpeedMode.FAST);
             //} 
@@ -172,8 +187,16 @@ public class ArcadeDrive implements ControlScheme {
             ejectorTimer.start();
         //*/
         } // end of X button and target
-        left_comand = 0;
-        right_comand = 0;
+        else {
+            left_command = 0;
+            right_command = 0;
+        }
+
+        SmartDashboard.putNumber("Left_command", left_command);
+        SmartDashboard.putNumber("Right_command", right_command);
+
+        drive.tankDrive(left_command, right_command, 0.0, false, SpeedMode.FAST);
+
     }
 
     public void elevator(Elevator elevator) {

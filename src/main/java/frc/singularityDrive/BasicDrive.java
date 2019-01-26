@@ -117,7 +117,7 @@ public class BasicDrive extends SingDrive {
 
 		// Drive the motors, and all subsequent motors through following.
 		super.m_leftMotor1.setSpeed(super.velocityMultiplier * leftVelocity / leftMaximum);
-		super.m_rightMotor1.setSpeed(super.velocityMultiplier * rightVelocity / rightMaximum);
+		super.m_rightMotor1.setSpeed(-super.velocityMultiplier * rightVelocity / rightMaximum);
 
 	}
 }

@@ -155,7 +155,7 @@ public class Robot extends TimedRobot {
     //currentScheme.drive(drive, drivePneumatics);
     // parcial autonomy via vision
     currentScheme.visionDrive(vision, drive, drivePneumatics, ejectorPneu, hatchMech);
-
+    
   }
 
   /**
