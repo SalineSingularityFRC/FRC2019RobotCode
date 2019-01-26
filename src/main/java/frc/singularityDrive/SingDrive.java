@@ -29,7 +29,7 @@ public abstract class SingDrive {
 	 * 
 	 * WARNING: These objects will need to be changed if the number, type, or orientation of motor controllers changes!
 	 */
-	protected MotorController m_leftMotor1, m_leftMotor2, m_rightMotor1, m_rightMotor2;
+	protected MotorController m_leftMotor1, m_leftMotor2, m_leftMotor3, m_rightMotor1, m_rightMotor2, m_rightMotor3;
 
 	/**
 	 * When using CANSparkMax motor controllers, change DEFAULT_TO_BRUSHLESS based on the drivetrain
@@ -129,19 +129,23 @@ public abstract class SingDrive {
 	 * 
 	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes!
 	 */
-	public SingDrive(int leftMotor1, int leftMotor2, int rightMotor1, int rightMotor2,
+	public SingDrive(int leftMotor1, int leftMotor2, int leftMotor3, int rightMotor1, int rightMotor2, int rightMotor3,000
 	double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) {
 
 		this.m_leftMotor1 = new Spark(leftMotor1, DEFAULT_TO_BRUSHLESS);
 		this.m_leftMotor2 = new Spark(leftMotor2, DEFAULT_TO_BRUSHLESS);
+		this.m_leftMotor3 = new Spark(leftMotor3, DEFAULT_TO_BRUSHLESS);
 		// Setting one motor controller to follow another means that it will automatically set output voltage of the follower
-		// controller to the value of the followee motor controller. Setting the boolean value to true inverts the signal
+		// controller to the value of the followee motor controller. Setting the boolean value to true inverts the s0ignal
 		// in case that the motor controllers are naturally reversed.
 		this.m_leftMotor2.follow(this.m_leftMotor1, false);
+		this.m_leftMotor3.follow(this.m_leftMotor1, false);
 
 		this.m_rightMotor1 = new Spark(rightMotor1, DEFAULT_TO_BRUSHLESS);
 		this.m_rightMotor2 = new Spark(rightMotor2, DEFAULT_TO_BRUSHLESS);
+		this.m_rightMotor3 = new Spark(rightMotor3, DEFAULT_TO_BRUSHLESS);
 		this.m_rightMotor2.follow(this.m_rightMotor1, false);
+		this.m_rightMotor3.follow(this.m_rightMotor1, false);
 
 
 		// Set speed constants.
@@ -216,8 +220,10 @@ public abstract class SingDrive {
 	public void rampVoltage(double rampRate) {
 		this.m_leftMotor1.setRampRate(rampRate);
 		this.m_leftMotor2.setRampRate(rampRate);
+		this.m_leftMotor3.setRampRate(rampRate);
 		this.m_rightMotor1.setRampRate(rampRate);
 		this.m_rightMotor2.setRampRate(rampRate);
+		this.m_rightMotor3.setRampRate(rampRate);
 	}
 	/**
 	 * Used to return rampRate of motors to the default to avoid wear on motors (recommended for any normal driving).
@@ -227,8 +233,10 @@ public abstract class SingDrive {
 	public void rampDefaultVoltage() {
 		this.m_leftMotor1.setRampRate(DEFAULT_RAMP_RATE);
 		this.m_leftMotor2.setRampRate(DEFAULT_RAMP_RATE);
+		this.m_leftMotor3.setRampRate(DEFAULT_RAMP_RATE);
 		this.m_rightMotor1.setRampRate(DEFAULT_RAMP_RATE);
 		this.m_rightMotor2.setRampRate(DEFAULT_RAMP_RATE);
+		this.m_rightMotor3.setRampRate(DEFAULT_RAMP_RATE);
 	}
 	
 	

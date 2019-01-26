@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   //stores the motor controller IDs
-  int driveLeft1, driveLeft2, driveRight1, driveRight2;
+  int driveLeft1, driveLeft2, driveLeft3, driveRight1, driveRight2, driveRight3;
   int drivePneuHigh, drivePneuLow;
   int ejectorPneuPush, ejectorPneuHold;
   int hatchMechDown, hatchMechUp;
@@ -178,9 +178,11 @@ public class Robot extends TimedRobot {
     //Motors
     driveLeft1 = 3;
     driveLeft2 = 4;
+    driveLeft3 = 5;
     driveRight1 = 1;
     driveRight2 = 2;
-    intakeMotor = 5;
+    driveRight3 = 6;
+    intakeMotor = 7;
     
     //Pneumatics
     drivePneuHigh = 1;
