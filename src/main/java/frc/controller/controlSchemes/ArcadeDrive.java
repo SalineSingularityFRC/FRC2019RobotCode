@@ -138,27 +138,21 @@ public class ArcadeDrive implements ControlScheme {
 
     
     public void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, PneumaticEjector ejector, HatchMech hatchMech) {
-
+        double left_comand = driveSpeedConstant;
+        double right_comand = driveSpeedConstant;
 
         ///*
         if(controller.getXButton() && vision.table.getEntry("tv").getDouble(0.0) == 1.0) {
 
             //dPneumatics.setLow();
             //hatchMech.setForward();
-
-            
-
-
-            while(!controller.getYButton() && vision.table.getEntry("ta").getDouble(0.0) < endPosition) {
+            //while(!controller.getYButton() && vision.table.getEntry("ta").getDouble(0.0) < endPosition) {
                 this.ta = vision.table.getEntry("ta").getDouble(0.0);
                 this.tx = vision.table.getEntry("tx").getDouble(0.0);
                 this.ty = vision.table.getEntry("ty").getDouble(0.0);
 
                 double heading_error =( this.tx * -1 );
                 double steering_adjust = 0.0;
-
-                double left_comand = driveSpeedConstant;
-                double right_comand = driveSpeedConstant;
 
                 if(tx > 1.0){
                     steering_adjust = Kp*heading_error - min_command;
@@ -172,15 +166,14 @@ public class ArcadeDrive implements ControlScheme {
                 drive.tankDrive(left_comand, right_comand, 0.0, false, SpeedMode.FAST);
 
               //  drive.drive(driveSpeed, 0, tx/tuningConstant, false, SpeedMode.FAST);
-            } 
+            //} 
             //8ejector.setForward();
             ejectorTimer.reset();
             ejectorTimer.start();
         //*/
-            
-
-
-        } 
+        } // end of X button and target
+        left_comand = 0;
+        right_comand = 0;
     }
 
     public void elevator(Elevator elevator) {
