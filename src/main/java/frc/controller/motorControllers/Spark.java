@@ -3,6 +3,7 @@ package frc.controller.motorControllers;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.controller.EncoderController;
@@ -69,6 +70,16 @@ public class Spark implements MotorController {
 
         if (!this.m_motor.isFollower()) {
             this.m_motor.setRampRate(rampRate);
+        }
+    }
+
+    public void setCoastMode(boolean coast) {
+
+        if (coast) {
+            this.m_motor.setIdleMode(IdleMode.kCoast);
+        }
+        else {
+            this.m_motor.setIdleMode(IdleMode.kBrake);
         }
     }
 

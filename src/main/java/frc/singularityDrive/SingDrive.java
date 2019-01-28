@@ -1,6 +1,8 @@
 package frc.singularityDrive;
 
 
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.controller.MotorController;
@@ -69,8 +71,8 @@ public abstract class SingDrive {
 
 
 	// RAMP_RATE is used to limit jerks in motor output. Drive Motors starting at 0 output can ramp up to full power
-	// in a time denoted by RAMP_RATE (measured in seconds). Suggested value: 0.2 (still needs testing)
-	private final static double DEFAULT_RAMP_RATE = 0.2;
+	// in a time denoted by RAMP_RATE (measured in seconds). Suggested value: 0.4 (still needs testing)
+	private final static double DEFAULT_RAMP_RATE = 0.4;
 
 	// MINIMUM_THRESHOLD limits unintended drift from joystick axes. Any joystick input less than MINIMUM_THRESHOLD
 	// will be set to 0 using this.threshold(double velocity). Suggested value: 0.07 (still needs testing)
@@ -157,6 +159,9 @@ public abstract class SingDrive {
 
 		// Ramp the voltage of the motor output before normal driving (can be changed for auton, or special circumstances).
 		this.rampDefaultVoltage();
+
+		// Set all drive motor controllers to coast to limit wear and tear.
+		this.setDriveToCoast(true);
 	}
 
 
@@ -213,6 +218,7 @@ public abstract class SingDrive {
 	/**
 	 * Used to manually control the rampRate. For example, if you are preparing to stop the robot
 	 * in autonomous mode, it is recommended you set rampRate to 0.0 to avoid sliding through the intended position.
+	 * 
 	 * @param rampRate describes how fast drive motors can ramp from 0 to full power, in seconds
 	 * 
 	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes!
@@ -221,6 +227,7 @@ public abstract class SingDrive {
 		this.m_leftMotor1.setRampRate(rampRate);
 		this.m_leftMotor2.setRampRate(rampRate);
 		this.m_leftMotor3.setRampRate(rampRate);
+
 		this.m_rightMotor1.setRampRate(rampRate);
 		this.m_rightMotor2.setRampRate(rampRate);
 		this.m_rightMotor3.setRampRate(rampRate);
@@ -234,9 +241,27 @@ public abstract class SingDrive {
 		this.m_leftMotor1.setRampRate(DEFAULT_RAMP_RATE);
 		this.m_leftMotor2.setRampRate(DEFAULT_RAMP_RATE);
 		this.m_leftMotor3.setRampRate(DEFAULT_RAMP_RATE);
+
 		this.m_rightMotor1.setRampRate(DEFAULT_RAMP_RATE);
 		this.m_rightMotor2.setRampRate(DEFAULT_RAMP_RATE);
 		this.m_rightMotor3.setRampRate(DEFAULT_RAMP_RATE);
+	}
+
+	/**
+	 * Setting motors to brake mode runs power to the motors to decellerate, but wears on the motors.
+	 * 
+	 * @param coast pass true to turn on coast mode (highly recommended)
+	 * 
+	 * WARNING: This method will need to be changed if the number, type, or orientation of motor controllers changes!
+	 */
+	public void setDriveToCoast(boolean coast) {
+		this.m_leftMotor1.setCoastMode(coast);
+		this.m_leftMotor2.setCoastMode(coast);
+		this.m_leftMotor3.setCoastMode(coast);
+
+		this.m_rightMotor1.setCoastMode(coast);
+		this.m_rightMotor2.setCoastMode(coast);
+		this.m_rightMotor3.setCoastMode(coast);
 	}
 	
 	

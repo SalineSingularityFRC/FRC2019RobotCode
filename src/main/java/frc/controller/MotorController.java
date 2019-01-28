@@ -28,6 +28,12 @@ public interface MotorController {
      */
     public void setRampRate(double rampRate);
 
+    /**
+     * Allows control of letting motor controllers coast or forcing them to brake
+     * @param coast pass true to coast, false to brake (recommended is true for coast)
+     */
+    public void setCoastMode(boolean coast);
+
 
     
 }
