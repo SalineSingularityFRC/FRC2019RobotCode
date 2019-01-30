@@ -35,10 +35,6 @@ import com.revrobotics.*;
  * project.
  */
 public class Robot extends TimedRobot {
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   //stores the motor controller IDs
   int driveLeft1, driveLeft2, driveLeft3, driveRight1, driveRight2, driveRight3;
@@ -59,6 +55,10 @@ public class Robot extends TimedRobot {
   PneumaticEjector ejectorPneu;
   Vision vision;
 
+  //Create a gyro
+  AHRS gyro;
+  boolean gyroResetAtTeleop;
+
 
   //default ports of certain joysticks in DriverStation
   final int XBOX_PORT = 0;
@@ -72,9 +72,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
     
     
     
@@ -92,6 +89,9 @@ public class Robot extends TimedRobot {
     ejectorPneu = new PneumaticEjector(ejectorPneuPush, ejectorPneuHold);
     */
     vision = new Vision();
+
+    gyro = new AHRS(SPI.Port.kMXP);
+    gyroResetAtTeleop = true;
   }
 
   /**
@@ -119,12 +119,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    // autoSelected = SmartDashboard.getString("Auto Selector",
-    // defaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
 
-
+    gyro.setAngleAdjustment(-gyro.getAngle());
+    gyroResetAtTeleop = false;
     
   }
 
@@ -133,15 +130,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-      case kCustomAuto:
-        // Put custom auto code here
-        break;
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
-        break;
-    }
+    
+  }
+
+  @Override
+  public void teleopInit() {
+    
+    if (gyroResetAtTeleop) {
+      gyro.setAngleAdjustment(-gyro.getAngle());
+    } 
   }
 
   /**
@@ -154,7 +151,7 @@ public class Robot extends TimedRobot {
     //(we shouldn't need to change this too often)
     currentScheme.drive(drive, drivePneumatics);
     // partial autonomy via vision
-    //currentScheme.visionDrive(vision, drive, drivePneumatics, ejectorPneu, hatchMech);
+    //currentScheme.visionDrive(vision, drive, drivePneumatics, gyro);
     
   }
 

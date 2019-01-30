@@ -12,17 +12,20 @@ import frc.controller.ControlScheme;
 import frc.singularityDrive.BasicDrive;
 import frc.singularityDrive.SingDrive;
 import frc.singularityDrive.SingDrive.SpeedMode;
-
 import edu.wpi.first.wpilibj.smartdashboard.*;
-
+import com.kauailabs.navx.frc.AHRS;
 //import java.util.Map;
-
 import edu.wpi.first.wpilibj.Timer;
-
-public class ArcadeDrive implements ControlScheme {
+/**
+ * 
+ * Main class to control the robot
+ * 
+ */
+public class ArcadeDrive extends ControlScheme {
 
     XboxController controller;
     XboxController armController;
+    Vision vision;
 
     Timer ejectorTimer;
     double ejectorTimerValue;
@@ -64,18 +67,23 @@ public class ArcadeDrive implements ControlScheme {
     final double driveSpeed = 0.3;
     final double tuningConstant = 50;
 
-    Vision vision;
+ 
 
-    
+    // Constructor for the ArcadeDrive class
 
     public ArcadeDrive(int controllerPort, int armControllerPort) {
+        //Initiates a new Xbox controller
         controller = new XboxController(controllerPort);
         //armController = new XboxController(armControllerPort);
-
+        
+        // Sets the boolean for fastGear to low (drive train not in fast gear)
         fastGear = false;
+        //makes the drive pneumatics only go once instead of many times
         buttonDPneuPrevious = false;
+        //instanciating the ejectorTimer is a new timer for the pneumatics to pull the  
         ejectorTimer = new Timer();
 
+        //instanciating the vision object
         vision = new Vision();
     }
 
@@ -147,7 +155,11 @@ public class ArcadeDrive implements ControlScheme {
     }
 
     
-    public void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, PneumaticEjector ejector, HatchMech hatchMech) {
+    public void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, AHRS gyro) {
+
+        double currentAngle = super.smooshGyroAngle(gyro.getAngle());
+        
+
         double left_command = driveSpeedConstant;
         double right_command = driveSpeedConstant;
 
@@ -246,7 +258,7 @@ public class ArcadeDrive implements ControlScheme {
 
     }
 
-    }
+}
     
 
 
