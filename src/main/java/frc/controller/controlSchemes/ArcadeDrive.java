@@ -175,7 +175,12 @@ public class ArcadeDrive extends ControlScheme {
         boolean squareButton = controller.getXButton();
         boolean offSetButton = controller.getYButton();
 
-        
+        double currentAngle = super.smooshGyroAngle(gyro.getAngle());
+        SmartDashboard.putNumber("current ange:", currentAngle);
+
+        if(controller.getAButton()) {
+            gyro.setAngleAdjustment(-gyro.getAngle());
+        }
 
 
         if((squareButton || offSetButton) && vision.table.getEntry("tv").getDouble(0.0) == 1.0) {
@@ -192,7 +197,6 @@ public class ArcadeDrive extends ControlScheme {
                 steering_adjust = txkP * drive.setInputToPower(this.tx, txPower) + min_command;
             }
 
-            double currentAngle = super.smooshGyroAngle(gyro.getAngle());
             double targetAngle;
 
             if(squareButton) {
@@ -206,7 +210,7 @@ public class ArcadeDrive extends ControlScheme {
             double angleDifference = currentAngle - targetAngle;
 
             //To remove gyro control, comment out this line:
-            //steering_adjust += angleDifferencekP * drive.setInputToPower(angleDifference, angleDifferencePower);
+            steering_adjust += angleDifferencekP * drive.setInputToPower(angleDifference, angleDifferencePower);
 
 
             left_command += steering_adjust;

@@ -110,8 +110,7 @@ public abstract class SingDrive {
 	 * @param speedMode controls the velocityMultiplier in order to scale motor velocity
 	 */
 	public abstract void tankDrive(double left, double right, double horizontal, boolean poweredInputs, SpeedMode speedMode);
-
-
+                                                                                                                                                                                                 
 
 	/**
 	 * This is the essential constructor for SingDrive. Its parameters are motor controller ports and the
