@@ -37,6 +37,25 @@ public class Spark implements MotorController {
      * @param portNumber pass the CAN network ID for this motor controller
      * @param brushlessMotor pass true if using a neo brushless motor
      */
+    public Spark(int portNumber, boolean brushlessMotor) {
+
+        MotorType type;
+        if (brushlessMotor) {
+            type = MotorType.kBrushless;
+        }
+        else {
+            type = MotorType.kBrushed;
+        }
+        
+        this.m_motor = new CANSparkMax(portNumber, type);
+    }
+
+    /**
+     * Constructor for Spark class.
+     * 
+     * @param portNumber pass the CAN network ID for this motor controller
+     * @param brushlessMotor pass true if using a neo brushless motor
+     */
     public Spark(int portNumber, boolean brushlessMotor, String name,
     double kP, double kI, double KD, double kIZ, double kFF, double kMinOut, double kMaxOut) {
 
@@ -102,49 +121,43 @@ public class Spark implements MotorController {
     
     public void setP(double kP) {
         this.m_pidController.setP(kP);
+        this.kP = kP;
     }
 
     public void setI(double kI) {
         this.m_pidController.setI(kI);
+        this.kI = kI;
     }
 
     public void setD(double kD) {
         this.m_pidController.setD(kD);
+        this.kD = kD;
     }
 
     public void setIz(double kIZ) {
         this.m_pidController.setIZone(kIZ);
+        this.kIZ = kIZ;
     }
 
     public void setFF(double kFF) {
         this.m_pidController.setFF(kFF);
+        this.kFF = kFF;
     }
 
     public void setOutputRange(double kMinOut, double kMaxOut) {
         this.m_pidController.setOutputRange(kMinOut, kMaxOut);
+        this.kMinOut = kMinOut;
+        this.kMaxOut = kMaxOut;
     }
 
     public void putConstantsOnDashboard(String name, double kP, double kI, double kD, double kIZ, double kFF, double kMinOut, double kMaxOut) {
 
-        this.m_pidController.setP(kP);
-        this.kP = kP;
-
-        this.m_pidController.setI(kI);
-        this.kI = kI;
-
-        this.m_pidController.setD(kD);
-        this.kD = kD;
-
-        this.m_pidController.setIZone(kIZ);
-        this.kIZ = kIZ;
-
-        this.m_pidController.setFF(kFF);
-        this.kFF = kFF;
-
-        this.m_pidController.setOutputRange(kMinOut, kMaxOut);
-        this.kMinOut = kMinOut;
-        this.kMaxOut = kMaxOut;
-
+        this.setP(kP);
+        this.setI(kI);
+        this.setD(kD);
+        this.setIz(kIZ);
+        this.setFF(kFF);
+        this.setOutputRange(kMinOut, kMaxOut);
         this.name = name;
 
         // display PID coefficients on SmartDashboard
@@ -172,29 +185,22 @@ public class Spark implements MotorController {
 
         // if PID coefficients on SmartDashboard have changed, write new values to controller
         if ((p != this.kP)) {
-            this.m_pidController.setP(p);
-            this.kP = p;
+            this.setP(kP);
         }
         if((i != this.kI)) {
-            this.m_pidController.setI(i);
-            this.kI = i;
+            this.setI(kI);
         }
         if((d != this.kD)) {
-            this.m_pidController.setD(d);
-            this.kD = d;
+            this.setD(kD);
         }
         if((iz != this.kIZ)) {
-            this.m_pidController.setIZone(iz);
-            this.kIZ = iz;
+            this.setIz(kIZ);
         }
         if((ff != this.kFF)) {
-            this.m_pidController.setFF(ff);
-            this.kFF = ff;
+            this.setFF(kFF);
         }
         if((max != this.kMaxOut) || (min != this.kMinOut)) { 
-            this.m_pidController.setOutputRange(min, max); 
-            this.kMinOut = min;
-            this.kMaxOut = max; 
+            this.setOutputRange(kMinOut, kMaxOut);
         }
     }
 
