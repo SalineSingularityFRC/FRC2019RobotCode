@@ -3,9 +3,11 @@ package frc.controller.motorControllers;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controller.EncoderController;
 import frc.controller.MotorController;
 
@@ -21,6 +23,12 @@ public class Spark implements MotorController {
     private CANEncoder m_encoder;
     private CANPIDController m_pidController;
 
+    //PID constants
+    double kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut;
+    String name;
+
+    double currentPosition;
+    double initialPosition;
 
     /**
      * Constructor for Spark class.
@@ -28,7 +36,8 @@ public class Spark implements MotorController {
      * @param portNumber pass the CAN network ID for this motor controller
      * @param brushlessMotor pass true if using a neo brushless motor
      */
-    public Spark(int portNumber, boolean brushlessMotor) {
+    public Spark(int portNumber, boolean brushlessMotor, String name,
+    double kP, double kI, double KD, double kIZ, double kFF, double kMinOut, double kMaxOut) {
 
         MotorType type;
         if (brushlessMotor) {
@@ -42,6 +51,8 @@ public class Spark implements MotorController {
 
         this.m_encoder = m_motor.getEncoder();
         this.m_pidController = m_motor.getPIDController();
+
+        this.putConstantsOnDashboard(name, kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
         
     }
 
@@ -83,25 +94,134 @@ public class Spark implements MotorController {
         }
     }
 
-    public CANEncoder getEncoder() {
-        return this.m_encoder;
+    public void printEncoderPosition() {
+        SmartDashboard.putNumber(name + "encoder value", m_encoder.getPosition());
     }
 
-    /*
+    
     public void setP(double kP) {
         this.m_pidController.setP(kP);
-        super.recordP(kP);
     }
 
     public void setI(double kI) {
         this.m_pidController.setI(kI);
-        super.recordI(kI);
     }
 
     public void setD(double kD) {
         this.m_pidController.setD(kD);
-        super.recordD(kD);
     }
-*/
+
+    public void setIz(double kIZ) {
+        this.m_pidController.setIZone(kIZ);
+    }
+
+    public void setFF(double kFF) {
+        this.m_pidController.setFF(kFF);
+    }
+
+    public void setOutputRange(double kMinOut, double kMaxOut) {
+        this.m_pidController.setOutputRange(kMinOut, kMaxOut);
+    }
+
+    public void putConstantsOnDashboard(String name, double kP, double kI, double kD, double kIZ, double kFF, double kMinOut, double kMaxOut) {
+
+        this.m_pidController.setP(kP);
+        this.kP = kP;
+
+        this.m_pidController.setI(kI);
+        this.kI = kI;
+
+        this.m_pidController.setD(kD);
+        this.kD = kD;
+
+        this.m_pidController.setIZone(kIZ);
+        this.kIZ = kIZ;
+
+        this.m_pidController.setFF(kFF);
+        this.kFF = kFF;
+
+        this.m_pidController.setOutputRange(kMinOut, kMaxOut);
+        this.kMinOut = kMinOut;
+        this.kMaxOut = kMaxOut;
+
+        this.name = name;
+
+        // display PID coefficients on SmartDashboard
+        SmartDashboard.putNumber(name + " P Gain", this.kP);
+        SmartDashboard.putNumber(name + " I Gain", this.kI);
+        SmartDashboard.putNumber(name + " D Gain", this.kD);
+        SmartDashboard.putNumber(name + " I Zone", this.kIZ);
+        SmartDashboard.putNumber(name + " Feed Forward", this.kFF);
+        SmartDashboard.putNumber(name + " Max Output", this.kMaxOut);
+        SmartDashboard.putNumber(name + " Min Output", this.kMinOut);
+
+    }
+
+    public void getConstantsFromDashboard() {
+
+        // read PID coefficients from SmartDashboard
+        double p = SmartDashboard.getNumber(this.name + " P Gain", 0);
+        double i = SmartDashboard.getNumber(this.name + " I Gain", 0);
+        double d = SmartDashboard.getNumber(this.name + " D Gain", 0);
+        double iz = SmartDashboard.getNumber(this.name + " I Zone", 0);
+        double ff = SmartDashboard.getNumber(this.name + " Feed Forward", 0);
+        double max = SmartDashboard.getNumber(this.name + " Max Output", 0);
+        double min = SmartDashboard.getNumber(this.name + " Min Output", 0);
+        //double rotations = SmartDashboard.getNumber("Elevator Set Rotations", 0);
+
+        // if PID coefficients on SmartDashboard have changed, write new values to controller
+        if ((p != this.kP)) {
+            this.m_pidController.setP(p);
+            this.kP = p;
+        }
+        if((i != this.kI)) {
+            this.m_pidController.setI(i);
+            this.kI = i;
+        }
+        if((d != this.kD)) {
+            this.m_pidController.setD(d);
+            this.kD = d;
+        }
+        if((iz != this.kIZ)) {
+            this.m_pidController.setIZone(iz);
+            this.kIZ = iz;
+        }
+        if((ff != this.kFF)) {
+            this.m_pidController.setFF(ff);
+            this.kFF = ff;
+        }
+        if((max != this.kMaxOut) || (min != this.kMinOut)) { 
+            this.m_pidController.setOutputRange(min, max); 
+            this.kMinOut = min;
+            this.kMaxOut = max; 
+        }
+    }
+
+    public boolean isLowerLimitPressed(boolean normallyOpen) {
+        if (normallyOpen) {
+            return m_motor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen).get();
+        }
+        return m_motor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyClosed).get();
+    }
+
+    public boolean isUpperLimitPressed(boolean normallyOpen) {
+        if (normallyOpen) {
+            return m_motor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen).get();
+        }
+        return m_motor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyClosed).get();
+    }
+
+    public void setInitialPosition() {
+        this.initialPosition = this.m_encoder.getPosition();
+    }
+
+    public double getCurrentPosition() {
+        return this.m_encoder.getPosition() - this.initialPosition;
+    }
+
+    public void setToPosition(double position) {
+        
+    }
+
 
 }
