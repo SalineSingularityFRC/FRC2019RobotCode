@@ -69,31 +69,31 @@ public abstract class ControlScheme {
 
 	/**
 	 * 
-	 * @param gyroAngle
-	 * @return
+	 * @param gyroAngle the current angle our robot is at, between 0 and 360 degrees
+	 * @return the alignment angle that we want to drive towards, 28.75, 151.25, 208.75, or 331.25
 	 */
 	public double getOffsetHatchAngle(double gyroAngle) {
-/* 
-		used wrong input angles
+ 
+		
 
-		if (gyroAngle >= 16.25 && gyroAngle <= 90) {
-			return 61.25;
+		if (gyroAngle >= 0 && gyroAngle <= 73.75) {
+			return 28.75;
 		}
 			
-		else if (gyroAngle >= 90 && gyroAngle <= 180) {
-			return 118.75;
+		else if (gyroAngle >= 106.25 && gyroAngle <= 180) {
+			return 151.25;
 		}
 
-		else if (gyroAngle >= 180 && gyroAngle <= 270) {
-			return 241.25;
+		else if (gyroAngle >= 180 && gyroAngle <= 253.75) {
+			return 208.75;
 		}
 
-		else if (gyroAngle >= 270 && gyroAngle <= 343.75) {
-			return 298.75 
+		else if (gyroAngle >= 286.25 && gyroAngle <= 360) {
+			return 331.25; 
 		}
 		
-		return 180; */
-		return 1;
+		return gyroAngle;
+		
 	}
 	
 }

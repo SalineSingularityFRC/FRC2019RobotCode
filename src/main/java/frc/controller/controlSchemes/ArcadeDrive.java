@@ -49,9 +49,13 @@ public class ArcadeDrive extends ControlScheme {
     
 
     //Need to be adjusted for our robot
-    double Kp = 0.02;
-    double min_command = 0.02;
-    double driveSpeedConstant = 0.2;
+    final double txkP = 0.02;
+    final double min_command = 0.02;
+    final double driveSpeedConstant = 0.2;
+    final double txPower = 0.8;
+
+    final double angleDifferencekP = 0.01;
+    final double angleDifferencePower = 0.8;
 
     //Positions for elevator encoder, these are just placeholder values, need to test with robot
     final int elevatorLow = 20;
@@ -157,13 +161,6 @@ public class ArcadeDrive extends ControlScheme {
     
     public void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, AHRS gyro) {
 
-        double currentAngle = super.smooshGyroAngle(gyro.getAngle());
-        
-
-        double left_command = driveSpeedConstant;
-        double right_command = driveSpeedConstant;
-
-        ///*
         this.ta = vision.table.getEntry("ta").getDouble(0.0);
         this.tx = vision.table.getEntry("tx").getDouble(0.0);
         this.ty = vision.table.getEntry("ty").getDouble(0.0);
@@ -175,42 +172,56 @@ public class ArcadeDrive extends ControlScheme {
         SmartDashboard.putNumber("ta", ta);
         SmartDashboard.putNumber("tv", tv);
         
+        boolean squareButton = controller.getXButton();
+        boolean offSetButton = controller.getYButton();
+
+        
 
 
-        if(controller.getXButton() && vision.table.getEntry("tv").getDouble(0.0) == 1.0) {
+        if((squareButton || offSetButton) && vision.table.getEntry("tv").getDouble(0.0) == 1.0) {
 
-            //dPneumatics.setLow();
-            //hatchMech.setForward();
-            //while(!controller.getYButton() && vision.table.getEntry("ta").getDouble(0.0) < endPosition) {
+            double left_command = driveSpeedConstant;
+            double right_command = driveSpeedConstant;
+
+            double steering_adjust = 0.0;
+
+            if(tx > 1.0){
+                steering_adjust = txkP * drive.setInputToPower(this.tx, txPower) - min_command;
+            }
+            else if(tx < 1.0){
+                steering_adjust = txkP * drive.setInputToPower(this.tx, txPower) + min_command;
+            }
+
+            double currentAngle = super.smooshGyroAngle(gyro.getAngle());
+            double targetAngle;
+
+            if(squareButton) {
+                targetAngle = super.getSquareAngleForPort(currentAngle);
+            }
+
+            else {
+                targetAngle = super.getOffsetHatchAngle(currentAngle);
+            }
+
+            double angleDifference = currentAngle - targetAngle;
+
+            //To remove gyro control, comment out this line:
+            //steering_adjust += angleDifferencekP * drive.setInputToPower(angleDifference, angleDifferencePower);
+
+
+            left_command += steering_adjust;
+            right_command -= steering_adjust;
+
                 
 
-                double heading_error =( this.tx);
-                double steering_adjust = 0.0;
-
-                if(tx > 1.0){
-                    steering_adjust = Kp * (this.tx) - min_command;
-                }
-                else if(tx < 1.0){
-                    steering_adjust = Kp * (this.tx) + min_command;
-                }
-                left_command += steering_adjust;
-                right_command -= steering_adjust;
-
-                
-
-                drive.tankDrive(left_command, right_command, 0.0, false, SpeedMode.FAST);
-
-              //  drive.drive(driveSpeed, 0, tx/tuningConstant, false, SpeedMode.FAST);
-            //} 
-            //8ejector.setForward();
-            ejectorTimer.reset();
-            ejectorTimer.start();
-        //*/
+            drive.tankDrive(left_command, right_command, 0.0, false, SpeedMode.FAST);
+            
+            SmartDashboard.putNumber("Left_command", left_command);
+            SmartDashboard.putNumber("Right_command", right_command);
         } // end of X button and target
         
 
-        SmartDashboard.putNumber("Left_command", left_command);
-        SmartDashboard.putNumber("Right_command", right_command);
+        
 
         
 
