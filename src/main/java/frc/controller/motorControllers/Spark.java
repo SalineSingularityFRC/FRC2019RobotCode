@@ -3,6 +3,7 @@ package frc.controller.motorControllers;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -220,7 +221,9 @@ public class Spark implements MotorController {
     }
 
     public void setToPosition(double position) {
-        
+
+
+        this.m_pidController.setReference(position, ControlType.kPosition);
     }
 
 
