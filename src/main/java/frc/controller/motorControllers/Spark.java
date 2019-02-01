@@ -24,8 +24,7 @@ public class Spark implements MotorController {
     private CANEncoder m_encoder;
     private CANPIDController m_pidController;
 
-    //PID constants
-    double kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut;
+    //name of the mechanism
     String name;
 
     double currentPosition;
@@ -57,22 +56,16 @@ public class Spark implements MotorController {
      * @param brushlessMotor pass true if using a neo brushless motor
      */
     public Spark(int portNumber, boolean brushlessMotor, String name,
-    double kP, double kI, double KD, double kIZ, double kFF, double kMinOut, double kMaxOut) {
-
-        MotorType type;
-        if (brushlessMotor) {
-            type = MotorType.kBrushless;
-        }
-        else {
-            type = MotorType.kBrushed;
-        }
-        
-        this.m_motor = new CANSparkMax(portNumber, type);
+    double kP, double kI, double kD, double kIZ, double kFF, double kMinOut, double kMaxOut) {
+        this(portNumber, brushlessMotor);
 
         this.m_encoder = m_motor.getEncoder();
         this.m_pidController = m_motor.getPIDController();
 
         this.putConstantsOnDashboard(name, kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
+
+        //If intitialPosition = -100, lower limit switch has not been pressed.
+        double initialPosition = -100;
         
     }
 
@@ -114,63 +107,51 @@ public class Spark implements MotorController {
         }
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Encoder methods:
+
     public void printEncoderPosition() {
         SmartDashboard.putNumber(name + "encoder value", m_encoder.getPosition());
     }
 
-    
-    public void setP(double kP) {
-        this.m_pidController.setP(kP);
-        this.kP = kP;
-    }
 
-    public void setI(double kI) {
-        this.m_pidController.setI(kI);
-        this.kI = kI;
-    }
-
-    public void setD(double kD) {
-        this.m_pidController.setD(kD);
-        this.kD = kD;
-    }
-
-    public void setIz(double kIZ) {
-        this.m_pidController.setIZone(kIZ);
-        this.kIZ = kIZ;
-    }
-
-    public void setFF(double kFF) {
-        this.m_pidController.setFF(kFF);
-        this.kFF = kFF;
-    }
-
-    public void setOutputRange(double kMinOut, double kMaxOut) {
-        this.m_pidController.setOutputRange(kMinOut, kMaxOut);
-        this.kMinOut = kMinOut;
-        this.kMaxOut = kMaxOut;
-    }
-
+    /**
+     * Puts constants on the dashboard, possibly so they can be edited later with getConstantsFromDashboard()
+     * 
+     * @param name name of the mechanism we are controlling
+     * @param kP constant of proportional control
+     * @param kI constant of integral control
+     * @param kD constant of derivative control
+     * @param kIZ constant of IZone (whatever that is)
+     * @param kFF constant of FeedvForward
+     * @param kMinOut constant of minimum output for the motor in percent voltage (never lower than -1)
+     * @param kMaxOut constant of maximum output for the motor in percent voltage (never more that +1)
+     */
     public void putConstantsOnDashboard(String name, double kP, double kI, double kD, double kIZ, double kFF, double kMinOut, double kMaxOut) {
 
-        this.setP(kP);
-        this.setI(kI);
-        this.setD(kD);
-        this.setIz(kIZ);
-        this.setFF(kFF);
-        this.setOutputRange(kMinOut, kMaxOut);
-        this.name = name;
+        this.m_pidController.setP(kP);
+        this.m_pidController.setI(kI);
+        this.m_pidController.setD(kD);
+        this.m_pidController.setIZone(kIZ);
+        this.m_pidController.setFF(kFF);
+        this.m_pidController.setOutputRange(kMinOut, kMaxOut);
+        
 
         // display PID coefficients on SmartDashboard
-        SmartDashboard.putNumber(name + " P Gain", this.kP);
-        SmartDashboard.putNumber(name + " I Gain", this.kI);
-        SmartDashboard.putNumber(name + " D Gain", this.kD);
-        SmartDashboard.putNumber(name + " I Zone", this.kIZ);
-        SmartDashboard.putNumber(name + " Feed Forward", this.kFF);
-        SmartDashboard.putNumber(name + " Max Output", this.kMaxOut);
-        SmartDashboard.putNumber(name + " Min Output", this.kMinOut);
+        SmartDashboard.putNumber(name + " P Gain", kP);
+        SmartDashboard.putNumber(name + " I Gain", kI);
+        SmartDashboard.putNumber(name + " D Gain", kD);
+        SmartDashboard.putNumber(name + " I Zone", kIZ);
+        SmartDashboard.putNumber(name + " Feed Forward", kFF);
+        SmartDashboard.putNumber(name + " Max Output", kMaxOut);
+        SmartDashboard.putNumber(name + " Min Output", kMinOut);
 
     }
 
+    
+    /**
+     * Update PID constants from the dashboard (primarily for testing purposes)
+     */
     public void getConstantsFromDashboard() {
 
         // read PID coefficients from SmartDashboard
@@ -184,26 +165,31 @@ public class Spark implements MotorController {
         //double rotations = SmartDashboard.getNumber("Elevator Set Rotations", 0);
 
         // if PID coefficients on SmartDashboard have changed, write new values to controller
-        if ((p != this.kP)) {
-            this.setP(kP);
+        if ((p != this.m_pidController.getP())) {
+            this.m_pidController.setP(p);
         }
-        if((i != this.kI)) {
-            this.setI(kI);
+        if((i != this.m_pidController.getI())) {
+            this.m_pidController.setI(i);
         }
-        if((d != this.kD)) {
-            this.setD(kD);
+        if((d != this.m_pidController.getD())) {
+            this.m_pidController.setD(d);
         }
-        if((iz != this.kIZ)) {
-            this.setIz(kIZ);
+        if((iz != this.m_pidController.getIZone())) {
+            this.m_pidController.setIZone(iz);
         }
-        if((ff != this.kFF)) {
-            this.setFF(kFF);
+        if((ff != this.m_pidController.getFF())) {
+            this.m_pidController.setFF(ff);
         }
-        if((max != this.kMaxOut) || (min != this.kMinOut)) { 
-            this.setOutputRange(kMinOut, kMaxOut);
+        if((max != this.m_pidController.getOutputMax()) || (min != this.m_pidController.getOutputMin())) { 
+            this.m_pidController.setOutputRange(min, max);
         }
     }
 
+    
+
+    /**
+     * returns state of limit switch (may need to be made more reusable)
+     */
     public boolean isLowerLimitPressed(boolean normallyOpen) {
         if (normallyOpen) {
             return m_motor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen).get();
@@ -211,6 +197,11 @@ public class Spark implements MotorController {
         return m_motor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyClosed).get();
     }
 
+    /**
+     * returns state of second limit switch (may need to be made more reusable)
+     * @param normallyOpen true if limit switch often is not pressed (I think)
+     * @return state of limit switch (true if in unexpected state (maybe))
+     */
     public boolean isUpperLimitPressed(boolean normallyOpen) {
         if (normallyOpen) {
             return m_motor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen).get();
@@ -218,6 +209,10 @@ public class Spark implements MotorController {
         return m_motor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyClosed).get();
     }
 
+    /**
+     * sets initial position to m_encoder.getPosition()
+     * Call this method when a limit switch is pressed, because then we know where the mechanism is
+     */
     public void setInitialPosition() {
         this.initialPosition = this.m_encoder.getPosition();
     }
@@ -226,11 +221,22 @@ public class Spark implements MotorController {
         return this.m_encoder.getPosition() - this.initialPosition;
     }
 
-    public void setToPosition(double position) {
+    public void setToPosition(double joystickControl, double position) {
+
+        if (this.initialPosition != -100) {
+            this.m_pidController.setReference(position, ControlType.kPosition);
+            return;
+        }
 
 
-        this.m_pidController.setReference(position, ControlType.kPosition);
     }
 
+    /**
+     * sets velocity of the motor (not likely to be used in 2019)
+     * @param velocity in RPM
+     */
+    public void setVelocity(double velocity) {
 
+        this.m_pidController.setReference(velocity, ControlType.kVelocity);
+    }
 }
