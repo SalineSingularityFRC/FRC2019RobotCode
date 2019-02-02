@@ -286,7 +286,7 @@ public class ArcadeDrive extends ControlScheme {
         SmartDashboard.putBoolean("D-Pad Up", controller.getPOVUp());
         SmartDashboard.putBoolean("D-Pad Down", controller.getPOVDown());
         }
-
+/*
     public void wrist(Wrist wrist) {
 
         wristButton1Now = armController.getPOVDown();
@@ -305,7 +305,7 @@ public class ArcadeDrive extends ControlScheme {
 
 
     }
-
+*/
 }
     
 

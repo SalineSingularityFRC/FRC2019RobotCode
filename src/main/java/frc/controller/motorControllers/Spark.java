@@ -8,6 +8,7 @@ import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controller.EncoderController;
 import frc.controller.MotorController;
@@ -30,7 +31,7 @@ public class Spark implements MotorController {
 
     double initialPosition;
     double previousPosition, previousJoystick;
-    boolean setToPosition;
+    boolean controlWithJoystick;
 
 
     /**
@@ -39,7 +40,7 @@ public class Spark implements MotorController {
      * @param portNumber pass the CAN network ID for this motor controller
      * @param brushlessMotor pass true if using a neo brushless motor
      */
-    public Spark(int portNumber, boolean brushlessMotor) {
+    public Spark(int portNumber, boolean brushlessMotor, double rampRate) {
 
         MotorType type;
         if (brushlessMotor) {
@@ -50,6 +51,8 @@ public class Spark implements MotorController {
         }
         
         this.m_motor = new CANSparkMax(portNumber, type);
+        this.setCoastMode(true);
+        this.setRampRate(rampRate);
     }
 
     /**
@@ -58,9 +61,9 @@ public class Spark implements MotorController {
      * @param portNumber pass the CAN network ID for this motor controller
      * @param brushlessMotor pass true if using a neo brushless motor
      */
-    public Spark(int portNumber, boolean brushlessMotor, String name,
+    public Spark(int portNumber, boolean brushlessMotor, double rampRate, String name,
     double kP, double kI, double kD, double kIZ, double kFF, double kMinOut, double kMaxOut) {
-        this(portNumber, brushlessMotor);
+        this(portNumber, brushlessMotor, rampRate);
 
         this.m_encoder = m_motor.getEncoder();
         this.m_pidController = m_motor.getPIDController();
@@ -69,9 +72,10 @@ public class Spark implements MotorController {
 
         //If intitialPosition = -100, lower limit switch has not been pressed.
         initialPosition = -100;
-        previousJoystick = 0.0;
         previousPosition = -100;
-        setToPosition = true;
+
+        previousJoystick = 0.0;
+        controlWithJoystick = false;
 
 
         
@@ -119,7 +123,8 @@ public class Spark implements MotorController {
     //Encoder methods:
 
     public void printEncoderPosition() {
-        SmartDashboard.putNumber(name + "encoder value", m_encoder.getPosition());
+        SmartDashboard.putNumber(name + "Encoder Value", this.getCurrentPosition());
+        
     }
 
 
@@ -226,22 +231,50 @@ public class Spark implements MotorController {
     }
 
     public double getCurrentPosition() {
+        if(initialPosition != -100) {
+            return m_encoder.getPosition();
+        }
         return this.m_encoder.getPosition() - this.initialPosition;
+        
     }
 
+
+
+    
     public void setToPosition(double joystickControl, double position) {
+
+        this.getConstantsFromDashboard();
+        this.printEncoderPosition();
+
+        SmartDashboard.putBoolean("lower limit switch", isLowerLimitPressed(true));
+        if (isLowerLimitPressed(true)) {
+            this.setInitialPosition();
+        }
 
         joystickControl = SingDrive.threshold(joystickControl);
         
-        if (joystickControl != previousJoystick)
-
-        if (position != previousPosition) {
-            setToPosition = true;
+        if (joystickControl != previousJoystick) {
+            controlWithJoystick = true;
         }
 
-        if (this.initialPosition != -100) {
-            this.m_pidController.setReference(position, ControlType.kPosition);
-            return;
+        else if (position != previousPosition) {
+            controlWithJoystick = false;
+        }
+
+        /*
+        If initialPosition is not 100, we assume we know what position the elevator is in.
+        Only set to a position if we haven't started controlling with a joystick.
+        */
+        if (this.initialPosition == -100) {
+            DriverStation.reportWarning("We do not know the position of the " + name +
+            "; Please move this mechanism to a limit switch manually", true);
+            controlWithJoystick = true;
+        }
+        else if (!controlWithJoystick) {
+            this.m_pidController.setReference(position + this.initialPosition, ControlType.kPosition);
+        }
+        else {
+            this.m_motor.set(joystickControl);
         }
 
         previousJoystick = joystickControl;

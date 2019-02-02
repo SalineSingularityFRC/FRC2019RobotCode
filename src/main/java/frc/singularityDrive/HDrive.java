@@ -53,8 +53,8 @@ public class HDrive extends SingDrive {
 
         super(leftMotor1, leftMotor2, leftMotor3, rightMotor1, rightMotor2, rightMotor3, slowSpeedConstant, normalSpeedConstant, fastSpeedConstant);
         
-        this.m_middleMotor1 = new Spark(middleMotor1, DEFAULT_TO_BRUSHLESS);
-        this.m_middleMotor2 = new Spark(middleMotor2, DEFAULT_TO_BRUSHLESS);
+        this.m_middleMotor1 = new Spark(middleMotor1, DEFAULT_TO_BRUSHLESS, SingDrive.DEFAULT_RAMP_RATE);
+        this.m_middleMotor2 = new Spark(middleMotor2, DEFAULT_TO_BRUSHLESS, SingDrive.DEFAULT_RAMP_RATE);
         // Setting one motor controller to follow another means that it will automatically set output voltage of the follower
 		// controller to the value of the followee motor controller. Setting the boolean value to true inverts the signal
 		// in case that the motor controllers are naturally reversed.

@@ -72,11 +72,11 @@ public abstract class SingDrive {
 
 	// RAMP_RATE is used to limit jerks in motor output. Drive Motors starting at 0 output can ramp up to full power
 	// in a time denoted by RAMP_RATE (measured in seconds). Suggested value: 0.4 (still needs testing)
-	private final static double DEFAULT_RAMP_RATE = 0.4;
+	public final static double DEFAULT_RAMP_RATE = 0.4;
 
 	// MINIMUM_THRESHOLD limits unintended drift from joystick axes. Any joystick input less than MINIMUM_THRESHOLD
 	// will be set to 0 using this.threshold(double velocity). Suggested value: 0.07 (still needs testing)
-	private final static double MINIMUM_THRESHOLD = 0.07;
+	public final static double MINIMUM_THRESHOLD = 0.07;
 
 	// DEFAULT_INPUT_POWER is the default for what a joystick input will be raised to. For example, when the value
 	// is 2.0, joystick inputs will be squared when DEFAULT_INPUT_POWER is passed to this.setInputToPower().
@@ -133,7 +133,7 @@ public abstract class SingDrive {
 	public SingDrive(int leftMotor1, int leftMotor2, int leftMotor3, int rightMotor1, int rightMotor2, int rightMotor3,
 	double slowSpeedConstant, double normalSpeedConstant, double fastSpeedConstant) {
 
-		this.m_leftMotor1 = new Spark(leftMotor1, DEFAULT_TO_BRUSHLESS);
+		this.m_leftMotor1 = new Spark(leftMotor1, DEFAULT_TO_BRUSHLESS, DEFAULT_RAMP_RATE);
 		//this.m_leftMotor2 = new Spark(leftMotor2, DEFAULT_TO_BRUSHLESS);
 		//this.m_leftMotor3 = new Spark(leftMotor3, DEFAULT_TO_BRUSHLESS);
 		// Setting one motor controller to follow another means that it will automatically set output voltage of the follower
@@ -142,7 +142,7 @@ public abstract class SingDrive {
 		//this.m_leftMotor2.follow(this.m_leftMotor1, false);
 		//this.m_leftMotor3.follow(this.m_leftMotor1, false);
 
-		this.m_rightMotor1 = new Spark(rightMotor1, DEFAULT_TO_BRUSHLESS);
+		this.m_rightMotor1 = new Spark(rightMotor1, DEFAULT_TO_BRUSHLESS, DEFAULT_RAMP_RATE);
 		////this.m_rightMotor2 = new Spark(rightMotor2, DEFAULT_TO_BRUSHLESS);
 		//this.m_rightMotor3 = new Spark(rightMotor3, DEFAULT_TO_BRUSHLESS);
 		//this.m_rightMotor2.follow(this.m_rightMotor1, false);
@@ -157,7 +157,7 @@ public abstract class SingDrive {
 		this.velocityMultiplier = this.normalSpeedConstant;
 
 		// Ramp the voltage of the motor output before normal driving (can be changed for auton, or special circumstances).
-		this.rampDefaultVoltage();
+		//this.rampDefaultVoltage();
 
 		// Set all drive motor controllers to coast to limit wear and tear.
 		this.setDriveToCoast(true);
