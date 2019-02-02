@@ -256,17 +256,17 @@ public class ArcadeDrive extends ControlScheme {
         /*
         elevatorButton1Now = armController.getAButton();
         if(elevatorButton1Now && !elevatorButton1Previous) {
-            elevator.setElevatorPosition(elevatorLow);
+            elevator.setPosition(elevatorLow);
         }
 
         elevatorButton2Now = armController.getBButton();
         if(elevatorButton2Now && !elevatorButton2Previous) {
-            elevator.setElevatorPosition(elevatorMid);
+            elevator.setPosition(elevatorMid);
         }
 
         elevatorButton3Now = armController.getXButton();
         if(elevatorButton3Now && !elevatorButton3Previous) {
-            elevator.setElevatorPosition(elevatorHigh);
+            elevator.setPosition(elevatorHigh);
         }
 
         elevatorButton1Previous = elevatorButton1Now;
@@ -276,12 +276,15 @@ public class ArcadeDrive extends ControlScheme {
 
         //Test code to move elevator motor with d-pad
         if(controller.getPOVUp()) {
-            elevator.setElevatorPosition(this.elevatorForwardSpeed);
+            elevator.setSpeed(this.elevatorForwardSpeed);
         }
 
         else if(controller.getPOVDown()) {
-            elevator.setElevatorPosition(this.elevatorReverseSpeed);
+            elevator.setSpeed(this.elevatorReverseSpeed);
         }
+
+        SmartDashboard.putBoolean("D-Pad Up", controller.getPOVUp());
+        SmartDashboard.putBoolean("D-Pad Down", controller.getPOVDown());
         }
 
     public void wrist(Wrist wrist) {

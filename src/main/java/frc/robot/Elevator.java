@@ -56,7 +56,7 @@ public class Elevator {
     }
 
 
-    public void setElevatorPosition(double position) {
+    public void setPosition(double position) {
 
         // read PID coefficients from SmartDashboard
         double p = SmartDashboard.getNumber("Elevator P Gain", 0);
@@ -102,7 +102,7 @@ public class Elevator {
 
     public void setSpeed(double speed) {
         m_motor.set(speed);
-        SmartDashboard.putNumber("ProcessVariable", m_encoder.getPosition());
+        //SmartDashboard.putNumber("ProcessVariable", m_encoder.getSpeed());
     }
 
 }
