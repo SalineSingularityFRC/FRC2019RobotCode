@@ -52,11 +52,11 @@ public class ArcadeDrive extends ControlScheme {
 
     //Need to be adjusted for our robot
     final double txkP = 0.02;
-    final double min_command = 0.02;
+    double txAdjust;
     final double driveSpeedConstant = 0.2;
-    final double txPower = 0.8;
+    final double txPower = 1;
 
-    final double angleDifferencekP = 0.005;
+    final double angleDifferencekP = 0.01;
     final double angleDifferencePower = 1;
 
     //Positions for elevator encoder, these are just placeholder values, need to test with robot
@@ -101,7 +101,7 @@ public class ArcadeDrive extends ControlScheme {
 
     public void drive(SingDrive drive, DrivePneumatics pneumatics) {
 
-        leftJoyY = controller.getLS_Y();
+        leftJoyY = controller.getRS_Y();
         rightJoyX = controller.getRS_X();
         drive.arcadeDrive(leftJoyY, rightJoyX, 0.0, false, SpeedMode.FAST);
 
@@ -206,14 +206,11 @@ public class ArcadeDrive extends ControlScheme {
 
             double steering_adjust = 0.0;
             
-            if(tx > 1.0){
-               // steering_adjust = txkP * (this.tx * Math.abs(Math.pow(this.tx, txPower - 1))) - min_command;
-               steering_adjust = txkP * tx;
+            txAdjust = txkP * Math.pow(Math.abs(tx), txPower);
+            if (tx < 0) {
+                txAdjust *= -1;
             }
-            else if(tx < 1.0){
-               // steering_adjust = txkP * (this.tx * Math.abs(Math.pow(this.tx, txPower - 1))) + min_command;
-               steering_adjust = txkP * tx;
-            }
+
             
             double targetAngle;
 
@@ -235,7 +232,8 @@ public class ArcadeDrive extends ControlScheme {
             
 
             //To remove gyro control, comment out this line:
-            steering_adjust += angleDifferencekP * SingDrive.setInputToPower(angleDifference, angleDifferencePower);
+            steering_adjust += txAdjust;
+            steering_adjust += angleDifferencekP * angleDifference;
             
 
             left_command += steering_adjust;

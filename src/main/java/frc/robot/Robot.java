@@ -159,7 +159,7 @@ public class Robot extends TimedRobot {
     currentScheme.drive(drive, drivePneumatics);
     // partial autonomy via vision
     currentScheme.visionDrive(vision, drive, drivePneumatics, gyro);
-    currentScheme.elevator(elevator);
+    //currentScheme.elevator(elevator);
     
     
   }
@@ -182,14 +182,14 @@ public class Robot extends TimedRobot {
   private void setDefaultProperties() {
     
     //Motors
-    driveLeft1 = 3;
-    driveLeft2 = 4;
+    driveLeft1 = 1;
+    driveLeft2 = 2;
     driveLeft3 = 3;
-    driveRight1 = 1;
-    driveRight2 = 2;
+    driveRight1 = 4;
+    driveRight2 = 5;
     driveRight3 = 6;
-    intakeMotor = 7;
-    elevatorMotor = 8;
+    intakeMotor = 8;
+    elevatorMotor = 7;
     
     //Pneumatics
     drivePneuHigh = 1;
