@@ -100,7 +100,7 @@ public class Elevator {
         SmartDashboard.putNumber("ProcessVariable", m_encoder.getPosition());
     }
 
-    public void elevatorTesting(double speed) {
+    public void setSpeed(double speed) {
         m_motor.set(speed);
         SmartDashboard.putNumber("ProcessVariable", m_encoder.getPosition());
     }
