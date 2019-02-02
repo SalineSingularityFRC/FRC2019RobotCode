@@ -3,6 +3,7 @@ package frc.robot;
 
 import frc.controller.MotorController;
 import frc.controller.motorControllers.Spark;
+import frc.singularityDrive.SingDrive;
 
 
 public class Intake {
@@ -17,7 +18,7 @@ public class Intake {
     private final double intakeOffSpeed = 0;
 
     public Intake(int rotatePort) {
-        intake = new Spark(rotatePort, true);
+        intake = new Spark(rotatePort, true, SingDrive.DEFAULT_RAMP_RATE);
     }
 
     public void controlIntake(boolean intakeOn, boolean intakeReverse) {

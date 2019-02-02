@@ -14,6 +14,8 @@ import frc.singularityDrive.SingDrive;
 import frc.singularityDrive.SingDrive.SpeedMode;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.Encoder;
 //import java.util.Map;
 import edu.wpi.first.wpilibj.Timer;
 /**
@@ -62,6 +64,10 @@ public class ArcadeDrive extends ControlScheme {
     final int elevatorMid = 50;
     final int elevatorHigh = 100;
 
+    //Elevator speeed constants for testing
+    final double elevatorForwardSpeed = 0.1;
+    final double elevatorReverseSpeed = -0.1;
+
     final int wristStartinPos = 0;
     final int wristHatchPos = 90;
     final int wristCargoPos = 180;
@@ -89,6 +95,8 @@ public class ArcadeDrive extends ControlScheme {
 
         //instanciating the vision object
         vision = new Vision();
+
+        
     }
 
     public void drive(SingDrive drive, DrivePneumatics pneumatics) {
@@ -244,27 +252,41 @@ public class ArcadeDrive extends ControlScheme {
 
     public void elevator(Elevator elevator) {
 
+        //Elevator code set to three poitions with encoders, not using right now
+        /*
         elevatorButton1Now = armController.getAButton();
         if(elevatorButton1Now && !elevatorButton1Previous) {
-            elevator.setElevatorPosition(elevatorLow);
+            elevator.setPosition(elevatorLow);
         }
 
         elevatorButton2Now = armController.getBButton();
         if(elevatorButton2Now && !elevatorButton2Previous) {
-            elevator.setElevatorPosition(elevatorMid);
+            elevator.setPosition(elevatorMid);
         }
 
         elevatorButton3Now = armController.getXButton();
         if(elevatorButton3Now && !elevatorButton3Previous) {
-            elevator.setElevatorPosition(elevatorHigh);
+            elevator.setPosition(elevatorHigh);
         }
 
         elevatorButton1Previous = elevatorButton1Now;
         elevatorButton2Previous = elevatorButton2Now;
         elevatorButton3Previous = elevatorButton3Now;
+        */
 
+        //Test code to move elevator motor with d-pad
+        if(controller.getPOVUp()) {
+            elevator.setSpeed(this.elevatorForwardSpeed);
         }
 
+        else if(controller.getPOVDown()) {
+            elevator.setSpeed(this.elevatorReverseSpeed);
+        }
+
+        SmartDashboard.putBoolean("D-Pad Up", controller.getPOVUp());
+        SmartDashboard.putBoolean("D-Pad Down", controller.getPOVDown());
+        }
+/*
     public void wrist(Wrist wrist) {
 
         wristButton1Now = armController.getPOVDown();
@@ -283,7 +305,7 @@ public class ArcadeDrive extends ControlScheme {
 
 
     }
-
+*/
 }
     
 

@@ -42,6 +42,7 @@ public class Robot extends TimedRobot {
   int ejectorPneuPush, ejectorPneuHold;
   int hatchMechDown, hatchMechUp;
   int intakeMotor;
+  int elevatorMotor;
 
   //Declaration of our driving scheme, which can be initialized to
   //any ControlScheme in robotInit()
@@ -54,6 +55,7 @@ public class Robot extends TimedRobot {
   HatchMech hatchMech;
   PneumaticEjector ejectorPneu;
   Vision vision;
+  Elevator elevator;
 
   //Create a gyro
   AHRS gyro;
@@ -84,6 +86,7 @@ public class Robot extends TimedRobot {
     //initialize mechanisms
     drive = new BasicDrive(driveLeft1, driveLeft2, driveLeft3, driveRight1, driveRight2, driveRight3);
     drivePneumatics = new DrivePneumatics(0, 1);
+    elevator = new Elevator(elevatorMotor, true);
     /*intake = new Intake(intakeMotor);
     hatchMech = new HatchMech(hatchMechDown, hatchMechUp);
     ejectorPneu = new PneumaticEjector(ejectorPneuPush, ejectorPneuHold);
@@ -156,6 +159,7 @@ public class Robot extends TimedRobot {
     currentScheme.drive(drive, drivePneumatics);
     // partial autonomy via vision
     currentScheme.visionDrive(vision, drive, drivePneumatics, gyro);
+    currentScheme.elevator(elevator);
     
     
   }
@@ -185,6 +189,7 @@ public class Robot extends TimedRobot {
     driveRight2 = 2;
     driveRight3 = 6;
     intakeMotor = 7;
+    elevatorMotor = 8;
     
     //Pneumatics
     drivePneuHigh = 1;

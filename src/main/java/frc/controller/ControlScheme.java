@@ -3,6 +3,7 @@ package frc.controller;
 import com.kauailabs.navx.frc.AHRS;
 
 import frc.robot.DrivePneumatics;
+import frc.robot.Elevator;
 import frc.robot.HatchMech;
 import frc.robot.Intake;
 import frc.robot.PneumaticEjector;
@@ -21,6 +22,7 @@ public abstract class ControlScheme {
 	public abstract void controlHatchMech(HatchMech hatchMech, PneumaticEjector ejector);
 	public abstract void intake(Intake intake);
 	public abstract void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, AHRS gyro);
+	public abstract void elevator(Elevator elevator);
 	
 	/**
 	 * 
