@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controller.EncoderController;
 import frc.controller.MotorController;
+import frc.singularityDrive.SingDrive;
 
 
 /**
@@ -27,8 +28,10 @@ public class Spark implements MotorController {
     //name of the mechanism
     String name;
 
-    double currentPosition;
     double initialPosition;
+    double previousPosition, previousJoystick;
+    boolean setToPosition;
+
 
     /**
      * Constructor for Spark class.
@@ -65,7 +68,12 @@ public class Spark implements MotorController {
         this.putConstantsOnDashboard(name, kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
 
         //If intitialPosition = -100, lower limit switch has not been pressed.
-        double initialPosition = -100;
+        initialPosition = -100;
+        previousJoystick = 0.0;
+        previousPosition = -100;
+        setToPosition = true;
+
+
         
     }
 
@@ -223,12 +231,21 @@ public class Spark implements MotorController {
 
     public void setToPosition(double joystickControl, double position) {
 
+        joystickControl = SingDrive.threshold(joystickControl);
+        
+        if (joystickControl != previousJoystick)
+
+        if (position != previousPosition) {
+            setToPosition = true;
+        }
+
         if (this.initialPosition != -100) {
             this.m_pidController.setReference(position, ControlType.kPosition);
             return;
         }
 
-
+        previousJoystick = joystickControl;
+        previousPosition = position;
     }
 
     /**

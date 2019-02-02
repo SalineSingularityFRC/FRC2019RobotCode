@@ -161,29 +161,34 @@ public class ArcadeDrive extends ControlScheme {
     
     public void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, AHRS gyro) {
 
-        this.ta = vision.table.getEntry("ta").getDouble(0.0);
-        this.tx = vision.table.getEntry("tx").getDouble(0.0);
-        this.ty = vision.table.getEntry("ty").getDouble(0.0);
-        this.tv = vision.table.getEntry("tv").getDouble(0.0);
+        ta = vision.ta.getDouble(0.0);
+        tx = vision.tx.getDouble(0.0);
+        ty = vision.ty.getDouble(0.0);
+        tv = vision.tv.getDouble(0.0);
+ 
 
+        boolean squareButton = controller.getXButton();
+        boolean offSetButton = controller.getYButton();
 
         SmartDashboard.putNumber("tx", tx);
         SmartDashboard.putNumber("ty", ty);
         SmartDashboard.putNumber("ta", ta);
         SmartDashboard.putNumber("tv", tv);
-        
-        boolean squareButton = controller.getXButton();
-        boolean offSetButton = controller.getYButton();
 
+        SmartDashboard.putBoolean("Square button", squareButton);
+        SmartDashboard.putBoolean("Offset button", offSetButton);
+        
+
+        /*
         double currentAngle = super.smooshGyroAngle(gyro.getAngle());
-        SmartDashboard.putNumber("current ange:", currentAngle);
+        SmartDashboard.putNumber("current angle:", currentAngle);
 
         if(controller.getAButton()) {
             gyro.setAngleAdjustment(-gyro.getAngle());
         }
+        */
 
-
-        if((squareButton || offSetButton) && vision.table.getEntry("tv").getDouble(0.0) == 1.0) {
+        if((squareButton == true || offSetButton == true) && vision.table.getEntry("tv").getDouble(0.0) == 1.0) {
 
             double left_command = driveSpeedConstant;
             double right_command = driveSpeedConstant;
@@ -191,12 +196,12 @@ public class ArcadeDrive extends ControlScheme {
             double steering_adjust = 0.0;
 
             if(tx > 1.0){
-                steering_adjust = txkP * drive.setInputToPower(this.tx, txPower) - min_command;
+                steering_adjust = txkP * this.tx * Math.abs(Math.pow(this.tx, txPower - 1)) - min_command;
             }
             else if(tx < 1.0){
-                steering_adjust = txkP * drive.setInputToPower(this.tx, txPower) + min_command;
+                steering_adjust = txkP * this.tx * Math.abs(Math.pow(this.tx, txPower - 1)) + min_command;
             }
-
+            /*
             double targetAngle;
 
             if(squareButton) {
@@ -210,8 +215,8 @@ public class ArcadeDrive extends ControlScheme {
             double angleDifference = currentAngle - targetAngle;
 
             //To remove gyro control, comment out this line:
-            steering_adjust += angleDifferencekP * drive.setInputToPower(angleDifference, angleDifferencePower);
-
+            steering_adjust += angleDifferencekP * SingDrive.setInputToPower(angleDifference, angleDifferencePower);
+            */
 
             left_command += steering_adjust;
             right_command -= steering_adjust;
