@@ -7,8 +7,8 @@
 
 package frc.robot;
 
-//import edu.wpi.cscore.UsbCamera;
-//import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
 //import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -89,9 +89,13 @@ public class Robot extends TimedRobot {
     ejectorPneu = new PneumaticEjector(ejectorPneuPush, ejectorPneuHold);
     */
     vision = new Vision();
+    //DO NOT REMOVE PLZ
+    CameraServer.getInstance().startAutomaticCapture();
+    CameraServer.getInstance().startAutomaticCapture();
 
     gyro = new AHRS(SPI.Port.kMXP);
     gyroResetAtTeleop = true;
+    
   }
 
   /**
