@@ -56,8 +56,8 @@ public class ArcadeDrive extends ControlScheme {
     final double driveSpeedConstant = 0.2;
     final double txPower = 0.8;
 
-    final double angleDifferencekP = 0.01;
-    final double angleDifferencePower = 0.8;
+    final double angleDifferencekP = 0.005;
+    final double angleDifferencePower = 1;
 
     //Positions for elevator encoder, these are just placeholder values, need to test with robot
     final int elevatorLow = 20;
@@ -187,29 +187,34 @@ public class ArcadeDrive extends ControlScheme {
         SmartDashboard.putBoolean("Offset button", offSetButton);
         
 
-        /*
+        
         double currentAngle = super.smooshGyroAngle(gyro.getAngle());
         SmartDashboard.putNumber("current angle:", currentAngle);
 
+        SmartDashboard.putBoolean("A button", controller.getAButton());
         if(controller.getAButton()) {
-            gyro.setAngleAdjustment(-gyro.getAngle());
+            gyro.setAngleAdjustment(0);
+            gyro.setAngleAdjustment(-super.smooshGyroAngle(gyro.getAngle()));
+            
         }
-        */
+        
 
-        if((squareButton == true || offSetButton == true) && vision.table.getEntry("tv").getDouble(0.0) == 1.0) {
+        if((squareButton == true || offSetButton == true) && tv == 1.0) {
 
             double left_command = driveSpeedConstant;
             double right_command = driveSpeedConstant;
 
             double steering_adjust = 0.0;
-
+            
             if(tx > 1.0){
-                steering_adjust = txkP * this.tx * Math.abs(Math.pow(this.tx, txPower - 1)) - min_command;
+               // steering_adjust = txkP * (this.tx * Math.abs(Math.pow(this.tx, txPower - 1))) - min_command;
+               steering_adjust = txkP * tx;
             }
             else if(tx < 1.0){
-                steering_adjust = txkP * this.tx * Math.abs(Math.pow(this.tx, txPower - 1)) + min_command;
+               // steering_adjust = txkP * (this.tx * Math.abs(Math.pow(this.tx, txPower - 1))) + min_command;
+               steering_adjust = txkP * tx;
             }
-            /*
+            
             double targetAngle;
 
             if(squareButton) {
@@ -220,11 +225,18 @@ public class ArcadeDrive extends ControlScheme {
                 targetAngle = super.getOffsetHatchAngle(currentAngle);
             }
 
+
             double angleDifference = currentAngle - targetAngle;
+            double secondAngleDifference = targetAngle - 360 + currentAngle;
+
+            if (Math.abs(secondAngleDifference) < Math.abs(angleDifference)) {
+                angleDifference = secondAngleDifference;
+            }
+            
 
             //To remove gyro control, comment out this line:
             steering_adjust += angleDifferencekP * SingDrive.setInputToPower(angleDifference, angleDifferencePower);
-            */
+            
 
             left_command += steering_adjust;
             right_command -= steering_adjust;
@@ -236,12 +248,6 @@ public class ArcadeDrive extends ControlScheme {
             SmartDashboard.putNumber("Left_command", left_command);
             SmartDashboard.putNumber("Right_command", right_command);
         } // end of X button and target
-        
-
-        
-
-        
-
     }
 
     public void elevator(Elevator elevator) {
