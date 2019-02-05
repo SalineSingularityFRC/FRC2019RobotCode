@@ -11,6 +11,7 @@ public class Elevator {
 
     public Elevator(int motorPort, boolean brushlessMotor) {
         m_motor = new Spark(motorPort, brushlessMotor, this.rampRate, "Elevator", kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
+        m_motor.setCoastMode(false);
     }
 
     public void setPosition(double position, double joystickControl) {
