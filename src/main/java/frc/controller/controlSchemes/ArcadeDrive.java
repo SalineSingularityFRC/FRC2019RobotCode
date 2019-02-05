@@ -25,18 +25,24 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class ArcadeDrive extends ControlScheme {
 
+    // make new XBox controller objects
     XboxController controller;
     XboxController armController;
+
     Vision vision;
 
-    Timer ejectorTimer;
-    double ejectorTimerValue;
-
+    //Drive Stuff
     boolean fastGear;
     boolean buttonDPneuNow, buttonDPneuPrevious;
 
+    SpeedMode speedMode;
+
+    //Hatch Stuff
     boolean hatchMechExtended;
     boolean buttonHatchMechNow, buttonHatchMechPrevious;
+
+    Timer ejectorTimer;
+    double ejectorTimerValue;
 
     boolean ejectorButtonNow, ejectorButtonPrevious;
 
@@ -47,17 +53,6 @@ public class ArcadeDrive extends ControlScheme {
     boolean wristButton1Now, wristButton1Previous;
     boolean wristButton2Now, wristButton2Previous;
 
-    double joyY, joyX;
-    
-
-    //Need to be adjusted for our robot
-    final double txkP = 0.025;
-    double txAdjust;
-    final double driveSpeedConstant = 0.3;
-    final double txPower = 1;
-
-    final double angleDifferencekP = 0.012;
-    final double angleDifferencePower = 1;
 
     //Positions for elevator encoder, these are just placeholder values, need to test with robot
     final int elevatorLow = 20;
@@ -72,14 +67,16 @@ public class ArcadeDrive extends ControlScheme {
     final int wristHatchPos = 90;
     final int wristCargoPos = 180;
 
-    final double endPosition = 10.0;
-    double tx, ta, ty, tv;
-    final double driveSpeed = 0.3;
-    final double tuningConstant = 50;
+    double tx, tv;
 
-    SpeedMode speedMode;
+    //Need to be adjusted for our robot
+    final double driveSpeedConstant = 0.3;
 
- 
+    final double txkP = 0.025;
+    double txAdjust;
+    
+    final double angleDifferencekP = 0.012;
+    double angleDifferenceAdjust;
 
     // Constructor for the ArcadeDrive class
 
@@ -93,7 +90,7 @@ public class ArcadeDrive extends ControlScheme {
         //makes the drive pneumatics only go once instead of many times
         buttonDPneuPrevious = false;
         //instanciating the ejectorTimer is a new timer for the pneumatics to pull the  
-        ejectorTimer = new Timer();
+        //ejectorTimer = new Timer();
 
         //instanciating the vision object
         vision = new Vision();
@@ -105,9 +102,6 @@ public class ArcadeDrive extends ControlScheme {
 
     public void drive(SingDrive drive, DrivePneumatics pneumatics) {
 
-        joyY = controller.getRS_Y();
-        joyX = controller.getRS_X();
-
         if(controller.getPOVDown()){
             speedMode = SpeedMode.SLOW;
 
@@ -115,18 +109,9 @@ public class ArcadeDrive extends ControlScheme {
         else if(controller.getPOVUp()){
             speedMode = SpeedMode.FAST;
         }
-        drive.arcadeDrive(joyY, joyX, 0.0, false, speedMode);
+        drive.arcadeDrive(controller.getRS_Y(), controller.getRS_X(), 0.0, false, speedMode);
 
-
-
-
-
-
-
-        
-        SmartDashboard.putNumber("left joystick", joyY);
-        SmartDashboard.putNumber("right joystick", joyX);
-
+/*
         buttonDPneuNow = controller.getRB();
 
         if (buttonDPneuNow && !buttonDPneuPrevious) {
@@ -141,8 +126,9 @@ public class ArcadeDrive extends ControlScheme {
   //      }
 
         buttonDPneuPrevious = buttonDPneuNow;
-
+    */
     }
+    
 
     public void controlHatchMech(HatchMech hatchMech, PneumaticEjector ejector) {
 
@@ -183,88 +169,6 @@ public class ArcadeDrive extends ControlScheme {
 
         intake.controlIntake(controller.getPOVDown(), controller.getPOVUp());
 
-    }
-
-    
-    public void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, AHRS gyro) {
-
-        ta = vision.ta.getDouble(0.0);
-        tx = vision.tx.getDouble(0.0);
-        ty = vision.ty.getDouble(0.0);
-        tv = vision.tv.getDouble(0.0);
- 
-
-        boolean squareButton = controller.getXButton();
-        boolean offSetButton = controller.getYButton();
-
-        SmartDashboard.putNumber("tx", tx);
-        SmartDashboard.putNumber("ty", ty);
-        SmartDashboard.putNumber("ta", ta);
-        SmartDashboard.putNumber("tv", tv);
-
-        SmartDashboard.putBoolean("Square button", squareButton);
-        SmartDashboard.putBoolean("Offset button", offSetButton);
-        
-
-        
-        double currentAngle = super.smooshGyroAngle(gyro.getAngle());
-        SmartDashboard.putNumber("current angle:", currentAngle);
-
-        SmartDashboard.putBoolean("A button", controller.getAButton());
-        if(controller.getAButton()) {
-            gyro.setAngleAdjustment(0);
-            gyro.setAngleAdjustment(-super.smooshGyroAngle(gyro.getAngle()));
-            
-        }
-        
-
-        if((squareButton == true || offSetButton == true) && tv == 1.0) {
-
-            double left_command = driveSpeedConstant;
-            double right_command = driveSpeedConstant;
-
-            double steering_adjust = 0.0;
-            
-            txAdjust = txkP * Math.pow(Math.abs(tx), txPower);
-            if (tx < 0) {
-                txAdjust *= -1;
-            }
-
-            
-            double targetAngle;
-
-            if(squareButton) {
-                targetAngle = super.getSquareAngleForPort(currentAngle);
-            }
-
-            else {
-                targetAngle = super.getOffsetHatchAngle(currentAngle);
-            }
-
-
-            double angleDifference = currentAngle - targetAngle;
-            double secondAngleDifference = targetAngle - 360 + currentAngle;
-
-            if (Math.abs(secondAngleDifference) < Math.abs(angleDifference)) {
-                angleDifference = secondAngleDifference;
-            }
-            
-
-            //To remove gyro control, comment out this line:
-            steering_adjust += txAdjust;
-            steering_adjust += angleDifferencekP * angleDifference;
-            
-
-            left_command += steering_adjust;
-            right_command -= steering_adjust;
-
-                
-
-            drive.tankDrive(left_command, right_command, 0.0, false, SpeedMode.FAST);
-            
-            SmartDashboard.putNumber("Left_command", left_command);
-            SmartDashboard.putNumber("Right_command", right_command);
-        } // end of X button and target
     }
 
     public void elevator(Elevator elevator) {
@@ -323,16 +227,82 @@ public class ArcadeDrive extends ControlScheme {
 
     }
 */
-}
+
+public void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, AHRS gyro) {
+
+        
+    tx = vision.tx.getDouble(0.0);
+    tv = vision.tv.getDouble(0.0);
+
+
+    boolean squareButton = controller.getXButton();
+    boolean offSetButton = controller.getYButton();
+
+    SmartDashboard.putNumber("tx", tx);
+    SmartDashboard.putNumber("tv", tv);
+
+    double currentAngle = super.smooshGyroAngle(gyro.getAngle());
+    SmartDashboard.putNumber("current angle:", currentAngle);
+
     
-
-
-
-    //TODO: finish this method
-/*     
-
-    private double clip(double input, double inputMin, double inputMax, double outputMin, double outputMax) {
-        input = input/(inputMin+inputMax);
+    if(controller.getAButton()) {
+        gyro.setAngleAdjustment(0);
+        gyro.setAngleAdjustment(-super.smooshGyroAngle(gyro.getAngle()));
         
     }
-*/
+    
+
+    if((squareButton == true || offSetButton == true) && tv == 1.0) {
+
+        double left_command = driveSpeedConstant;
+        double right_command = driveSpeedConstant;
+
+        double steering_adjust = 0.0;
+        
+        txAdjust = txkP * tx;
+        /*
+
+        txAdjust = txkP * Math.pow(Math.abs(tx), txPower);
+        if (tx < 0) {
+            txAdjust *= -1;
+        }*/
+
+        
+        double targetAngle;
+
+        if(squareButton) {
+            targetAngle = super.getSquareAngleForPort(currentAngle);
+        }
+
+        else {
+            targetAngle = super.getOffsetHatchAngle(currentAngle);
+        }
+
+
+        double angleDifference = currentAngle - targetAngle;
+        double secondAngleDifference = targetAngle - 360 + currentAngle;
+
+        if (Math.abs(secondAngleDifference) < Math.abs(angleDifference)) {
+            angleDifference = secondAngleDifference;
+        }
+        
+
+        //To remove gyro control, comment out this line:
+        steering_adjust += txAdjust;
+        steering_adjust += angleDifferencekP * angleDifference;
+        
+
+        left_command += steering_adjust;
+        right_command -= steering_adjust;
+
+            
+
+        drive.tankDrive(left_command, right_command, 0.0, false, SpeedMode.FAST);
+        
+        SmartDashboard.putNumber("Left_command", left_command);
+        SmartDashboard.putNumber("Right_command", right_command);
+    } // end of X button and target
+}
+
+}
+    
