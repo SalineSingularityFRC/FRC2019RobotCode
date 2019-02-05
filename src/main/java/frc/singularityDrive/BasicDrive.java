@@ -63,8 +63,8 @@ public class BasicDrive extends SingDrive {
 		double forwardVelocity = vertical, rotationVelocity = -rotation;
 		
 		// Account for joystick drift.
-		forwardVelocity = threshold(forwardVelocity);
-		rotationVelocity = threshold(rotationVelocity);
+		//forwardVelocity = threshold(forwardVelocity);
+		//rotationVelocity = threshold(rotationVelocity);
 
 		// If prompted, raise inputs to the default power.
 		if (poweredInputs) {
@@ -103,8 +103,8 @@ public class BasicDrive extends SingDrive {
 		double leftVelocity = -left, rightVelocity = -right;
 
 		// Account for joystick drift.
-		leftVelocity = threshold(leftVelocity);
-		rightVelocity = threshold(rightVelocity);
+		//leftVelocity = threshold(leftVelocity);
+		//rightVelocity = threshold(rightVelocity);
 
 		// If prompted, raise inputs to the default power.
 		if (poweredInputs) {

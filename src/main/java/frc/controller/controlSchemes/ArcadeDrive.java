@@ -47,16 +47,16 @@ public class ArcadeDrive extends ControlScheme {
     boolean wristButton1Now, wristButton1Previous;
     boolean wristButton2Now, wristButton2Previous;
 
-    double leftJoyY, rightJoyX;
+    double joyY, joyX;
     
 
     //Need to be adjusted for our robot
-    final double txkP = 0.02;
+    final double txkP = 0.025;
     double txAdjust;
-    final double driveSpeedConstant = 0.2;
+    final double driveSpeedConstant = 0.3;
     final double txPower = 1;
 
-    final double angleDifferencekP = 0.01;
+    final double angleDifferencekP = 0.012;
     final double angleDifferencePower = 1;
 
     //Positions for elevator encoder, these are just placeholder values, need to test with robot
@@ -77,6 +77,8 @@ public class ArcadeDrive extends ControlScheme {
     final double driveSpeed = 0.3;
     final double tuningConstant = 50;
 
+    SpeedMode speedMode;
+
  
 
     // Constructor for the ArcadeDrive class
@@ -96,17 +98,34 @@ public class ArcadeDrive extends ControlScheme {
         //instanciating the vision object
         vision = new Vision();
 
+        speedMode = SpeedMode.FAST;
+
         
     }
 
     public void drive(SingDrive drive, DrivePneumatics pneumatics) {
 
-        leftJoyY = controller.getRS_Y();
-        rightJoyX = controller.getRS_X();
-        drive.arcadeDrive(leftJoyY, rightJoyX, 0.0, false, SpeedMode.FAST);
+        joyY = controller.getRS_Y();
+        joyX = controller.getRS_X();
 
-        SmartDashboard.putNumber("left joystick", leftJoyY);
-        SmartDashboard.putNumber("right joystick", rightJoyX);
+        if(controller.getPOVDown()){
+            speedMode = SpeedMode.SLOW;
+
+        }
+        else if(controller.getPOVUp()){
+            speedMode = SpeedMode.FAST;
+        }
+        drive.arcadeDrive(joyY, joyX, 0.0, false, speedMode);
+
+
+
+
+
+
+
+        
+        SmartDashboard.putNumber("left joystick", joyY);
+        SmartDashboard.putNumber("right joystick", joyX);
 
         buttonDPneuNow = controller.getRB();
 
