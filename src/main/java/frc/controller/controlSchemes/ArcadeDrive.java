@@ -37,7 +37,7 @@ public class ArcadeDrive extends ControlScheme {
 
     SpeedMode speedMode;
 
-    //Hatch Stuff
+    //Hatch Stuff 
     boolean hatchMechExtended;
     boolean buttonHatchMechNow, buttonHatchMechPrevious;
 
