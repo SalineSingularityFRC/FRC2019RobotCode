@@ -2,7 +2,7 @@ package frc.controller.controlSchemes;
 
 import frc.controller.XboxController;
 import frc.robot.DrivePneumatics;
-import frc.robot.HatchMech;
+import frc.robot.Claw;
 import frc.robot.Intake;
 import frc.robot.Vision;
 import frc.robot.Wrist;
@@ -38,13 +38,13 @@ public class ArcadeDrive extends ControlScheme {
     SpeedMode speedMode;
 
     //Hatch Variables
-    boolean hatchMechExtended;
-    boolean buttonHatchMechNow, buttonHatchMechPrevious;
+    boolean clawExtended;
+    boolean buttonclawNow, buttonclawPrevious;
 
     Timer ejectorTimer;
     double ejectorTimerValue;
 
-    boolean ejectorButtonNow, ejectorButtonPrevious;
+    boolean ejectorClawNow, ejectorButtonPrevious;
 
     boolean elevatorButton1Now, elevatorButton1Previous;
     boolean elevatorButton2Now, elevatorButton2Previous;
@@ -135,20 +135,20 @@ public class ArcadeDrive extends ControlScheme {
     }
     
 
-    public void controlHatchMech(HatchMech hatchMech, PneumaticEjector ejector) {
-
-        buttonHatchMechNow = controller.getAButton();
+    public void controlClaw(Claw claw, PneumaticEjector ejector) {
+/*
+        buttonClawNow = controller.getAButton();
         ejectorButtonNow = controller.getBButton();
 
-        if (buttonHatchMechNow && !buttonHatchMechPrevious) {
-            hatchMechExtended = !hatchMechExtended;
+        if (buttonclawNow && !buttonclawPrevious) {
+            clawExtended = !clawExtended;
         }
 
-        if (hatchMechExtended) {
-            hatchMech.setForward();
+        if (clawExtended) {
+            claw.setForward();
         }
         else {
-            hatchMech.setReverse();
+            claw.setReverse();
         }
 
         if (ejectorButtonNow && !ejectorButtonPrevious) {
@@ -164,9 +164,9 @@ public class ArcadeDrive extends ControlScheme {
             ejector.setReverse();
         }
 
-        buttonHatchMechPrevious = buttonHatchMechNow;
+        buttonclawPrevious = buttonclawNow;
         ejectorButtonPrevious = ejectorButtonNow;
-        
+        */
 
     }
 

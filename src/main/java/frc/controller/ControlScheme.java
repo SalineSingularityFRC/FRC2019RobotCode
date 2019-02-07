@@ -4,7 +4,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import frc.robot.DrivePneumatics;
 import frc.robot.Elevator;
-import frc.robot.HatchMech;
+import frc.robot.Claw;
 import frc.robot.Intake;
 import frc.robot.PneumaticEjector;
 import frc.singularityDrive.SingDrive;
@@ -19,7 +19,7 @@ import frc.robot.Vision;
 public abstract class ControlScheme {
 	
 	public abstract void drive(SingDrive drive, DrivePneumatics pneumatics);
-	public abstract void controlHatchMech(HatchMech hatchMech, PneumaticEjector ejector);
+	public abstract void controlClaw(Claw claw, PneumaticEjector ejector);
 	public abstract void intake(Intake intake);
 	public abstract void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, AHRS gyro);
 	public abstract void elevator(Elevator elevator);

@@ -52,7 +52,7 @@ public class Robot extends TimedRobot {
   SingDrive drive;
   DrivePneumatics drivePneumatics;
   Intake intake;
-  HatchMech hatchMech;
+  Claw hatchMech;
   PneumaticEjector ejectorPneu;
   Vision vision;
   Elevator elevator;
@@ -88,7 +88,7 @@ public class Robot extends TimedRobot {
     drivePneumatics = new DrivePneumatics(0, 1);
     elevator = new Elevator(elevatorMotor, true);
     /*intake = new Intake(intakeMotor);
-    hatchMech = new HatchMech(hatchMechDown, hatchMechUp);
+    claw = new Claw(hatchMechDown, hatchMechUp);
     ejectorPneu = new PneumaticEjector(ejectorPneuPush, ejectorPneuHold);
     */
     vision = new Vision();
