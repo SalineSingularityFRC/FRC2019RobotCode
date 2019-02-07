@@ -93,8 +93,8 @@ public class Robot extends TimedRobot {
     */
     vision = new Vision();
     //DO NOT REMOVE PLZ
-    CameraServer.getInstance().startAutomaticCapture();
-    CameraServer.getInstance().startAutomaticCapture();
+    //CameraServer.getInstance().startAutomaticCapture();
+    //CameraServer.getInstance().startAutomaticCapture();
 
     gyro = new AHRS(SPI.Port.kMXP);
     gyroResetAtTeleop = true;
