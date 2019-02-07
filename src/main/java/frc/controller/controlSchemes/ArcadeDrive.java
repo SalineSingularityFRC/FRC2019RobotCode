@@ -31,13 +31,13 @@ public class ArcadeDrive extends ControlScheme {
 
     Vision vision;
 
-    //Drive Stuff
+    //Drive Variales
     boolean fastGear;
     boolean buttonDPneuNow, buttonDPneuPrevious;
 
     SpeedMode speedMode;
 
-    //Hatch Stuff 
+    //Hatch Variables
     boolean hatchMechExtended;
     boolean buttonHatchMechNow, buttonHatchMechPrevious;
 
@@ -73,10 +73,8 @@ public class ArcadeDrive extends ControlScheme {
     final double driveSpeedConstant = 0.3;
 
     final double txkP = 0.025;
-    double txAdjust;
     
     final double angleDifferencekP = 0.012;
-    double angleDifferenceAdjust;
 
     // Constructor for the ArcadeDrive class
 
@@ -228,43 +226,55 @@ public class ArcadeDrive extends ControlScheme {
     }
 */
 
+
+/**
+ * Method to drive autonomously using limelight and gyro
+ * 
+ */
 public void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, AHRS gyro) {
 
-        
+    // Defining tx and tv
+    // tx = X coordinate between -27 and 27
+    // tv = 0 if no target found, 1 is target found
     tx = vision.tx.getDouble(0.0);
     tv = vision.tv.getDouble(0.0);
 
-
-    boolean squareButton = controller.getXButton();
-    boolean offSetButton = controller.getYButton();
-
+    // Pastes values into smart dashboard
     SmartDashboard.putNumber("tx", tx);
     SmartDashboard.putNumber("tv", tv);
 
+    // Declaring and instantiating buttons used for enabling vision drive
+    boolean squareButton = controller.getXButton();
+    boolean offSetButton = controller.getYButton();
+
+    
+    // Defining and Declaring currentAngle as angle from gyro, between 0 and 360 degrees
     double currentAngle = super.smooshGyroAngle(gyro.getAngle());
     SmartDashboard.putNumber("current angle:", currentAngle);
 
-    
+    // Resets gyro value to 0
     if(controller.getAButton()) {
         gyro.setAngleAdjustment(0);
         gyro.setAngleAdjustment(-super.smooshGyroAngle(gyro.getAngle()));
         
     }
     
-
+    //Starts driving based on vision if the button is pushed and we have a target
     if((squareButton == true || offSetButton == true) && tv == 1.0) {
-
+        
+        //Declaring the left and right command speeds and setting it equal to the driveSpeedConstant
         double left_command = driveSpeedConstant;
         double right_command = driveSpeedConstant;
 
+        //use your brain
         double steering_adjust = 0.0;
         
-        txAdjust = txkP * tx;
+        double txAdjust = txkP * tx;
+        
         /*
-
         txAdjust = txkP * Math.pow(Math.abs(tx), txPower);
         if (tx < 0) {
-            txAdjust *= -1;
+            double txAdjust *= -1;
         }*/
 
         
