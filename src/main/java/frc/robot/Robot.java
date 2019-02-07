@@ -85,8 +85,8 @@ public class Robot extends TimedRobot {
     
     //initialize mechanisms
     drive = new BasicDrive(driveLeft1, driveLeft2, driveLeft3, driveRight1, driveRight2, driveRight3);
-    drivePneumatics = new DrivePneumatics(0, 1);
-    elevator = new Elevator(elevatorMotor, true);
+    //drivePneumatics = new DrivePneumatics(0, 1);
+    //elevator = new Elevator(elevatorMotor, true);
     /*intake = new Intake(intakeMotor);
     claw = new Claw(hatchMechDown, hatchMechUp);
     ejectorPneu = new PneumaticEjector(ejectorPneuPush, ejectorPneuHold);
@@ -158,7 +158,7 @@ public class Robot extends TimedRobot {
     //(we shouldn't need to change this too often)
     currentScheme.drive(drive, drivePneumatics);
     // partial autonomy via vision
-    currentScheme.visionDrive(vision, drive, drivePneumatics, gyro);
+    //currentScheme.visionDrive(vision, drive, drivePneumatics, gyro);
     //currentScheme.elevator(elevator);
     
     
@@ -185,8 +185,8 @@ public class Robot extends TimedRobot {
     driveLeft1 = 1;
     driveLeft2 = 2;
     driveLeft3 = 3;
-    driveRight1 = 4;
-    driveRight2 = 5;
+    driveRight1 = 3;
+    driveRight2 = 4;
     driveRight3 = 6;
     intakeMotor = 8;
     elevatorMotor = 7;
