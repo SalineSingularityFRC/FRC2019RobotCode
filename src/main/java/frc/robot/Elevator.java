@@ -4,10 +4,11 @@ import frc.controller.motorControllers.Spark;
 
 public class Elevator {
 
-    //Declaring new motor using a spark motor controller and the Spark class
+    //Declaring new motor using a spark motor controller and our Spark class
     Spark m_motor;
 
     //PID values used by the encoder on the Spark motor controller, these still need to be adjusted for our robot.
+    //These for the moment are just placeholder values, they need to be adjusted for our robot.
     public final double kP = 0.1, kI = 1e-4, kD = 0.1, kIZ = 0, kFF = 0, kMaxOut = 1, kMinOut = -1;
     //Rate that the motor speeds up at
     public final double rampRate = 0.2;

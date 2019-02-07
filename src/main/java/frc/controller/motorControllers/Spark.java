@@ -43,6 +43,7 @@ public class Spark implements MotorController {
     public Spark(int portNumber, boolean brushlessMotor, double rampRate) {
 
         MotorType type;
+        //Setting motor to either brushed or brushless
         if (brushlessMotor) {
             type = MotorType.kBrushless;
         }
@@ -102,6 +103,7 @@ public class Spark implements MotorController {
         this.m_motor.set(percentOutput);
     }
 
+    
     public void setRampRate(double rampRate) {
 
         if (!this.m_motor.isFollower()) {
@@ -109,6 +111,8 @@ public class Spark implements MotorController {
         }
     }
 
+    
+    //setCoastMode sets the motor to either coast mode (true) or brake mode (false)
     public void setCoastMode(boolean coast) {
 
         if (coast) {
@@ -122,6 +126,8 @@ public class Spark implements MotorController {
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     //Encoder methods:
 
+
+    //Put the current encoder values on the smart dashboard, adjusted for our inital position
     public void printEncoderPosition() {
         SmartDashboard.putNumber(name + "Encoder Value", this.getCurrentPosition());
         
@@ -240,19 +246,27 @@ public class Spark implements MotorController {
 
 
 
-    
+    /**
+     * Sets the motor to the designated encoder postition
+     * @param joystickControl if the encoder has not been set yet it will move via joystick control
+     * @param position the place where to set the target postiton to
+     */
     public void setToPosition(double joystickControl, double position) {
 
+        //getting the updated pid values from the smartdashboard, then prints the postion to the smartdashboard
         this.getConstantsFromDashboard();
         this.printEncoderPosition();
-
+        
+        // if the lower limit switch is pressed it means we are at the bottom which is setting the encoder postiton to zero
         SmartDashboard.putBoolean("lower limit switch", isLowerLimitPressed(true));
         if (isLowerLimitPressed(true)) {
             this.setInitialPosition();
         }
 
+        //Takes in the joystick value and makes sure it is above the threshold value set in singdrive
         joystickControl = SingDrive.threshold(joystickControl);
         
+        //Making sure the joystick value is only changed once with if/else statement
         if (joystickControl != previousJoystick) {
             controlWithJoystick = true;
         }
@@ -262,17 +276,21 @@ public class Spark implements MotorController {
         }
 
         /*
-        If initialPosition is not 100, we assume we know what position the elevator is in.
-        Only set to a position if we haven't started controlling with a joystick.
+        Inital Position defaults to -100, so if it still is -100, we havn't hit the bottom limit switch yet
+        We don't want the encoder to move if we don't know where the motor actually is, so it will use joystick control until we
+        hit the bottom limit switch.
         */
         if (this.initialPosition == -100) {
             DriverStation.reportWarning("We do not know the position of the " + name +
             "; Please move this mechanism to a limit switch manually", true);
             controlWithJoystick = true;
         }
-        else if (!controlWithJoystick) {
+
+        //If we are moving with the encoder, set encoder target position to our position we want it to be + the inital position the encoder thinks we are at
+        if (!controlWithJoystick) {
             this.m_pidController.setReference(position + this.initialPosition, ControlType.kPosition);
         }
+        //Else control the motor with the joystick
         else {
             this.m_motor.set(joystickControl);
         }
