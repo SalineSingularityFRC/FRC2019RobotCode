@@ -98,16 +98,23 @@ public class ArcadeDrive extends ControlScheme {
         
     }
 
+    /**
+     * Drives arcade drive
+     * 
+     */
     public void drive(SingDrive drive, DrivePneumatics pneumatics) {
 
+        //Set speed mode based on the dpad on the controller
         if(controller.getPOVDown()){
             speedMode = SpeedMode.SLOW;
-
         }
         else if(controller.getPOVUp()){
             speedMode = SpeedMode.FAST;
         }
-        drive.arcadeDrive(controller.getRS_Y(), controller.getRS_X(), 0.0, false, speedMode);
+
+        //driving arcade drive based on right joystick on controller
+        //changed boolean poweredInputs from false to true, change back if robot encounters issues
+        drive.arcadeDrive(controller.getRS_Y(), controller.getRS_X(), 0.0, true, speedMode);
 
 /*
         buttonDPneuNow = controller.getRB();
@@ -227,92 +234,81 @@ public class ArcadeDrive extends ControlScheme {
 */
 
 
-/**
- * Method to drive autonomously using limelight and gyro
- * 
- */
-public void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, AHRS gyro) {
+    /**
+     * Method to drive autonomously using limelight and gyro
+     * 
+     */
+    public void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, AHRS gyro) {
 
-    // Defining tx and tv
-    // tx = X coordinate between -27 and 27
-    // tv = 0 if no target found, 1 is target found
-    tx = vision.tx.getDouble(0.0);
-    tv = vision.tv.getDouble(0.0);
+        // Defining tx and tv
+        // tx = X coordinate between -27 and 27
+        // tv = 0 if no target found, 1 is target found
+        tx = vision.tx.getDouble(0.0);
+        tv = vision.tv.getDouble(0.0);
 
-    // Pastes values into smart dashboard
-    SmartDashboard.putNumber("tx", tx);
-    SmartDashboard.putNumber("tv", tv);
+        // Pastes values into smart dashboard
+        SmartDashboard.putNumber("tx", tx);
+        SmartDashboard.putNumber("tv", tv);
 
-    // Declaring and instantiating buttons used for enabling vision drive
-    boolean squareButton = controller.getXButton();
-    boolean offSetButton = controller.getYButton();
-
-    
-    // Defining and Declaring currentAngle as angle from gyro, between 0 and 360 degrees
-    double currentAngle = super.smooshGyroAngle(gyro.getAngle());
-    SmartDashboard.putNumber("current angle:", currentAngle);
-
-    // Resets gyro value to 0
-    if(controller.getAButton()) {
-        gyro.setAngleAdjustment(0);
-        gyro.setAngleAdjustment(-super.smooshGyroAngle(gyro.getAngle()));
-        
-    }
-    
-    //Starts driving based on vision if the button is pushed and we have a target
-    if((squareButton == true || offSetButton == true) && tv == 1.0) {
-        
-        //Declaring the left and right command speeds and setting it equal to the driveSpeedConstant
-        double left_command = driveSpeedConstant;
-        double right_command = driveSpeedConstant;
-
-        //use your brain
-        double steering_adjust = 0.0;
-        
-        double txAdjust = txkP * tx;
-        
-        /*
-        txAdjust = txkP * Math.pow(Math.abs(tx), txPower);
-        if (tx < 0) {
-            double txAdjust *= -1;
-        }*/
+        // Declaring and instantiating buttons used for enabling vision drive
+        boolean squareButton = controller.getXButton();
+        boolean offSetButton = controller.getYButton();
 
         
-        double targetAngle;
+        // Defining and Declaring currentAngle as angle from gyro, between 0 and 360 degrees
+        double currentAngle = super.smooshGyroAngle(gyro.getAngle());
+        SmartDashboard.putNumber("current angle:", currentAngle);
 
-        if(squareButton) {
-            targetAngle = super.getSquareAngleForPort(currentAngle);
-        }
-
-        else {
-            targetAngle = super.getOffsetHatchAngle(currentAngle);
-        }
-
-
-        double angleDifference = currentAngle - targetAngle;
-        double secondAngleDifference = targetAngle - 360 + currentAngle;
-
-        if (Math.abs(secondAngleDifference) < Math.abs(angleDifference)) {
-            angleDifference = secondAngleDifference;
-        }
-        
-
-        //To remove gyro control, comment out this line:
-        steering_adjust += txAdjust;
-        steering_adjust += angleDifferencekP * angleDifference;
-        
-
-        left_command += steering_adjust;
-        right_command -= steering_adjust;
-
+        // Resets gyro value to 0
+        if(controller.getAButton()) {
+            gyro.setAngleAdjustment(0);
+            gyro.setAngleAdjustment(-super.smooshGyroAngle(gyro.getAngle()));
             
+        }
 
-        drive.tankDrive(left_command, right_command, 0.0, false, SpeedMode.FAST);
         
-        SmartDashboard.putNumber("Left_command", left_command);
-        SmartDashboard.putNumber("Right_command", right_command);
-    } // end of X button and target
-}
+        //Starts driving based on vision if the button is pushed and we have a target
+        if((squareButton == true || offSetButton == true) && tv == 1.0) {
+            
+            //Declaring the left and right command speeds and setting it equal to the driveSpeedConstant
+            double left_command = driveSpeedConstant;
+            double right_command = driveSpeedConstant;
+
+            //Declares and instaniates steering_adjust, and sets it to txkP * tx
+            double steering_adjust = 0.0;
+            steering_adjust += txkP * tx;
+
+            // Declare and adjust tarteAngle based on currentAngle
+            double targetAngle;
+            if(squareButton) {
+                targetAngle = super.getSquareAngleForPort(currentAngle);
+            }
+            else {
+                targetAngle = super.getOffsetHatchAngle(currentAngle);
+            }
+
+            //Declaring the offset angle for turning
+            double angleDifference = currentAngle - targetAngle;
+            //This is an alternative angleDifference
+            double secondAngleDifference = targetAngle - 360 + currentAngle; 
+            //This is where we define which one we want to use. 
+            //Takes which ever one is closer to 0
+            if (Math.abs(secondAngleDifference) < Math.abs(angleDifference)) {
+                angleDifference = secondAngleDifference;
+            }
+
+            //To remove gyro control, comment out this line:
+            steering_adjust += angleDifferencekP * angleDifference;
+            
+            // Setting vision drive for tank drive
+            left_command += steering_adjust;
+            right_command -= steering_adjust;
+            drive.tankDrive(left_command, right_command, 0.0, false, SpeedMode.FAST);
+            
+            SmartDashboard.putNumber("Left_command", left_command);
+            SmartDashboard.putNumber("Right_command", right_command);
+        } // end of if statement
+    }
 
 }
     
