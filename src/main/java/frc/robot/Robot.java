@@ -18,6 +18,8 @@ import frc.robot.Vision;
 
 
 import com.kauailabs.navx.frc.*;
+
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 
@@ -39,6 +41,8 @@ public class Robot extends TimedRobot {
   int hatchMechDown, hatchMechUp;
   int intakeMotor;
   int elevatorMotor;
+
+  Compressor compressor;
 
   //Declaration of our driving scheme, which can be initialized to
   //any ControlScheme in robotInit()
@@ -95,6 +99,8 @@ public class Robot extends TimedRobot {
     gyro = new AHRS(SPI.Port.kMXP);
     gyroResetAtTeleop = true;
     
+    compressor = new Compressor();
+
   }
 
   /**
@@ -157,7 +163,7 @@ public class Robot extends TimedRobot {
     currentScheme.visionDrive(vision, drive, drivePneumatics, gyro);
     //currentScheme.elevator(elevator);
     
-    
+    compressor.start();
   }
 
   /**
@@ -165,6 +171,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+
+    compressor.start();
   }
 
   
