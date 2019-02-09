@@ -6,6 +6,7 @@ import frc.robot.Claw;
 import frc.robot.Intake;
 import frc.robot.Vision;
 import frc.robot.Wrist;
+import frc.robot.Elevator.ElevatorPosition;
 import frc.robot.Wrist.WristPosition;
 import frc.robot.Elevator;
 import frc.robot.PneumaticEjector;
@@ -26,8 +27,8 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class ArcadeDrive extends ControlScheme {
 
-    // make new XBox controller objects
-    XboxController controller;
+    // make new XBox driveController objects
+    XboxController driveController;
     XboxController armController;
 
     Vision vision;
@@ -50,6 +51,7 @@ public class ArcadeDrive extends ControlScheme {
     
     WristPosition wristPosition;
 
+    ElevatorPosition elevatorPosition;
 
     double tx, tv;
 
@@ -62,9 +64,9 @@ public class ArcadeDrive extends ControlScheme {
 
     // Constructor for the ArcadeDrive class
 
-    public ArcadeDrive(int controllerPort, int armControllerPort) {
-        //Initiates a new Xbox controller
-        controller = new XboxController(controllerPort);
+    public ArcadeDrive(int driveControllerPort, int armControllerPort) {
+        //Initiates a new Xbox driveController
+        driveController = new XboxController(driveControllerPort);
         armController = new XboxController(armControllerPort);
         
         // Sets the boolean for fastGear to low (drive train not in fast gear)
@@ -90,20 +92,20 @@ public class ArcadeDrive extends ControlScheme {
      */
     public void drive(SingDrive drive, DrivePneumatics pneumatics) {
 
-        //Set speed mode based on the dpad on the controller
-        if(controller.getPOVDown()){
+        //Set speed mode based on the dpad on the driveController
+        if(driveController.getPOVDown()){
             speedMode = SpeedMode.SLOW;
         }
-        else if(controller.getPOVUp()){
+        else if(driveController.getPOVUp()){
             speedMode = SpeedMode.FAST;
         }
 
-        //driving arcade drive based on right joystick on controller
+        //driving arcade drive based on right joystick on driveController
         //changed boolean poweredInputs from false to true, change back if robot encounters issues
-        drive.arcadeDrive(controller.getRS_Y(), controller.getRS_X(), 0.0, true, speedMode);
+        drive.arcadeDrive(driveController.getRS_Y(), driveController.getRS_X(), 0.0, true, speedMode);
 
         /*
-        buttonDPneuNow = controller.getRB();
+        buttonDPneuNow = driveController.getRB();
 
         if (buttonDPneuNow && !buttonDPneuPrevious) {
             fastGear = !fastGear;
@@ -142,15 +144,54 @@ public class ArcadeDrive extends ControlScheme {
     }
 
 
+
     public void elevator(Elevator elevator) {
 
+        else if(wristPosition == WristPosition.HATCH){
+            if (armController.getPOVDown()){
+                elevatorPosition = ElevatorPosition.HATCH1;
+            }
+            else if(armController.getPOVLeft()){
+                elevatorPosition = ElevatorPosition.HATCH2;
+            }
+            else if(armController.getPOVUp()){
+                elevatorPosition = ElevatorPosition.HATCH3;
+            }
+        }
+
+        else if(wristPosition == WristPosition.CARGO){
+            if (armController.getPOVDown()){
+                elevatorPosition = ElevatorPosition.CARGO1;
+            }
+            else if(armController.getPOVLeft()){
+                elevatorPosition = ElevatorPosition.CARGO2;
+            }
+            else if(armController.getPOVUp()){
+                elevatorPosition = ElevatorPosition.CARGO3;
+            }
+            else if(armController.getPOVRight()){
+                elevatorPosition = ElevatorPosition.CARGOSHIP;
+            }
+
+        }
+
+        else if(wristPosition == WristPosition.INTAKE){
+            elevatorPosition = ElevatorPosition.BOTTOM;
+        }
+
+        //WristPosition must be set to Start
+        else {
+            elevatorPosition = ElevatorPosition.BOTTOM; 
+        }
+
+        elevator.setPositionWithEnum(elevatorPosition, armController.getLS_Y());
     }
     
 
     public void controlClaw(Claw claw, PneumaticEjector ejector) {
 
-        buttonClawNow = controller.getAButton();
-        ejectorButtonNow = controller.getBButton();
+        buttonClawNow = driveController.getAButton();
+        ejectorButtonNow = driveController.getBButton();
 
         if (buttonClawNow && !buttonClawPrevious) {
             clawExtended = !clawExtended;
@@ -184,7 +225,7 @@ public class ArcadeDrive extends ControlScheme {
 
     public void intake(Intake intake) {
 
-        intake.controlIntake(controller.getPOVDown(), controller.getPOVUp());
+        intake.controlIntake(driveController.getPOVDown(), driveController.getPOVUp());
 
     }
 
@@ -207,8 +248,8 @@ public class ArcadeDrive extends ControlScheme {
         SmartDashboard.putNumber("tv", tv);
 
         // Declaring and instantiating buttons used for enabling vision drive
-        boolean squareButton = controller.getXButton();
-        boolean offSetButton = controller.getYButton();
+        boolean squareButton = driveController.getXButton();
+        boolean offSetButton = driveController.getYButton();
 
         
         // Defining and Declaring currentAngle as angle from gyro, between 0 and 360 degrees
@@ -216,7 +257,7 @@ public class ArcadeDrive extends ControlScheme {
         SmartDashboard.putNumber("current angle:", currentAngle);
 
         // Resets gyro value to 0
-        if(controller.getAButton()) {
+        if(driveController.getAButton()) {
             gyro.setAngleAdjustment(0);
             gyro.setAngleAdjustment(-super.smooshGyroAngle(gyro.getAngle()));
             
