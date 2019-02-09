@@ -93,7 +93,7 @@ public class ArcadeDrive extends ControlScheme {
         //instanciating the vision object
         vision = new Vision();
 
-        speedMode = SpeedMode.FAST;
+        speedMode = SpeedMode.SLOW;
 
         
     }
