@@ -30,20 +30,13 @@ public class ArcadeDrive extends ControlScheme {
     XboxController driveController;
     XboxController armController;
 
-    Vision vision;
+    boolean lowGear;
 
     SpeedMode speedMode;
 
     //Hatch Variables
     final int grabClawAngle = 120;
     final int releaseClawAngle = 60;
-
-
-
-    Timer ejectorTimer;
-    double ejectorTimerValue;
-
-    boolean ejectorButtonNow, ejectorButtonPrevious;
 
     
     WristPosition wristPosition;
@@ -70,8 +63,7 @@ public class ArcadeDrive extends ControlScheme {
         driveController = new XboxController(driveControllerPort);
         armController = new XboxController(armControllerPort);
 
-        //instanciating the vision object
-        vision = new Vision();
+        lowGear = true;
 
         speedMode = SpeedMode.FAST;
 
@@ -97,13 +89,21 @@ public class ArcadeDrive extends ControlScheme {
         //changed boolean poweredInputs from false to true, change back if robot encounters issues
         drive.arcadeDrive(driveController.getRS_Y(), driveController.getRS_X(), 0.0, true, speedMode);
 
-        /*if(driveController.getLB()) {
-            pneumatics.setLow();
+        if(driveController.getLB()) {
+           lowGear = true;
         }
 
         else if(driveController.getRB()) {
+            lowGear = false;
+        }
+
+        if(lowGear) {
+            pneumatics.setLow();
+        }
+
+        else {
             pneumatics.setHigh();
-        }*/
+        }
     }
 
     
