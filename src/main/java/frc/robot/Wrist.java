@@ -14,6 +14,19 @@ public class Wrist {
     //Rate that the motor speeds up atv
     public final double rampRate = 0.2;
 
+
+    public enum WristPosition {
+        START,
+        HATCH,
+        CARGO,
+        INTAKE
+    }
+
+    public final double startPosition = 0.0;
+    public final double hatchPosition = 90.0;
+    public final double cargoPosition = 180.0;
+    public final double intakePosition = 225.0;
+
     //Constructor for Wrist class, takes in the port the motor is plugged in to and whether the motor is brushless or not, along with the PID values
     //This also sets coast mode to false (therefor to brake), so the wrist stays in place when not being moved
     public Wrist(int motorPort, boolean brushlessMotor) {
@@ -24,6 +37,16 @@ public class Wrist {
     //This also takes in a joystick value, and as defined in Spark if the motor hasn't moved yet it will use joystick control until it hits the bottom endstop
     public void setPosition(double position, double joystickControl) {
         m_motor.setToPosition(joystickControl, position);
+    }
+
+    public void setPositionWithEnum(WristPosition wristPosition, double joystickControl) {
+        switch (wristPosition) {
+
+            case START:
+                m_motor.setToPosition(joystickControl, startPosition);
+        }
+
+
     }
 
     //For testing purposes to figure out the correct encoder values, or as a backup, the wrist can manually being controlled using the setSpeed function.

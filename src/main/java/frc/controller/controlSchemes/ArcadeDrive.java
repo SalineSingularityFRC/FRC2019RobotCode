@@ -39,16 +39,15 @@ public class ArcadeDrive extends ControlScheme {
 
     //Hatch Variables
     boolean clawExtended;
-    boolean buttonclawNow, buttonclawPrevious;
+    boolean buttonClawNow, buttonClawPrevious;
 
     Timer ejectorTimer;
     double ejectorTimerValue;
 
-    boolean ejectorClawNow, ejectorButtonPrevious;
+    boolean ejectorButtonNow, ejectorButtonPrevious;
 
-    boolean elevatorButton1Now, elevatorButton1Previous;
-    boolean elevatorButton2Now, elevatorButton2Previous;
-    boolean elevatorButton3Now, elevatorButton3Previous;
+    
+    
 
     boolean wristButton1Now, wristButton1Previous;
     boolean wristButton2Now, wristButton2Previous;
@@ -87,6 +86,7 @@ public class ArcadeDrive extends ControlScheme {
         fastGear = false;
         //makes the drive pneumatics only go once instead of many times
         buttonDPneuPrevious = false;
+        buttonClawPrevious = false;
         //instanciating the ejectorTimer is a new timer for the pneumatics to pull the  
         //ejectorTimer = new Timer();
 
@@ -116,7 +116,7 @@ public class ArcadeDrive extends ControlScheme {
         //changed boolean poweredInputs from false to true, change back if robot encounters issues
         drive.arcadeDrive(controller.getRS_Y(), controller.getRS_X(), 0.0, true, speedMode);
 
-/*
+        /*
         buttonDPneuNow = controller.getRB();
 
         if (buttonDPneuNow && !buttonDPneuPrevious) {
@@ -133,14 +133,52 @@ public class ArcadeDrive extends ControlScheme {
         buttonDPneuPrevious = buttonDPneuNow;
     */
     }
+
+    public void elevator(Elevator elevator) {
+
+        //Elevator code set to three poitions with encoders, not using right now
+        
+        elevatorButton1Now = armController.getAButton();
+        if(elevatorButton1Now && !elevatorButton1Previous) {
+            elevator.setPosition(elevatorLow);
+        }
+
+        elevatorButton2Now = armController.getBButton();
+        if(elevatorButton2Now && !elevatorButton2Previous) {
+            elevator.setPosition(elevatorMid);
+        }
+
+        elevatorButton3Now = armController.getXButton();
+        if(elevatorButton3Now && !elevatorButton3Previous) {
+            elevator.setPosition(elevatorHigh);
+        }
+
+        elevatorButton1Previous = elevatorButton1Now;
+        elevatorButton2Previous = elevatorButton2Now;
+        elevatorButton3Previous = elevatorButton3Now;
+        
+
+
+        //Test code to move elevator motor with d-pad
+        if(controller.getPOVUp()) {
+            elevator.setSpeed(this.elevatorForwardSpeed);
+        }
+
+        else if(controller.getPOVDown()) {
+            elevator.setSpeed(this.elevatorReverseSpeed);
+        }
+
+        SmartDashboard.putBoolean("D-Pad Up", controller.getPOVUp());
+        SmartDashboard.putBoolean("D-Pad Down", controller.getPOVDown());
+    }
     
 
     public void controlClaw(Claw claw, PneumaticEjector ejector) {
-/*
+
         buttonClawNow = controller.getAButton();
         ejectorButtonNow = controller.getBButton();
 
-        if (buttonclawNow && !buttonclawPrevious) {
+        if (buttonClawNow && !buttonClawPrevious) {
             clawExtended = !clawExtended;
         }
 
@@ -166,7 +204,7 @@ public class ArcadeDrive extends ControlScheme {
 
         buttonclawPrevious = buttonclawNow;
         ejectorButtonPrevious = ejectorButtonNow;
-        */
+        
 
     }
 
@@ -176,42 +214,7 @@ public class ArcadeDrive extends ControlScheme {
 
     }
 
-    public void elevator(Elevator elevator) {
-
-        //Elevator code set to three poitions with encoders, not using right now
-        /*
-        elevatorButton1Now = armController.getAButton();
-        if(elevatorButton1Now && !elevatorButton1Previous) {
-            elevator.setPosition(elevatorLow);
-        }
-
-        elevatorButton2Now = armController.getBButton();
-        if(elevatorButton2Now && !elevatorButton2Previous) {
-            elevator.setPosition(elevatorMid);
-        }
-
-        elevatorButton3Now = armController.getXButton();
-        if(elevatorButton3Now && !elevatorButton3Previous) {
-            elevator.setPosition(elevatorHigh);
-        }
-
-        elevatorButton1Previous = elevatorButton1Now;
-        elevatorButton2Previous = elevatorButton2Now;
-        elevatorButton3Previous = elevatorButton3Now;
-        */
-
-        //Test code to move elevator motor with d-pad
-        if(controller.getPOVUp()) {
-            elevator.setSpeed(this.elevatorForwardSpeed);
-        }
-
-        else if(controller.getPOVDown()) {
-            elevator.setSpeed(this.elevatorReverseSpeed);
-        }
-
-        SmartDashboard.putBoolean("D-Pad Up", controller.getPOVUp());
-        SmartDashboard.putBoolean("D-Pad Down", controller.getPOVDown());
-        }
+    
 /*
     public void wrist(Wrist wrist) {
 
