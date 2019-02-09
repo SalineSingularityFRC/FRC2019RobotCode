@@ -21,7 +21,7 @@ import com.kauailabs.navx.frc.*;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 
-
+import edu.wpi.first.wpilibj.Ultrasonic;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -57,11 +57,15 @@ public class Robot extends TimedRobot {
   AHRS gyro;
   boolean gyroResetAtTeleop;
 
+  //create ultrasonics
+  Ultrasonic ultra;
+  final int ultraInput = 1;
+  final int ultraOutput = 2;
 
   //default ports of certain joysticks in DriverStation
   final int XBOX_PORT = 0;
 	final int BIG_JOYSTICK_PORT = 1;
-	final int SMALL_JOYSTICK_PORT = 2;
+  final int SMALL_JOYSTICK_PORT = 2;
 
 
   /**
@@ -95,6 +99,9 @@ public class Robot extends TimedRobot {
     gyro = new AHRS(SPI.Port.kMXP);
     gyroResetAtTeleop = true;
     
+    //Ultrasonics
+    ultra = new Ultrasonic(ultraInput, ultraOutput);
+    ultra.setAutomaticMode(true);
   }
 
   /**
@@ -154,7 +161,7 @@ public class Robot extends TimedRobot {
     //(we shouldn't need to change this too often)
     currentScheme.drive(drive, drivePneumatics);
     // partial autonomy via vision
-    currentScheme.visionDrive(vision, drive, drivePneumatics, gyro);
+    currentScheme.visionDrive(vision, drive, drivePneumatics, gyro, ultra);
     //currentScheme.elevator(elevator);
     
     

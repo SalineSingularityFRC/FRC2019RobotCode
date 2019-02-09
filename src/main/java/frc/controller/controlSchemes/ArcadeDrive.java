@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.*;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Ultrasonic;
 /**
  * 
  * Main class to control the robot
@@ -50,6 +51,8 @@ public class ArcadeDrive extends ControlScheme {
     ElevatorPosition elevatorPosition;
 
     double tx, tv;
+    double ultraIn;
+
 
     //Need to be adjusted for our robot
     final double driveSpeedConstant = 0.3;
@@ -57,6 +60,8 @@ public class ArcadeDrive extends ControlScheme {
     final double txkP = 0.025;
     
     final double angleDifferencekP = 0.012;
+
+    final double endDistance = 2.0;
 
     // Constructor for the ArcadeDrive class
 
@@ -193,28 +198,28 @@ public class ArcadeDrive extends ControlScheme {
         }
     }
 
-  
-
     /**
      * Method to drive autonomously using limelight and gyro
      * 
      */
-    public void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, AHRS gyro) {
-
+    public void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, AHRS gyro, Ultrasonic ultra) {
         // Defining tx and tv
         // tx = X coordinate between -27 and 27
         // tv = 0 if no target found, 1 is target found
         tx = vision.tx.getDouble(0.0);
         tv = vision.tv.getDouble(0.0);
 
+        ultraIn = ultra.getRangeInches();
+
         // Pastes values into smart dashboard
         SmartDashboard.putNumber("tx", tx);
         SmartDashboard.putNumber("tv", tv);
+        SmartDashboard.putNumber("Inches", ultraIn);
 
         // Declaring and instantiating buttons used for enabling vision drive
         boolean squareButton = driveController.getXButton();
         boolean offSetButton = driveController.getYButton();
-
+    
         
         // Defining and Declaring currentAngle as angle from gyro, between 0 and 360 degrees
         double currentAngle = super.smooshGyroAngle(gyro.getAngle());
@@ -229,7 +234,7 @@ public class ArcadeDrive extends ControlScheme {
 
         
         //Starts driving based on vision if the button is pushed and we have a target
-        if((squareButton == true || offSetButton == true) && tv == 1.0) {
+        if((squareButton == true || offSetButton == true) && tv == 1.0 && ultraIn > endDistance) {
             
             //Declaring the left and right command speeds and setting it equal to the driveSpeedConstant
             double left_command = driveSpeedConstant;
@@ -257,7 +262,6 @@ public class ArcadeDrive extends ControlScheme {
             if (Math.abs(secondAngleDifference) < Math.abs(angleDifference)) {
                 angleDifference = secondAngleDifference;
             }
-
             //To remove gyro control, comment out this line:
             steering_adjust += angleDifferencekP * angleDifference;
             
