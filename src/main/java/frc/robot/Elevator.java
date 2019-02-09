@@ -13,6 +13,7 @@ public class Elevator {
     //Rate that the motor speeds up at
     public final double rampRate = 0.2;
 
+    //The ElevatorPosition enum lets us set the elevator to each of the desired positions to deliver hatch panels & cargo or to pick things up.
     public enum ElevatorPosition {
         BOTTOM, 
         HATCH1, 
@@ -24,7 +25,8 @@ public class Elevator {
         CARGOSHIP,
     }
 
-    //Positions for elevator
+    //Constants for the encoder position for each of our different desired positions.
+    //These ATM are just placholder values, need to be tested for our robot
     final double bottomPos = 0.0;
     final double hatch1Pos = 10.0;
     final double hatch2Pos = 20.0;
@@ -47,6 +49,9 @@ public class Elevator {
         m_motor.setToPosition(joystickControl, position);
     }
 
+    //Using the ElevatorPosition enum & constants, we can set the elevator to one of the desired positions for doing our different tasks using the setPositionWithEnum method
+    //Works using the constants defined above and setToPosition from Spark, see above setPosition for more info
+    //3 Position for placing the hatches & 3 for placing the cargo on the rocket ship, one for cargo on the cargo ship, and one at the bottom
     public void setPositionWithEnum (ElevatorPosition elevatorPosition, double joystickControl) {
 
         switch (elevatorPosition) {

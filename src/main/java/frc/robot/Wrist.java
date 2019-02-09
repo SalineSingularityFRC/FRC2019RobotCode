@@ -15,6 +15,8 @@ public class Wrist {
     public final double rampRate = 0.2;
 
 
+    //enum WristPosition allows us to set the wrist to one of 4 desired positions for doing stuff.
+    //See below setPositionWithEnum method for more information
     public enum WristPosition {
         START,
         HATCH,
@@ -22,6 +24,8 @@ public class Wrist {
         INTAKE
     }
 
+    //Constants for the encoder positions for each of our enum values.
+    //These at the moment are just placeholder values, need to be tested for our robot.
     public final double startPosition = 0.0;
     public final double hatchPosition = 90.0;
     public final double cargoPosition = 180.0;
@@ -39,6 +43,9 @@ public class Wrist {
         m_motor.setToPosition(joystickControl, position);
     }
 
+    //Using the WristPosition enum & constants, we can set the wrist to one of 4 positions for doing our 4 different tasks using the setPositionWithEnum method
+    //Works using the constants defined above and setToPosition from Spark, see above setPosition for more info
+    //Start is what it is when starting the match, hatch is to deliver hatch panels, cargo is to deliver cargo, and intake is to pickup cargo.
     public void setPositionWithEnum(WristPosition wristPosition, double joystickControl) {
         switch (wristPosition) {
 
