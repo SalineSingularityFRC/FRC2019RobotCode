@@ -6,6 +6,7 @@ import frc.robot.Claw;
 import frc.robot.Intake;
 import frc.robot.Vision;
 import frc.robot.Wrist;
+import frc.robot.Wrist.WristPosition;
 import frc.robot.Elevator;
 import frc.robot.PneumaticEjector;
 import frc.controller.ControlScheme;
@@ -47,24 +48,8 @@ public class ArcadeDrive extends ControlScheme {
     boolean ejectorButtonNow, ejectorButtonPrevious;
 
     
-    
+    WristPosition wristPosition;
 
-    boolean wristButton1Now, wristButton1Previous;
-    boolean wristButton2Now, wristButton2Previous;
-
-
-    //Positions for elevator encoder, these are just placeholder values, need to test with robot
-    final int elevatorLow = 20;
-    final int elevatorMid = 50;
-    final int elevatorHigh = 100;
-
-    //Elevator speeed constants for testing
-    final double elevatorForwardSpeed = 0.1;
-    final double elevatorReverseSpeed = -0.1;
-
-    final int wristStartinPos = 0;
-    final int wristHatchPos = 90;
-    final int wristCargoPos = 180;
 
     double tx, tv;
 
@@ -80,7 +65,7 @@ public class ArcadeDrive extends ControlScheme {
     public ArcadeDrive(int controllerPort, int armControllerPort) {
         //Initiates a new Xbox controller
         controller = new XboxController(controllerPort);
-        //armController = new XboxController(armControllerPort);
+        armController = new XboxController(armControllerPort);
         
         // Sets the boolean for fastGear to low (drive train not in fast gear)
         fastGear = false;
@@ -95,6 +80,7 @@ public class ArcadeDrive extends ControlScheme {
 
         speedMode = SpeedMode.FAST;
 
+        wristPosition = WristPosition.START;
         
     }
 
@@ -134,42 +120,30 @@ public class ArcadeDrive extends ControlScheme {
     */
     }
 
+    
+    public void wrist(Wrist wrist) {
+
+        if(armController.getAButton()){
+            wristPosition = WristPosition.START;
+        }
+        else if (armController.getBButton()){
+            wristPosition = WristPosition.CARGO;
+        }
+        else if (armController.getYButton()){
+            wristPosition = WristPosition.HATCH;
+        }
+        else if (armController.getXButton()){
+            wristPosition = WristPosition.INTAKE;
+        }
+
+        wrist.setPositionWithEnum(wristPosition, armController.getRS_Y());
+
+
+    }
+
+
     public void elevator(Elevator elevator) {
 
-        //Elevator code set to three poitions with encoders, not using right now
-        
-        elevatorButton1Now = armController.getAButton();
-        if(elevatorButton1Now && !elevatorButton1Previous) {
-            elevator.setPosition(elevatorLow);
-        }
-
-        elevatorButton2Now = armController.getBButton();
-        if(elevatorButton2Now && !elevatorButton2Previous) {
-            elevator.setPosition(elevatorMid);
-        }
-
-        elevatorButton3Now = armController.getXButton();
-        if(elevatorButton3Now && !elevatorButton3Previous) {
-            elevator.setPosition(elevatorHigh);
-        }
-
-        elevatorButton1Previous = elevatorButton1Now;
-        elevatorButton2Previous = elevatorButton2Now;
-        elevatorButton3Previous = elevatorButton3Now;
-        
-
-
-        //Test code to move elevator motor with d-pad
-        if(controller.getPOVUp()) {
-            elevator.setSpeed(this.elevatorForwardSpeed);
-        }
-
-        else if(controller.getPOVDown()) {
-            elevator.setSpeed(this.elevatorReverseSpeed);
-        }
-
-        SmartDashboard.putBoolean("D-Pad Up", controller.getPOVUp());
-        SmartDashboard.putBoolean("D-Pad Down", controller.getPOVDown());
     }
     
 
@@ -181,7 +155,7 @@ public class ArcadeDrive extends ControlScheme {
         if (buttonClawNow && !buttonClawPrevious) {
             clawExtended = !clawExtended;
         }
-
+/*
         if (clawExtended) {
             claw.setForward();
         }
@@ -204,7 +178,7 @@ public class ArcadeDrive extends ControlScheme {
 
         buttonclawPrevious = buttonclawNow;
         ejectorButtonPrevious = ejectorButtonNow;
-        
+        */
 
     }
 
@@ -214,28 +188,7 @@ public class ArcadeDrive extends ControlScheme {
 
     }
 
-    
-/*
-    public void wrist(Wrist wrist) {
-
-        wristButton1Now = armController.getPOVDown();
-        if(wristButton1Now && !wristButton1Previous)  {
-            wrist.setWristPosition(wristCargoPos);
-        }
-        
-        wristButton2Now = armController.getPOVUp();
-        if(wristButton2Now && !wristButton2Previous) {
-            wrist.setWristPosition(wristHatchPos);
-        }
-
-        wristButton1Previous = wristButton1Now;
-        wristButton2Previous = wristButton2Now;
-
-
-
-    }
-*/
-
+  
 
     /**
      * Method to drive autonomously using limelight and gyro
