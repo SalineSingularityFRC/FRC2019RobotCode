@@ -2,6 +2,7 @@ package frc.controller;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.Ultrasonic;
 import frc.robot.DrivePneumatics;
 import frc.robot.Elevator;
 import frc.robot.Claw;
@@ -21,7 +22,7 @@ public abstract class ControlScheme {
 	public abstract void drive(SingDrive drive, DrivePneumatics pneumatics);
 	public abstract void controlClaw(Claw claw, PneumaticEjector ejector);
 	public abstract void intake(Intake intake);
-	public abstract void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, AHRS gyro);
+	public abstract void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, AHRS gyro, Ultrasonic ultra);
 	public abstract void elevator(Elevator elevator);
 	
 	/**
