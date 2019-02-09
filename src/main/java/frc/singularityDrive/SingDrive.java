@@ -288,11 +288,11 @@ public abstract class SingDrive {
 	public static double setInputToPower(double joystickInput, double power) {
 
 		if (joystickInput >= 0) {
-			return joystickInput * Math.abs(Math.pow(joystickInput, power - 1));
+			return Math.pow(joystickInput, power);
 		}
 
 		double positiveInput = Math.abs(joystickInput);
-		return -1 * positiveInput * Math.abs(Math.pow(positiveInput, power - 1));
+		return joystickInput * Math.abs(Math.pow(positiveInput, power - 1));
 		
 	}
 
