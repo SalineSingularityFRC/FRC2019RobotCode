@@ -1,6 +1,5 @@
 package frc.singularityDrive;
 
-import com.revrobotics.CANSparkMax;
 
 import frc.controller.MotorController;
 import frc.controller.motorControllers.*;

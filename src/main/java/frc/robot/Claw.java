@@ -1,11 +1,14 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Servo;
 import frc.controller.motorControllers.Spark;
 
 public class Claw {
 
     //Declaring new motor using a spark motor controller and the Spark class
     Spark m_motor;
+    Servo servo1;
+    Servo servo2;
 
     //PID values used by the encoder on the Spark motor controller, these still need to be adjusted for our robot.
     public final double kP = 0.1, kI = 1e-4, kD = 0.1, kIZ = 0, kFF = 0, kMaxOut = 1, kMinOut = -1;
@@ -17,6 +20,16 @@ public class Claw {
     public Claw(int motorPort, boolean brushlessMotor) {
         m_motor = new Spark(motorPort, brushlessMotor, this.rampRate, "Claw", kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
         m_motor.setCoastMode(false);
+    }
+
+    public Claw(int servo1Port, int servo2Port) {
+        servo1 = new Servo(servo1Port);
+        servo2 = new Servo(servo2Port);
+    }
+
+    public void controlServo(int angle) {
+        servo1.setAngle(angle);
+        servo2.setAngle(angle);
     }
 
     //Basic function using the setToPosition function in the Spark class to move the encoder to a specified point (position).

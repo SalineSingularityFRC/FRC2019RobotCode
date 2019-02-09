@@ -11,14 +11,12 @@ import frc.robot.Wrist.WristPosition;
 import frc.robot.Elevator;
 import frc.robot.PneumaticEjector;
 import frc.controller.ControlScheme;
-import frc.singularityDrive.BasicDrive;
 import frc.singularityDrive.SingDrive;
 import frc.singularityDrive.SingDrive.SpeedMode;
+
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.Encoder;
-//import java.util.Map;
 import edu.wpi.first.wpilibj.Timer;
 /**
  * 
@@ -33,15 +31,13 @@ public class ArcadeDrive extends ControlScheme {
 
     Vision vision;
 
-    //Drive Variales
-    boolean fastGear;
-    boolean buttonDPneuNow, buttonDPneuPrevious;
-
     SpeedMode speedMode;
 
     //Hatch Variables
-    boolean clawExtended;
-    boolean buttonClawNow, buttonClawPrevious;
+    final int grabClawAngle = 120;
+    final int releaseClawAngle = 60;
+
+
 
     Timer ejectorTimer;
     double ejectorTimerValue;
@@ -68,14 +64,6 @@ public class ArcadeDrive extends ControlScheme {
         //Initiates a new Xbox driveController
         driveController = new XboxController(driveControllerPort);
         armController = new XboxController(armControllerPort);
-        
-        // Sets the boolean for fastGear to low (drive train not in fast gear)
-        fastGear = false;
-        //makes the drive pneumatics only go once instead of many times
-        buttonDPneuPrevious = false;
-        buttonClawPrevious = false;
-        //instanciating the ejectorTimer is a new timer for the pneumatics to pull the  
-        //ejectorTimer = new Timer();
 
         //instanciating the vision object
         vision = new Vision();
@@ -104,22 +92,13 @@ public class ArcadeDrive extends ControlScheme {
         //changed boolean poweredInputs from false to true, change back if robot encounters issues
         drive.arcadeDrive(driveController.getRS_Y(), driveController.getRS_X(), 0.0, true, speedMode);
 
-        /*
-        buttonDPneuNow = driveController.getRB();
-
-        if (buttonDPneuNow && !buttonDPneuPrevious) {
-            fastGear = !fastGear;
+        /*if(driveController.getLB()) {
+            pneumatics.setLow();
         }
-  // 20190126 PNEUMATICS NOT ON ROBOT AT THIS TIME       
-  //      if (fastGear) {
-  //          pneumatics.setHigh();
-  //      }
-  //      else {
-  //          pneumatics.setLow();
-  //      }
 
-        buttonDPneuPrevious = buttonDPneuNow;
-    */
+        else if(driveController.getRB()) {
+            pneumatics.setHigh();
+        }*/
     }
 
     
@@ -189,44 +168,29 @@ public class ArcadeDrive extends ControlScheme {
     
 
     public void controlClaw(Claw claw, PneumaticEjector ejector) {
-
-        buttonClawNow = driveController.getAButton();
-        ejectorButtonNow = driveController.getBButton();
-
-        if (buttonClawNow && !buttonClawPrevious) {
-            clawExtended = !clawExtended;
+        if(armController.getRB()){
+            claw.controlServo(grabClawAngle);
         }
-/*
-        if (clawExtended) {
-            claw.setForward();
+        else if(armController.getLB()){
+            claw.controlServo(releaseClawAngle);
         }
-        else {
-            claw.setReverse();
-        }
-
-        if (ejectorButtonNow && !ejectorButtonPrevious) {
-            ejector.setForward();
-            ejectorTimer.reset();
-            ejectorTimer.start();           
-        }
-
-        ejectorTimerValue = ejectorTimer.get();
-
-        if(ejectorTimerValue > 1) {
-            ejectorTimer.stop();
-            ejector.setReverse();
-        }
-
-        buttonclawPrevious = buttonclawNow;
-        ejectorButtonPrevious = ejectorButtonNow;
-        */
-
+        
     }
 
     public void intake(Intake intake) {
 
         intake.controlIntake(driveController.getPOVDown(), driveController.getPOVUp());
 
+        if(armController.getTriggerRight() > 0.2) {
+            intake.intakeOn();
+        }
+
+        else if(armController.getTriggerLeft() > 0.2) {
+            intake.intakeReverse();
+        }
+        else {
+            intake.intakeOff();
+        }
     }
 
   

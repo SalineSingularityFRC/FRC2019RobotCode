@@ -7,15 +7,12 @@
 
 package frc.robot;
 
-import edu.wpi.cscore.UsbCamera;
+
 import edu.wpi.first.cameraserver.CameraServer;
-//import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.controller.ControlScheme;
 import frc.singularityDrive.BasicDrive;
 import frc.singularityDrive.SingDrive;
-import frc.controller.controlSchemes.*;
 import frc.controller.controlSchemes.ArcadeDrive;
 import frc.robot.Vision;
 
@@ -24,8 +21,7 @@ import com.kauailabs.navx.frc.*;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 
-import com.ctre.phoenix.*;
-import com.revrobotics.*;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the

@@ -1,13 +1,5 @@
     package frc.controller;
 
-    import com.ctre.phoenix.motorcontrol.ControlMode;
-    import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-    import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-    import com.revrobotics.CANEncoder;
-    import com.revrobotics.CANPIDController;
-    import com.revrobotics.CANSparkMax;
-
-    import edu.wpi.first.wpilibj.DriverStation;
     import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
     public abstract class EncoderController implements MotorController {

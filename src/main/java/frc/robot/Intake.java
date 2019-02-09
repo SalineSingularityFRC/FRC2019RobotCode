@@ -19,6 +19,7 @@ public class Intake {
 
     public Intake(int rotatePort) {
         intake = new Spark(rotatePort, true, SingDrive.DEFAULT_RAMP_RATE);
+        intake.setCoastMode(false);
     }
 
     public void controlIntake(boolean intakeOn, boolean intakeReverse) {

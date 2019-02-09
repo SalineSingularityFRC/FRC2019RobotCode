@@ -1,8 +1,6 @@
 package frc.singularityDrive;
 
 
-import com.revrobotics.CANSparkMax.IdleMode;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.controller.MotorController;
