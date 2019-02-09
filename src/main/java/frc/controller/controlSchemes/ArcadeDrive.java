@@ -147,7 +147,7 @@ public class ArcadeDrive extends ControlScheme {
 
     public void elevator(Elevator elevator) {
 
-        else if(wristPosition == WristPosition.HATCH){
+        if(wristPosition == WristPosition.HATCH){
             if (armController.getPOVDown()){
                 elevatorPosition = ElevatorPosition.HATCH1;
             }
