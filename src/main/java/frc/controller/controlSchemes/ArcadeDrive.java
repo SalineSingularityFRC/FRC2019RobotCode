@@ -1,7 +1,13 @@
 package frc.controller.controlSchemes;
 
 import frc.controller.*;
-import frc.robot.*;
+import frc.robot.Claw;
+import frc.robot.DrivePneumatics;
+import frc.robot.Elevator;
+import frc.robot.Intake;
+import frc.robot.PneumaticEjector;
+import frc.robot.Vision;
+import frc.robot.Wrist;
 import frc.robot.Elevator.ElevatorPosition;
 import frc.robot.Wrist.WristPosition;
 import frc.singularityDrive.SingDrive;
@@ -113,8 +119,8 @@ public class ArcadeDrive extends ControlScheme {
         else if (armController.getXButton()){
             wristPosition = WristPosition.INTAKE;
         }
-
-        wrist.setPositionWithEnum(wristPosition, armController.getRS_Y());
+        SmartDashboard.putString("Wrist Intended Position", "" + wristPosition);
+        //wrist.setPositionWithEnum(wristPosition, armController.getRS_Y());
 
 
     }
@@ -159,6 +165,8 @@ public class ArcadeDrive extends ControlScheme {
         else {
             elevatorPosition = ElevatorPosition.BOTTOM; 
         }
+
+        SmartDashboard.putString("elevator intended position", "" + elevatorPosition);
 
         elevator.setPositionWithEnum(elevatorPosition, armController.getLS_Y());
     }
