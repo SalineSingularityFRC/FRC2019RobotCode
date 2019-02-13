@@ -172,7 +172,7 @@ public class ArcadeDrive extends ControlScheme {
     }
     
 
-    public void controlClaw(Claw claw, PneumaticEjector ejector) {
+    public void controlClaw(Claw claw) {
         if(armController.getRB()){
             claw.controlServo(grabClawAngle);
         }

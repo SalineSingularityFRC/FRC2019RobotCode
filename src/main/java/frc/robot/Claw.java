@@ -9,7 +9,7 @@ public class Claw {
     Spark m_motor;
     Servo servo1;
     Servo servo2;
-
+    /* Commented out stuff for motor since we are using servo instead
     //PID values used by the encoder on the Spark motor controller, these still need to be adjusted for our robot.
     public final double kP = 0.1, kI = 1e-4, kD = 0.1, kIZ = 0, kFF = 0, kMaxOut = 1, kMinOut = -1;
     //Rate that the motor speeds up at
@@ -21,17 +21,18 @@ public class Claw {
         m_motor = new Spark(motorPort, brushlessMotor, this.rampRate, "Claw", kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
         m_motor.setCoastMode(false);
     }
-
+    */
     public Claw(int servo1Port, int servo2Port) {
         servo1 = new Servo(servo1Port);
         servo2 = new Servo(servo2Port);
     }
 
     public void controlServo(int angle) {
+        int servo2Angle = 170 - angle;
         servo1.setAngle(angle);
-        servo2.setAngle(angle);
+        servo2.setAngle(servo2Angle);
     }
-
+    /* Also commented out since we are not using a motor
     //Basic function using the setToPosition function in the Spark class to move the encoder to a specified point (position).
     //This also takes in a joystick value, and as defined in Spark if the motor hasn't moved yet it will use joystick control until it hits the bottom endstop
     public void setPosition(double position, double joystickControl) {
@@ -44,5 +45,6 @@ public class Claw {
         m_motor.setSpeed(speed);
         m_motor.printEncoderPosition();
     }
+    */
 
 }
