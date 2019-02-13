@@ -1,24 +1,22 @@
 package frc.controller.controlSchemes;
 
-import frc.controller.XboxController;
-import frc.robot.DrivePneumatics;
+import frc.controller.*;
 import frc.robot.Claw;
+import frc.robot.DrivePneumatics;
+import frc.robot.Elevator;
 import frc.robot.Intake;
+import frc.robot.PneumaticEjector;
 import frc.robot.Vision;
 import frc.robot.Wrist;
 import frc.robot.Elevator.ElevatorPosition;
 import frc.robot.Wrist.WristPosition;
-import frc.robot.Elevator;
-import frc.robot.PneumaticEjector;
-import frc.controller.ControlScheme;
 import frc.singularityDrive.SingDrive;
 import frc.singularityDrive.SingDrive.SpeedMode;
 
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.Ultrasonic;
 /**
  * 
  * Main class to control the robot
@@ -121,8 +119,8 @@ public class ArcadeDrive extends ControlScheme {
         else if (armController.getXButton()){
             wristPosition = WristPosition.INTAKE;
         }
-
-        wrist.setPositionWithEnum(wristPosition, armController.getRS_Y());
+        SmartDashboard.putString("Wrist Intended Position", "" + wristPosition);
+        //wrist.setPositionWithEnum(wristPosition, armController.getRS_Y());
 
 
     }
@@ -167,6 +165,8 @@ public class ArcadeDrive extends ControlScheme {
         else {
             elevatorPosition = ElevatorPosition.BOTTOM; 
         }
+
+        SmartDashboard.putString("elevator intended position", "" + elevatorPosition);
 
         elevator.setPositionWithEnum(elevatorPosition, armController.getLS_Y());
     }

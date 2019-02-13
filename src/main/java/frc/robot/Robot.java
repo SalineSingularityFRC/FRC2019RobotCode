@@ -8,21 +8,18 @@
 package frc.robot;
 
 
-import edu.wpi.first.cameraserver.CameraServer;
-
-import frc.controller.ControlScheme;
-import frc.singularityDrive.BasicDrive;
+import frc.controller.*;
+import frc.singularityDrive.*;
 import frc.singularityDrive.SingDrive;
 import frc.controller.controlSchemes.ArcadeDrive;
-import frc.robot.Vision;
-
+import frc.controller.controlSchemes.Test;
 
 import com.kauailabs.navx.frc.*;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
-
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Ultrasonic;
 
 /**
@@ -41,6 +38,7 @@ public class Robot extends TimedRobot {
   int hatchMechDown, hatchMechUp;
   int intakeMotor;
   int elevatorMotor;
+  int wristMotor;
 
   Compressor compressor;
 
@@ -56,6 +54,7 @@ public class Robot extends TimedRobot {
   PneumaticEjector ejectorPneu;
   Vision vision;
   Elevator elevator;
+  Wrist wrist;
 
   //Create a gyro
   AHRS gyro;
@@ -85,29 +84,30 @@ public class Robot extends TimedRobot {
     setDefaultProperties();
 
     //initialize our driving scheme to a basic arcade drive
-    currentScheme = new ArcadeDrive(XBOX_PORT, XBOX_PORT +1);
+    currentScheme = new Test(XBOX_PORT, XBOX_PORT +1);
     
     //initialize mechanisms
-    drive = new BasicDrive(driveLeft1, driveLeft2, driveLeft3, driveRight1, driveRight2, driveRight3);
-    drivePneumatics = new DrivePneumatics(0, 1);
+    //drive = new BasicDrive(driveLeft1, driveLeft2, driveLeft3, driveRight1, driveRight2, driveRight3);
+    //drivePneumatics = new DrivePneumatics(0, 1);
     elevator = new Elevator(elevatorMotor, true);
+    wrist = new Wrist(wristMotor, true);
     /*intake = new Intake(intakeMotor);
     claw = new Claw(hatchMechDown, hatchMechUp);
     ejectorPneu = new PneumaticEjector(ejectorPneuPush, ejectorPneuHold);
     */
-    vision = new Vision();
+    //vision = new Vision();
     //DO NOT REMOVE PLZ
-    CameraServer.getInstance().startAutomaticCapture();
-    CameraServer.getInstance().startAutomaticCapture();
+    //CameraServer.getInstance().startAutomaticCapture();
+    //CameraServer.getInstance().startAutomaticCapture();
 
-    gyro = new AHRS(SPI.Port.kMXP);
-    gyroResetAtTeleop = true;
+    //gyro = new AHRS(SPI.Port.kMXP);
+    //gyroResetAtTeleop = true;
     
     
-    ultra = new Ultrasonic(ultraInput, ultraOutput);
-    ultra.setAutomaticMode(true);
+    //ultra = new Ultrasonic(ultraInput, ultraOutput);
+    //ultra.setAutomaticMode(true);
     
-    compressor = new Compressor();
+    //compressor = new Compressor();
 
   }
 
@@ -152,10 +152,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    
+    /*
     if (gyroResetAtTeleop) {
       gyro.setAngleAdjustment(-gyro.getAngle());
-    } 
+    } */
   }
 
   /**
@@ -166,12 +166,13 @@ public class Robot extends TimedRobot {
 
     //Allow driver control based on current scheme
     //(we shouldn't need to change this too often)
-    currentScheme.drive(drive, drivePneumatics);
+    //currentScheme.drive(drive, drivePneumatics);
     // partial autonomy via vision
-    currentScheme.visionDrive(vision, drive, drivePneumatics, gyro, ultra);
-    //currentScheme.elevator(elevator);
+    //currentScheme.visionDrive(vision, drive, drivePneumatics, gyro, ultra);
+    currentScheme.elevator(elevator);
+    currentScheme.wrist(wrist);
     
-    compressor.start();
+    //compressor.start();
   }
 
   /**
@@ -201,15 +202,17 @@ public class Robot extends TimedRobot {
     driveRight2 = 5;
     driveRight3 = 6;
     intakeMotor = 8;
-    elevatorMotor = 7;
+    elevatorMotor = 9;//should be 7
+    wristMotor = 13; 
     
     //Pneumatics
-    drivePneuHigh = 1;
+    /*
+    drivePneuHigh = 2;//should be 1
     drivePneuLow = 2;
     ejectorPneuPush = 3;
     ejectorPneuHold = 4;
     hatchMechDown = 5;
-    hatchMechUp = 6;
+    hatchMechUp = 6;*/
     
 
   }

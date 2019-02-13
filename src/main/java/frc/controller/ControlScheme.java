@@ -10,6 +10,7 @@ import frc.robot.Intake;
 import frc.robot.PneumaticEjector;
 import frc.singularityDrive.SingDrive;
 import frc.robot.Vision;
+import frc.robot.Wrist;
 
 /**
  * This interface forces it's subclasses to have all the
@@ -24,6 +25,7 @@ public abstract class ControlScheme {
 	public abstract void intake(Intake intake);
 	public abstract void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, AHRS gyro, Ultrasonic ultra);
 	public abstract void elevator(Elevator elevator);
+	public abstract void wrist(Wrist wrist);
 	
 	/**
 	 * 

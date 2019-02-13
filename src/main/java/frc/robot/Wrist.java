@@ -51,12 +51,16 @@ public class Wrist {
 
             case START:
                 m_motor.setToPosition(joystickControl, startPosition);
+                break;
             case HATCH:
                 m_motor.setToPosition(joystickControl, hatchPosition);
+                break;
             case CARGO:
                 m_motor.setToPosition(joystickControl, cargoPosition);
+                break;
             case INTAKE:
                 m_motor.setToPosition(joystickControl, intakePosition);
+                break;
         }
 
 

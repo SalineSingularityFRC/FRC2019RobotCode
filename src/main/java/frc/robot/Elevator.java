@@ -9,7 +9,7 @@ public class Elevator {
 
     //PID values used by the encoder on the Spark motor controller, these still need to be adjusted for our robot.
     //These for the moment are just placeholder values, they need to be adjusted for our robot.
-    public final double kP = 0.1, kI = 1e-4, kD = 0.1, kIZ = 0, kFF = 0, kMaxOut = 1, kMinOut = -1;
+    public final double kP = 0.05, kI = 5e-6, kD = 1e-5, kIZ = 0, kFF = 0, kMaxOut = 1, kMinOut = -1;
     //Rate that the motor speeds up at
     public final double rampRate = 0.2;
 
@@ -57,27 +57,35 @@ public class Elevator {
         switch (elevatorPosition) {
             case BOTTOM:
                 m_motor.setToPosition(joystickControl, bottomPos);
+                break;
             
             case HATCH1:
                 m_motor.setToPosition(joystickControl, hatch1Pos);
+                break;
 
             case HATCH2:
                 m_motor.setToPosition(joystickControl, hatch2Pos);
+                break;
 
             case HATCH3: 
                 m_motor.setToPosition(joystickControl, hatch3Pos);
-            
+                break;
+
             case CARGO1:
                 m_motor.setToPosition(joystickControl, cargo1Pos);
+                break;
 
             case CARGO2:
                 m_motor.setToPosition(joystickControl, cargo2Pos);
+                break;
 
             case CARGO3:
                 m_motor.setToPosition(joystickControl, cargo3Pos);
+                break;
 
             case CARGOSHIP: 
                 m_motor.setToPosition(joystickControl, cargoShipPos);
+                break;
         }
 
     }

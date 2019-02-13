@@ -77,7 +77,7 @@ public class Spark implements MotorController {
         previousJoystick = 0.0;
         controlWithJoystick = false;
 
-
+        this.name = name;
         
     }
 
@@ -128,7 +128,7 @@ public class Spark implements MotorController {
 
     //Put the current encoder values on the smart dashboard, adjusted for our inital position
     public void printEncoderPosition() {
-        SmartDashboard.putNumber(name + "Encoder Value", this.getCurrentPosition());
+        SmartDashboard.putNumber(name + " Encoder Value", this.getCurrentPosition());
         
     }
 
@@ -237,9 +237,9 @@ public class Spark implements MotorController {
 
     public double getCurrentPosition() {
         if(initialPosition != -100) {
-            return m_encoder.getPosition();
+            return this.m_encoder.getPosition() - this.initialPosition;
         }
-        return this.m_encoder.getPosition() - this.initialPosition;
+        return m_encoder.getPosition();
         
     }
 
@@ -255,6 +255,7 @@ public class Spark implements MotorController {
         //getting the updated pid values from the smartdashboard, then prints the postion to the smartdashboard
         this.getConstantsFromDashboard();
         this.printEncoderPosition();
+        SmartDashboard.putNumber("intended numerical position", position);
         
         // if the lower limit switch is pressed it means we are at the bottom which is setting the encoder postiton to zero
         SmartDashboard.putBoolean("lower limit switch", isLowerLimitPressed(true));
