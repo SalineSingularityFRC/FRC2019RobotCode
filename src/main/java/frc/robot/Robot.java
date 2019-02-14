@@ -201,9 +201,9 @@ public class Robot extends TimedRobot {
     driveRight1 = 4;
     driveRight2 = 5;
     driveRight3 = 6;
-    intakeMotor = 8;
-    elevatorMotor = 9;//should be 7
-    wristMotor = 13; 
+    elevatorMotor = 7;//should be 7
+    wristMotor = 8;
+    intakeMotor = 9;
     
     //Pneumatics
     /*
