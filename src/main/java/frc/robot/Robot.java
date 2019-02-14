@@ -39,6 +39,8 @@ public class Robot extends TimedRobot {
   int intakeMotor;
   int elevatorMotor;
   int wristMotor;
+  int clawServo1, clawServo2;
+
 
   Compressor compressor;
 
@@ -55,6 +57,7 @@ public class Robot extends TimedRobot {
   Vision vision;
   Elevator elevator;
   Wrist wrist;
+  Claw claw;
 
   //Create a gyro
   AHRS gyro;
@@ -91,10 +94,10 @@ public class Robot extends TimedRobot {
     //drivePneumatics = new DrivePneumatics(0, 1);
     elevator = new Elevator(elevatorMotor, true);
     wrist = new Wrist(wristMotor, true);
-    /*intake = new Intake(intakeMotor);
-    claw = new Claw(hatchMechDown, hatchMechUp);
-    ejectorPneu = new PneumaticEjector(ejectorPneuPush, ejectorPneuHold);
-    */
+    //intake = new Intake(intakeMotor);
+    claw = new Claw(clawServo1, clawServo2);
+    //ejectorPneu = new PneumaticEjector(ejectorPneuPush, ejectorPneuHold);
+    
     //vision = new Vision();
     //DO NOT REMOVE PLZ
     //CameraServer.getInstance().startAutomaticCapture();
@@ -169,9 +172,9 @@ public class Robot extends TimedRobot {
     //currentScheme.drive(drive, drivePneumatics);
     // partial autonomy via vision
     //currentScheme.visionDrive(vision, drive, drivePneumatics, gyro, ultra);
-    currentScheme.elevator(elevator);
-    currentScheme.wrist(wrist);
-    
+    //currentScheme.elevator(elevator);
+    //currentScheme.wrist(wrist);
+    currentScheme.controlClaw(claw);
     //compressor.start();
   }
 
@@ -213,6 +216,10 @@ public class Robot extends TimedRobot {
     ejectorPneuHold = 4;
     hatchMechDown = 5;
     hatchMechUp = 6;*/
+
+    //Servos
+    clawServo1 = 0;
+    clawServo2 = 1;
     
 
   }

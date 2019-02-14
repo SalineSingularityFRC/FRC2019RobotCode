@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controller.motorControllers.Spark;
 
 public class Claw {
@@ -28,6 +29,7 @@ public class Claw {
     }
 
     public void controlServo(int angle) {
+        SmartDashboard.putNumber("Servo Position", angle);
         int servo2Angle = 170 - angle;
         servo1.setAngle(angle);
         servo2.setAngle(servo2Angle);

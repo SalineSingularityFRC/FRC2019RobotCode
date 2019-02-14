@@ -21,7 +21,7 @@ import frc.robot.Wrist;
 public abstract class ControlScheme {
 	
 	public abstract void drive(SingDrive drive, DrivePneumatics pneumatics);
-	public abstract void controlClaw(Claw claw, PneumaticEjector ejector);
+	public abstract void controlClaw(Claw claw);
 	public abstract void intake(Intake intake);
 	public abstract void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, AHRS gyro, Ultrasonic ultra);
 	public abstract void elevator(Elevator elevator);
