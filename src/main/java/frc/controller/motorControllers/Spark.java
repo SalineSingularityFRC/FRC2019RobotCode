@@ -147,12 +147,12 @@ public class Spark implements MotorController {
      */
     public void putConstantsOnDashboard(String name, double kP, double kI, double kD, double kIZ, double kFF, double kMinOut, double kMaxOut) {
 
-        this.m_pidController.setP(kP);
-        this.m_pidController.setI(kI);
-        this.m_pidController.setD(kD);
-        this.m_pidController.setIZone(kIZ);
-        this.m_pidController.setFF(kFF);
-        this.m_pidController.setOutputRange(kMinOut, kMaxOut);
+        this.m_pidController.setP(kP, 0);
+        this.m_pidController.setI(kI, 0);
+        this.m_pidController.setD(kD, 0);
+        this.m_pidController.setIZone(kIZ, 0);
+        this.m_pidController.setFF(kFF, 0);
+        this.m_pidController.setOutputRange(kMinOut, kMaxOut, 0);
         
 
         // display PID coefficients on SmartDashboard
@@ -184,22 +184,22 @@ public class Spark implements MotorController {
 
         // if PID coefficients on SmartDashboard have changed, write new values to controller
         if ((p != this.m_pidController.getP())) {
-            this.m_pidController.setP(p);
+            this.m_pidController.setP(p, 0);
         }
         if((i != this.m_pidController.getI())) {
-            this.m_pidController.setI(i);
+            this.m_pidController.setI(i, 0);
         }
         if((d != this.m_pidController.getD())) {
-            this.m_pidController.setD(d);
+            this.m_pidController.setD(d, 0);
         }
         if((iz != this.m_pidController.getIZone())) {
-            this.m_pidController.setIZone(iz);
+            this.m_pidController.setIZone(iz, 0);
         }
         if((ff != this.m_pidController.getFF())) {
-            this.m_pidController.setFF(ff);
+            this.m_pidController.setFF(ff, 0);
         }
         if((max != this.m_pidController.getOutputMax()) || (min != this.m_pidController.getOutputMin())) { 
-            this.m_pidController.setOutputRange(min, max);
+            this.m_pidController.setOutputRange(min, max, 0);
         }
     }
 
@@ -250,7 +250,7 @@ public class Spark implements MotorController {
      * @param joystickControl if the encoder has not been set yet it will move via joystick control
      * @param position the place where to set the target postiton to
      */
-    public void setToPosition(double joystickControl, double position) {
+    public void setToPosition(double joystickControl, double position, double feedForward) {
 
         //getting the updated pid values from the smartdashboard, then prints the postion to the smartdashboard
         this.getConstantsFromDashboard();
@@ -288,7 +288,8 @@ public class Spark implements MotorController {
 
         //If we are moving with the encoder, set encoder target position to our position we want it to be + the inital position the encoder thinks we are at
         if (!controlWithJoystick) {
-            this.m_pidController.setReference(position + this.initialPosition, ControlType.kPosition);
+            //this.m_pidController.setReference(position + this.initialPosition, ControlType.kPosition, 0);
+            this.m_pidController.setReference(position + this.initialPosition, ControlType.kPosition, 0, feedForward);
         }
         //Else control the motor with the joystick
         else {

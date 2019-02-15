@@ -46,7 +46,7 @@ public class Elevator {
     //Basic function using the setToPosition function in the Spark class to move the encoder to a specified point (position).
     //This also takes in a joystick value, and as defined in Spark if the motor hasn't moved yet it will use joystick control until it hits the bottom endstop
     public void setPosition(double position, double joystickControl) {
-        m_motor.setToPosition(joystickControl, position);
+        m_motor.setToPosition(joystickControl, position, 0.0);
     }
 
     //Using the ElevatorPosition enum & constants, we can set the elevator to one of the desired positions for doing our different tasks using the setPositionWithEnum method
@@ -56,35 +56,35 @@ public class Elevator {
 
         switch (elevatorPosition) {
             case BOTTOM:
-                m_motor.setToPosition(joystickControl, bottomPos);
+                m_motor.setToPosition(joystickControl, bottomPos, 0.0);
                 break;
             
             case HATCH1:
-                m_motor.setToPosition(joystickControl, hatch1Pos);
+                m_motor.setToPosition(joystickControl, hatch1Pos, 0.0);
                 break;
 
             case HATCH2:
-                m_motor.setToPosition(joystickControl, hatch2Pos);
+                m_motor.setToPosition(joystickControl, hatch2Pos, 0.0);
                 break;
 
             case HATCH3: 
-                m_motor.setToPosition(joystickControl, hatch3Pos);
+                m_motor.setToPosition(joystickControl, hatch3Pos, 0.0);
                 break;
 
             case CARGO1:
-                m_motor.setToPosition(joystickControl, cargo1Pos);
+                m_motor.setToPosition(joystickControl, cargo1Pos, 0.0);
                 break;
 
             case CARGO2:
-                m_motor.setToPosition(joystickControl, cargo2Pos);
+                m_motor.setToPosition(joystickControl, cargo2Pos, 0.0);
                 break;
 
             case CARGO3:
-                m_motor.setToPosition(joystickControl, cargo3Pos);
+                m_motor.setToPosition(joystickControl, cargo3Pos, 0.0);
                 break;
 
             case CARGOSHIP: 
-                m_motor.setToPosition(joystickControl, cargoShipPos);
+                m_motor.setToPosition(joystickControl, cargoShipPos, 0.0);
                 break;
         }
 
