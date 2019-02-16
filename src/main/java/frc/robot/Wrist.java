@@ -39,7 +39,7 @@ public class Wrist {
     private final double gravity = 9.80665;// m/s^2
     private final double distanceToCM = 0.0;// m FIND THIS VALUE
     private final double kTorque = .216667; //N*m
-    private final double gearRatio = 0.0; //FIND THIS VALUE
+    private final double gearRatio = 34.9; //FIND THIS VALUE
 
     private final double kVoltage = this.mass * this.distanceToCM / (this.kTorque * gearRatio);
 
