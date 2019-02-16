@@ -24,13 +24,15 @@ public class Test extends ControlScheme{
 
     }
 	public void controlClaw(Claw claw) {
+        claw.controlClawMotor(SingDrive.threshold(driveController.getLS_Y()));
+        /*
         if(driveController.getRB()){
             claw.controlServo(grabClawAngle);
         }
         else if(driveController.getLB()){
             claw.controlServo(releaseClawAngle);
         }
-        
+        */
     }
 	public void intake(Intake intake){
 

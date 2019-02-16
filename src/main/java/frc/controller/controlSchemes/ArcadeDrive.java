@@ -173,12 +173,14 @@ public class ArcadeDrive extends ControlScheme {
     
 
     public void controlClaw(Claw claw) {
+        /* NOT USING SERVOS
         if(armController.getRB()){
             claw.controlServo(grabClawAngle);
         }
         else if(armController.getLB()){
             claw.controlServo(releaseClawAngle);
         }
+        */
         
     }
 

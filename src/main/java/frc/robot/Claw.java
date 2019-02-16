@@ -1,15 +1,22 @@
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controller.motorControllers.Spark;
+import frc.singularityDrive.SingDrive;
 
 public class Claw {
 
     //Declaring new motor using a spark motor controller and the Spark class
+    /* NOT USING SPARK OR SERVOS
     Spark m_motor;
     Servo servo1;
     Servo servo2;
+    */
+    VictorSPX clawMotor1;
     /* Commented out stuff for motor since we are using servo instead
     //PID values used by the encoder on the Spark motor controller, these still need to be adjusted for our robot.
     public final double kP = 0.1, kI = 1e-4, kD = 0.1, kIZ = 0, kFF = 0, kMaxOut = 1, kMinOut = -1;
@@ -23,17 +30,22 @@ public class Claw {
         m_motor.setCoastMode(false);
     }
     */
-    public Claw(int servo1Port, int servo2Port) {
-        servo1 = new Servo(servo1Port);
-        servo2 = new Servo(servo2Port);
+    public Claw(int claw1Port) {
+        clawMotor1 = new VictorSPX(claw1Port);
     }
 
+    public void controlClawMotor(double power) {
+        clawMotor1.set(ControlMode.PercentOutput, power);
+    }
+    /* Servo Control
     public void controlServo(int angle) {
         SmartDashboard.putNumber("Servo Position", angle);
         int servo2Angle = 170 - angle;
         servo1.setAngle(angle);
         servo2.setAngle(servo2Angle);
     }
+    */
+   
     /* Also commented out since we are not using a motor
     //Basic function using the setToPosition function in the Spark class to move the encoder to a specified point (position).
     //This also takes in a joystick value, and as defined in Spark if the motor hasn't moved yet it will use joystick control until it hits the bottom endstop
