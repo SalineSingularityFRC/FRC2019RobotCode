@@ -35,11 +35,11 @@ public class Wrist {
 
     // Constants for Feed Forward control to counteract gravity
     // PID control is not the best for holding a position against gravity
-    private final double mass = 0.0;// kg FIND THIS VALUE
+    private final double mass = 6.818;// kg FIND THIS VALUE
     private final double gravity = 9.80665;// m/s^2
     private final double distanceToCM = 0.0;// m FIND THIS VALUE
     private final double kTorque = .216667; //N*m
-    private final double gearRatio = 34.9; //FIND THIS VALUE
+    private final double gearRatio = 34.22;
 
     private final double kVoltage = this.mass * this.distanceToCM / (this.kTorque * gearRatio);
 
