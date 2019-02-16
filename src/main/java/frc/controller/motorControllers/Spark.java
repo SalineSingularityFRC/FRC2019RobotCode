@@ -132,6 +132,18 @@ public class Spark implements MotorController {
         
     }
 
+    public void watchEncoderWithJoystick(double percentOutput) {
+
+        SmartDashboard.putBoolean("lower limit switch", isLowerLimitPressed(true));
+        if (isLowerLimitPressed(true)) {
+            this.setInitialPosition();
+        }
+
+        this.printEncoderPosition();
+
+        this.setSpeed(percentOutput);
+    }
+
 
     /**
      * Puts constants on the dashboard, possibly so they can be edited later with getConstantsFromDashboard()

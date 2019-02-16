@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -33,7 +35,7 @@ public class Robot extends TimedRobot {
 
   //stores the motor controller IDs
   int driveLeft1, driveLeft2, driveLeft3, driveRight1, driveRight2, driveRight3;
-  int drivePneuHigh, drivePneuLow;
+  int drivePneu1, drivePneu2;
   int ejectorPneuPush, ejectorPneuHold;
   int hatchMechDown, hatchMechUp;
   int intakeMotor;
@@ -43,6 +45,7 @@ public class Robot extends TimedRobot {
 
 
   Compressor compressor;
+  
 
   //Declaration of our driving scheme, which can be initialized to
   //any ControlScheme in robotInit()
@@ -90,12 +93,12 @@ public class Robot extends TimedRobot {
     currentScheme = new Test(XBOX_PORT, XBOX_PORT +1);
     
     //initialize mechanisms
-    //drive = new BasicDrive(driveLeft1, driveLeft2, driveLeft3, driveRight1, driveRight2, driveRight3);
-    //drivePneumatics = new DrivePneumatics(0, 1);
-    elevator = new Elevator(elevatorMotor, true);
-    wrist = new Wrist(wristMotor, true);
+    drive = new BasicDrive(driveLeft1, driveLeft2, driveLeft3, driveRight1, driveRight2, driveRight3);
+    drivePneumatics = new DrivePneumatics(drivePneu1, drivePneu2);
+    //elevator = new Elevator(elevatorMotor, true);
+    //wrist = new Wrist(wristMotor, true);
     //intake = new Intake(intakeMotor);
-    claw = new Claw(clawMotor1);
+    //claw = new Claw(clawMotor1);
     //ejectorPneu = new PneumaticEjector(ejectorPneuPush, ejectorPneuHold);
     
     //vision = new Vision();
@@ -110,7 +113,9 @@ public class Robot extends TimedRobot {
     //ultra = new Ultrasonic(ultraInput, ultraOutput);
     //ultra.setAutomaticMode(true);
     
-    //compressor = new Compressor();
+    
+    compressor = new Compressor();
+    
 
   }
 
@@ -124,6 +129,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+
+    //compressor.start();
+
   }
 
   /**
@@ -169,13 +177,13 @@ public class Robot extends TimedRobot {
 
     //Allow driver control based on current scheme
     //(we shouldn't need to change this too often)
-    //currentScheme.drive(drive, drivePneumatics);
+    currentScheme.drive(drive, drivePneumatics);
     // partial autonomy via vision
     //currentScheme.visionDrive(vision, drive, drivePneumatics, gyro, ultra);
-    //currentScheme.elevator(elevator);
+    currentScheme.elevator(elevator);
     //currentScheme.wrist(wrist);
-    currentScheme.controlClaw(claw);
-    //compressor.start();
+    //currentScheme.controlClaw(claw);
+    compressor.start();
   }
 
   /**
@@ -210,13 +218,13 @@ public class Robot extends TimedRobot {
     clawMotor1 = 0; //don't known this yet
     
     //Pneumatics
-    /*
-    drivePneuHigh = 2;//should be 1
-    drivePneuLow = 2;
-    ejectorPneuPush = 3;
-    ejectorPneuHold = 4;
-    hatchMechDown = 5;
-    hatchMechUp = 6;*/
+    
+    drivePneu1 = 1;
+    drivePneu2 = 2;
+    //ejectorPneuPush = 3;
+    //ejectorPneuHold = 4;
+    //hatchMechDown = 5;
+    //hatchMechUp = 6;*/
 
     
 

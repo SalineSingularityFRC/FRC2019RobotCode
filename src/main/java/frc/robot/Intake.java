@@ -17,8 +17,10 @@ public class Intake {
     private final double intakeReverseSpeed = -1.0;
     private final double intakeOffSpeed = 0;
 
+    public static boolean haveBall;
+
     public Intake(int rotatePort) {
-        intake = new Spark(rotatePort, true, SingDrive.DEFAULT_RAMP_RATE);
+        intake = new Spark(rotatePort, false, SingDrive.DEFAULT_RAMP_RATE);
         intake.setCoastMode(false);
     }
 

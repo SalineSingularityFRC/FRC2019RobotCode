@@ -21,7 +21,7 @@ public class Test extends ControlScheme{
         armController = new XboxController(armControllerPort);
     }
     public void drive(SingDrive drive, DrivePneumatics pneumatics) {
-
+        
     }
 	public void controlClaw(Claw claw) {
         claw.controlClawMotor(SingDrive.threshold(driveController.getLS_Y()));

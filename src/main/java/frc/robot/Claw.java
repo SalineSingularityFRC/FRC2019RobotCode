@@ -30,13 +30,30 @@ public class Claw {
         m_motor.setCoastMode(false);
     }
     */
+
+    boolean hatchAcquired;
+
     public Claw(int claw1Port) {
         clawMotor1 = new VictorSPX(claw1Port);
-    }
+        hatchAcquired = false;    }
 
     public void controlClawMotor(double power) {
         clawMotor1.set(ControlMode.PercentOutput, power);
+
+        if (power > .25) {
+            hatchAcquired = true;
+        }
+        else if (power < .25) {
+            hatchAcquired = false;
+        }
+        SmartDashboard.putBoolean("hatch acquired`", hatchAcquired);
     }
+
+    public boolean haveHatch() {
+        return haveHatch();
+    }
+
+
     /* Servo Control
     public void controlServo(int angle) {
         SmartDashboard.putNumber("Servo Position", angle);

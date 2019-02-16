@@ -12,11 +12,11 @@ public class DrivePneumatics{
     }
 	
 	public void setHigh() {
-		doubleSolenoid.set(DoubleSolenoid.Value.kForward);
+		doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
 	}
 	
 	public void setLow() {
-		doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
+		doubleSolenoid.set(DoubleSolenoid.Value.kForward);
 	}
 	
 	public void setOff() {

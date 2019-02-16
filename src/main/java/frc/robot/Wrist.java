@@ -35,13 +35,13 @@ public class Wrist {
 
     // Constants for Feed Forward control to counteract gravity
     // PID control is not the best for holding a position against gravity
-    private final double mass = 6.818;// kg FIND THIS VALUE
+    private final double mass = 7.48;// kg
     private final double gravity = 9.80665;// m/s^2
-    private final double distanceToCM = 0.0;// m FIND THIS VALUE
-    private final double kTorque = .216667; //N*m
-    private final double gearRatio = 34.22;
+    private final double distanceToCM = .368;// m
+    private final double kT = .216667; //N*m
+    private final double gearRatio = 32.1;
 
-    private final double kVoltage = this.mass * this.distanceToCM / (this.kTorque * gearRatio);
+    private final double kTorque = 1 / (this.kT * gearRatio);
 
     // Constants for converting position to angle and vice versa
     private final double positionScalar = 0.0;// FIND THIS VALUE
@@ -104,7 +104,9 @@ public class Wrist {
         //Option to try to incorporate acceleration of elevator
         double acceleration = this.gravity;
 
-        return Math.cos(this.getAngle()) * acceleration * this.kVoltage;
+        
+
+        return Math.cos(this.getAngle()) * acceleration * this.kTorque * mass * distanceToCM;
     }
 
 }
