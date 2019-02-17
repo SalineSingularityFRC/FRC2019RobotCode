@@ -70,11 +70,11 @@ public abstract class SingDrive {
 
 	// RAMP_RATE is used to limit jerks in motor output. Drive Motors starting at 0 output can ramp up to full power
 	// in a time denoted by RAMP_RATE (measured in seconds). Suggested value: 0.4 (still needs testing)
-	public final static double DEFAULT_RAMP_RATE = 0.4;
+	public final static double DEFAULT_RAMP_RATE = 0.5;
 
 	// MINIMUM_THRESHOLD limits unintended drift from joystick axes. Any joystick input less than MINIMUM_THRESHOLD
 	// will be set to 0 using this.threshold(double velocity). Suggested value: 0.07 (still needs testing)
-	public final static double MINIMUM_THRESHOLD = 0.07;
+	public final static double MINIMUM_THRESHOLD = 0.05;
 
 	// DEFAULT_INPUT_POWER is the default for what a joystick input will be raised to. For example, when the value
 	// is 2.0, joystick inputs will be squared when DEFAULT_INPUT_POWER is passed to this.setInputToPower().

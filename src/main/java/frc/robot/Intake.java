@@ -3,7 +3,6 @@ package frc.robot;
 
 import frc.controller.MotorController;
 import frc.controller.motorControllers.Spark;
-import frc.singularityDrive.SingDrive;
 
 
 public class Intake {
@@ -15,12 +14,11 @@ public class Intake {
 
     private final double intakeSpeed = 0.5;
     private final double intakeReverseSpeed = -1.0;
-    private final double intakeOffSpeed = 0;
 
     public static boolean haveBall;
 
     public Intake(int rotatePort) {
-        intake = new Spark(rotatePort, false, SingDrive.DEFAULT_RAMP_RATE);
+        intake = new Spark(rotatePort, false, 0.05);
         intake.setCoastMode(false);
     }
 
@@ -33,7 +31,7 @@ public class Intake {
             intake.setSpeed(intakeReverseSpeed);
         }
         else {
-            intake.setSpeed(intakeOffSpeed);
+            intake.setSpeed(0.0);
         }
     }
 
@@ -42,7 +40,7 @@ public class Intake {
     }
 
     public void intakeOff() {
-        intake.setSpeed(intakeOffSpeed);
+        intake.setSpeed(0.0);
     }
 
     public void intakeReverse() {

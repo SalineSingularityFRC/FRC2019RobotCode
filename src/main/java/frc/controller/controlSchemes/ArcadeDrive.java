@@ -5,7 +5,6 @@ import frc.robot.Claw;
 import frc.robot.DrivePneumatics;
 import frc.robot.Elevator;
 import frc.robot.Intake;
-import frc.robot.PneumaticEjector;
 import frc.robot.Vision;
 import frc.robot.Wrist;
 import frc.robot.Elevator.ElevatorPosition;
@@ -29,13 +28,14 @@ public class ArcadeDrive extends ControlScheme {
     XboxController armController;
 
     boolean lowGear;
-
     SpeedMode speedMode;
 
-    //Hatch Variables
-    final int grabClawAngle = 120;
-    final int releaseClawAngle = 60;
+    boolean usingVision;
 
+    //Hatch Variables
+    //final int grabClawAngle = 120;
+    //final int releaseClawAngle = 60;
+    final double clawSpeed = 0.5;
     
     WristPosition wristPosition;
 
@@ -44,14 +44,10 @@ public class ArcadeDrive extends ControlScheme {
     double tx, tv;
     double ultraIn;
 
-
     //Need to be adjusted for our robot
     final double driveSpeedConstant = 0.3;
-
     final double txkP = 0.025;
-    
     final double angleDifferencekP = 0.012;
-
     final double endDistance = 2.0;
 
     // Constructor for the ArcadeDrive class
@@ -62,8 +58,9 @@ public class ArcadeDrive extends ControlScheme {
         armController = new XboxController(armControllerPort);
 
         lowGear = true;
-
         speedMode = SpeedMode.FAST;
+
+        usingVision = false;
 
         wristPosition = WristPosition.START;
         
@@ -85,12 +82,14 @@ public class ArcadeDrive extends ControlScheme {
 
         //driving arcade drive based on right joystick on driveController
         //changed boolean poweredInputs from false to true, change back if robot encounters issues
-        drive.arcadeDrive(driveController.getRS_Y(), driveController.getRS_X(), 0.0, true, speedMode);
+        //ADDED USINGVISION, SO IF THINGS ARE ACTING WEIRD COME BACK TO THIS
+        if (!usingVision) {
+            drive.arcadeDrive(driveController.getLS_Y(), driveController.getRS_X(), 0.0, true, speedMode);
+        }
 
         if(driveController.getLB()) {
            lowGear = true;
         }
-
         else if(driveController.getRB()) {
             lowGear = false;
         }
@@ -98,7 +97,6 @@ public class ArcadeDrive extends ControlScheme {
         if(lowGear) {
             pneumatics.setLow();
         }
-
         else {
             pneumatics.setHigh();
         }
@@ -173,20 +171,23 @@ public class ArcadeDrive extends ControlScheme {
     
 
     public void controlClaw(Claw claw) {
-        /* NOT USING SERVOS
+        
         if(armController.getRB()){
-            claw.controlServo(grabClawAngle);
+            //claw.controlServo(grabClawAngle);
+            claw.controlClawMotor(clawSpeed);
         }
         else if(armController.getLB()){
-            claw.controlServo(releaseClawAngle);
+            //claw.controlServo(releaseClawAngle);
+            claw.controlClawMotor(-clawSpeed);
         }
-        */
+        else {
+            claw.controlClawMotor(0.0);
+        }
+        
         
     }
 
     public void intake(Intake intake) {
-
-        intake.controlIntake(driveController.getPOVDown(), driveController.getPOVUp());
 
         if(armController.getTriggerRight() > 0.2) {
             intake.intakeOn();
@@ -211,12 +212,12 @@ public class ArcadeDrive extends ControlScheme {
         tx = vision.tx.getDouble(0.0);
         tv = vision.tv.getDouble(0.0);
 
-        ultraIn = ultra.getRangeInches();
+        //ultraIn = ultra.getRangeInches();
 
         // Pastes values into smart dashboard
         SmartDashboard.putNumber("tx", tx);
         SmartDashboard.putNumber("tv", tv);
-        SmartDashboard.putNumber("Inches", ultraIn);
+        //SmartDashboard.putNumber("Inches", ultraIn);
 
         // Declaring and instantiating buttons used for enabling vision drive
         boolean squareButton = driveController.getXButton();
@@ -228,7 +229,7 @@ public class ArcadeDrive extends ControlScheme {
         SmartDashboard.putNumber("current angle:", currentAngle);
 
         // Resets gyro value to 0
-        if(driveController.getAButton()) {
+        if (driveController.getAButton()) {
             gyro.setAngleAdjustment(0);
             gyro.setAngleAdjustment(-super.smooshGyroAngle(gyro.getAngle()));
             
@@ -236,7 +237,7 @@ public class ArcadeDrive extends ControlScheme {
 
         
         //Starts driving based on vision if the button is pushed and we have a target
-        if((squareButton == true || offSetButton == true) && tv == 1.0 && ultraIn > endDistance) {
+        if ((squareButton == true || offSetButton == true) && tv == 1.0/* && ultraIn > endDistance*/) {
             
             //Declaring the left and right command speeds and setting it equal to the driveSpeedConstant
             double left_command = driveSpeedConstant;
@@ -246,7 +247,7 @@ public class ArcadeDrive extends ControlScheme {
             double steering_adjust = 0.0;
             steering_adjust += txkP * tx;
 
-            // Declare and adjust tarteAngle based on currentAngle
+            // Declare and adjust targetAngle based on currentAngle
             double targetAngle;
             if(squareButton) {
                 targetAngle = super.getSquareAngleForPort(currentAngle);
@@ -274,7 +275,13 @@ public class ArcadeDrive extends ControlScheme {
             
             SmartDashboard.putNumber("Left_command", left_command);
             SmartDashboard.putNumber("Right_command", right_command);
+
+            usingVision = true;
         } // end of if statement
+
+        else {
+            usingVision = false;
+        }
     }
 
 }

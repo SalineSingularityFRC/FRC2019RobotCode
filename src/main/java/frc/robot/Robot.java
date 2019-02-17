@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -36,15 +35,14 @@ public class Robot extends TimedRobot {
   //stores the motor controller IDs
   int driveLeft1, driveLeft2, driveLeft3, driveRight1, driveRight2, driveRight3;
   int drivePneu1, drivePneu2;
-  int ejectorPneuPush, ejectorPneuHold;
-  int hatchMechDown, hatchMechUp;
+
+  //int ejectorPneuPush, ejectorPneuHold;
+  //int hatchMechDown, hatchMechUp;
+
   int intakeMotor;
   int elevatorMotor;
   int wristMotor;
-  int clawMotor1;
-
-
-  Compressor compressor;
+  int clawLeftMotor, clawRightMotor;
   
 
   //Declaration of our driving scheme, which can be initialized to
@@ -54,13 +52,14 @@ public class Robot extends TimedRobot {
   //Declaration of mechanisms
   SingDrive drive;
   DrivePneumatics drivePneumatics;
+
   Intake intake;
-  Claw hatchMech;
-  PneumaticEjector ejectorPneu;
-  Vision vision;
+  //PneumaticEjector ejectorPneu;
   Elevator elevator;
   Wrist wrist;
   Claw claw;
+
+  Vision vision;
 
   //Create a gyro
   AHRS gyro;
@@ -70,6 +69,8 @@ public class Robot extends TimedRobot {
   Ultrasonic ultra;
   final int ultraInput = 1;
   final int ultraOutput = 2;
+
+  Compressor compressor;
 
   //default ports of certain joysticks in DriverStation
   final int XBOX_PORT = 0;
@@ -83,8 +84,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    
-    
     
     //initialize motor controller ports IDs
     setDefaultProperties();
@@ -109,8 +108,8 @@ public class Robot extends TimedRobot {
     //CameraServer.getInstance().startAutomaticCapture();
     //CameraServer.getInstance().startAutomaticCapture();
 
-    //gyro = new AHRS(SPI.Port.kMXP);
-    //gyroResetAtTeleop = true;
+    gyro = new AHRS(SPI.Port.kMXP);
+    gyroResetAtTeleop = true;
     
     
     //ultra = new Ultrasonic(ultraInput, ultraOutput);
@@ -166,10 +165,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    /*
+    
     if (gyroResetAtTeleop) {
       gyro.setAngleAdjustment(-gyro.getAngle());
-    } */
+    }
   }
 
   /**
@@ -178,12 +177,12 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    //Allow driver control based on current scheme
-    //(we shouldn't need to change this too often)
+    // Allow driver control based on current scheme
+    // (we shouldn't need to change this too often- other than commenting)
     currentScheme.drive(drive, drivePneumatics);
     // partial autonomy via vision
     //currentScheme.visionDrive(vision, drive, drivePneumatics, gyro, ultra);
-    currentScheme.elevator(elevator);
+    //currentScheme.elevator(elevator);
     //currentScheme.wrist(wrist);
     //currentScheme.controlClaw(claw);
     compressor.start();
@@ -215,11 +214,12 @@ public class Robot extends TimedRobot {
     driveRight1 = 4;
     driveRight2 = 5;
     driveRight3 = 6;
-    elevatorMotor = 7;//should be 7
+    elevatorMotor = 7;
     wristMotor = 8;
     intakeMotor = 9;
-    clawMotor1 = 0; //don't known this yet
-    
+    clawLeftMotor = 10; //don't known this yet
+    clawRightMotor = 11;
+
     //Pneumatics
     
     drivePneu1 = 1;
