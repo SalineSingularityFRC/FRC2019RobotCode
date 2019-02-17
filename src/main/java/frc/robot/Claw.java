@@ -1,22 +1,16 @@
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-
-import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controller.motorControllers.Spark;
-import frc.singularityDrive.SingDrive;
 
 public class Claw {
 
     //Declaring new motor using a spark motor controller and the Spark class
-    /* NOT USING SPARK OR SERVOS
-    Spark m_motor;
-    Servo servo1;
-    Servo servo2;
-    */
-    VictorSPX clawMotor1;
+    // NOT USING SPARK OR SERVOS - or not
+    Spark m_motorLeft, m_motorRight;
+    private final double rampRate = 0.2;
+    
+    
     /* Commented out stuff for motor since we are using servo instead
     //PID values used by the encoder on the Spark motor controller, these still need to be adjusted for our robot.
     public final double kP = 0.1, kI = 1e-4, kD = 0.1, kIZ = 0, kFF = 0, kMaxOut = 1, kMinOut = -1;
@@ -33,20 +27,24 @@ public class Claw {
 
     private boolean hatchAcquired;
 
-    public Claw(int claw1Port) {
-        clawMotor1 = new VictorSPX(claw1Port);
-        hatchAcquired = false;    }
+    public Claw(int clawLeftPort, int clawRightPort) {
+        this.m_motorLeft = new Spark(clawLeftPort, false, rampRate);
+        this.m_motorRight = new Spark(clawRightPort, false, rampRate);
+
+        hatchAcquired = false;
+    }
 
     public void controlClawMotor(double power) {
-        clawMotor1.set(ControlMode.PercentOutput, power);
+        m_motorLeft.setSpeed(power);
+        m_motorRight.setSpeed(power);
 
-        if (power > .25) {
+        if (power > .15) {
             hatchAcquired = true;
         }
-        else if (power < .25) {
+        else if (power < -.15) {
             hatchAcquired = false;
         }
-        SmartDashboard.putBoolean("hatch acquired`", hatchAcquired);
+        SmartDashboard.putBoolean("hatch acquired", hatchAcquired);
     }
 
     public boolean hasHatch() {
