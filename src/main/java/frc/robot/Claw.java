@@ -31,7 +31,7 @@ public class Claw {
     }
     */
 
-    boolean hatchAcquired;
+    private boolean hatchAcquired;
 
     public Claw(int claw1Port) {
         clawMotor1 = new VictorSPX(claw1Port);
@@ -49,8 +49,8 @@ public class Claw {
         SmartDashboard.putBoolean("hatch acquired`", hatchAcquired);
     }
 
-    public boolean haveHatch() {
-        return haveHatch();
+    public boolean hasHatch() {
+        return hatchAcquired;
     }
 
 

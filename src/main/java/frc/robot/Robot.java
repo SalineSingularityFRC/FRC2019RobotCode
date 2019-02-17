@@ -95,10 +95,13 @@ public class Robot extends TimedRobot {
     //initialize mechanisms
     drive = new BasicDrive(driveLeft1, driveLeft2, driveLeft3, driveRight1, driveRight2, driveRight3);
     drivePneumatics = new DrivePneumatics(drivePneu1, drivePneu2);
-    //elevator = new Elevator(elevatorMotor, true);
-    //wrist = new Wrist(wristMotor, true);
+
     //intake = new Intake(intakeMotor);
     //claw = new Claw(clawMotor1);
+
+    //elevator = new Elevator(elevatorMotor, true);
+    //wrist = new Wrist(wristMotor, true);
+    
     //ejectorPneu = new PneumaticEjector(ejectorPneuPush, ejectorPneuHold);
     
     //vision = new Vision();

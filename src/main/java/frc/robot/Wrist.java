@@ -47,10 +47,14 @@ public class Wrist {
     private final double positionScalar = 0.0;// FIND THIS VALUE
     private final double positionTranslator = 60.0;// FIND THIS VALUE
 
+    private Claw claw;
+
     //Constructor for Wrist class, takes in the port the motor is plugged in to and whether the motor is brushless or not, along with the PID values
     //This also sets coast mode to false (therefor to brake), so the wrist stays in place when not being moved
-    public Wrist(int motorPort, boolean brushlessMotor) {
-        m_motor = new Spark(motorPort, brushlessMotor, this.rampRate, "Wrist", kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
+    public Wrist(int motorPort, boolean brushlessMotor, Claw claw) {
+        this.m_motor = new Spark(motorPort, brushlessMotor, this.rampRate, "Wrist", kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
+
+        this.claw = claw;
     }
 
     // Basic function using the setToPosition function in the Spark class to move the motor using the encoder to a specified point (position).
@@ -104,9 +108,14 @@ public class Wrist {
         //Option to try to incorporate acceleration of elevator
         double acceleration = this.gravity;
 
-        
+        double currentMass = mass;
+        double currentCM = distanceToCM;
+        if (claw.hasHatch()) {
+            currentMass += 1.04;
+            currentCM += .04;
+        }
 
-        return Math.cos(this.getAngle()) * acceleration * this.kTorque * mass * distanceToCM;
+        return Math.cos(this.getAngle()) * acceleration * this.kTorque * currentMass * currentCM;
     }
 
 }
