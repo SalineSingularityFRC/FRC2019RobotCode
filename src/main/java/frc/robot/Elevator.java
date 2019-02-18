@@ -49,44 +49,52 @@ public class Elevator {
         m_motor.setToPosition(joystickControl, position, 0.0);
     }
 
-    //Using the ElevatorPosition enum & constants, we can set the elevator to one of the desired positions for doing our different tasks using the setPositionWithEnum method
-    //Works using the constants defined above and setToPosition from Spark, see above setPosition for more info
-    //3 Position for placing the hatches & 3 for placing the cargo on the rocket ship, one for cargo on the cargo ship, and one at the bottom
+    /*
+    Using the ElevatorPosition enum & constants, we can set the elevator to one of the desired positions
+    for doing our different tasks using the setPositionWithEnum method. Works using the constants defined
+    above and setToPosition from Spark, see above setPosition for more info. 3 Position for placing the
+    hatches & 3 for placing the cargo on the rocket ship, one for cargo on the cargo ship, and one at the
+    bottom.
+    */
     public void setPositionWithEnum (ElevatorPosition elevatorPosition, double joystickControl) {
+
+        double position = 0.0;
 
         switch (elevatorPosition) {
             case BOTTOM:
-                m_motor.setToPosition(joystickControl, bottomPos, 0.0);
+                position = bottomPos;
                 break;
             
             case HATCH1:
-                m_motor.setToPosition(joystickControl, hatch1Pos, 0.0);
+                position = hatch1Pos;
                 break;
 
             case HATCH2:
-                m_motor.setToPosition(joystickControl, hatch2Pos, 0.0);
+                position = hatch2Pos;
                 break;
 
-            case HATCH3: 
-                m_motor.setToPosition(joystickControl, hatch3Pos, 0.0);
+            case HATCH3:
+                position = hatch3Pos;
                 break;
 
             case CARGO1:
-                m_motor.setToPosition(joystickControl, cargo1Pos, 0.0);
+                position = cargo1Pos;
                 break;
 
             case CARGO2:
-                m_motor.setToPosition(joystickControl, cargo2Pos, 0.0);
+                position = cargo2Pos;
                 break;
 
             case CARGO3:
-                m_motor.setToPosition(joystickControl, cargo3Pos, 0.0);
+                position = cargo3Pos;
                 break;
 
-            case CARGOSHIP: 
-                m_motor.setToPosition(joystickControl, cargoShipPos, 0.0);
+            case CARGOSHIP:
+                position = cargoShipPos;
                 break;
         }
+
+        this.m_motor.setToPosition(joystickControl, position, 0.0);
 
     }
 

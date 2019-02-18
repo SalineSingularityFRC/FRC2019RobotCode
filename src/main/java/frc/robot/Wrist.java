@@ -47,6 +47,9 @@ public class Wrist {
     private final double positionScalar = 0.0;// FIND THIS VALUE
     private final double positionTranslator = 60.0;// FIND THIS VALUE
 
+    private final double hatchMassAddition = 1.04;
+    private final double hatchCMAddition = 0.04;
+
     private Claw claw;
 
     //Constructor for Wrist class, takes in the port the motor is plugged in to and whether the motor is brushless or not, along with the PID values
@@ -69,22 +72,28 @@ public class Wrist {
     // Start is what it is when starting the match, hatch is to deliver hatch panels, cargo is to deliver cargo, and intake is to pickup cargo.
     public void setPositionWithEnum(WristPosition wristPosition, double joystickControl) {
 
+        double position = 0.0;
+
         switch (wristPosition) {
 
             case START:
-                m_motor.setToPosition(joystickControl, startPosition, this.getFeedForward());
+                position = startPosition;
                 break;
+            
             case HATCH:
-                m_motor.setToPosition(joystickControl, hatchPosition, this.getFeedForward());
+                position = hatchPosition;
                 break;
+
             case CARGO:
-                m_motor.setToPosition(joystickControl, cargoPosition, this.getFeedForward());
+                position = cargoPosition;
                 break;
+
             case INTAKE:
-                m_motor.setToPosition(joystickControl, intakePosition, this.getFeedForward());
+                position = intakePosition;
                 break;
         }
 
+        this.m_motor.setToPosition(joystickControl, position, this.getFeedForward());
 
     }
 
@@ -111,8 +120,8 @@ public class Wrist {
         double currentMass = mass;
         double currentCM = distanceToCM;
         if (claw.hasHatch()) {
-            currentMass += 1.04;
-            currentCM += .04;
+            currentMass += hatchMassAddition;
+            currentCM += hatchCMAddition;
         }
 
         return Math.cos(this.getAngle()) * acceleration * this.kTorque * currentMass * currentCM;
