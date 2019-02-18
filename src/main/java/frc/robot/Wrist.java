@@ -38,24 +38,24 @@ public class Wrist {
     private final double mass = 7.48;// kg
     private final double gravity = 9.80665;// m/s^2
     private final double distanceToCM = .368;// m
-    private final double kT = .216667; //N*m
+    private final double kT = .216667;// N*m
     private final double gearRatio = 32.1;
 
-    private final double kTorque = 1 / (this.kT * gearRatio);
+    private final double kTorque = 1 / (this.kT * gearRatio);// m*N
 
     // Constants for converting position to angle and vice versa
     private final double positionScalar = 0.0;// FIND THIS VALUE
     private final double positionTranslator = 60.0;// FIND THIS VALUE
 
     private final double hatchMassAddition = 1.04;
-    private final double hatchCMAddition = 0.04;
+    private final double hatchCMAddition = 0.03;
 
     private Claw claw;
 
     //Constructor for Wrist class, takes in the port the motor is plugged in to and whether the motor is brushless or not, along with the PID values
     //This also sets coast mode to false (therefor to brake), so the wrist stays in place when not being moved
     public Wrist(int motorPort, boolean brushlessMotor, Claw claw) {
-        this.m_motor = new Spark(motorPort, brushlessMotor, this.rampRate, "Wrist", kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
+        this.m_motor = new Spark(motorPort, brushlessMotor, this.rampRate, "Wrist", false, kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
 
         this.claw = claw;
     }

@@ -98,15 +98,12 @@ public class BasicDrive extends SingDrive {
 	 * @param speedMode controls the velocityMultiplier in order to scale motor velocity
 	 */
 	public void tankDrive(double left, double right, double horizontal, boolean poweredInputs, SpeedMode speedMode) {
-		
-		SmartDashboard.putNumber("left", left);
-		SmartDashboard.putNumber("right", right);
 
 		double leftVelocity = -left, rightVelocity = -right;
 
 		// Account for joystick drift.
-		//leftVelocity = threshold(leftVelocity);
-		//rightVelocity = threshold(rightVelocity);
+		leftVelocity = threshold(leftVelocity);
+		rightVelocity = threshold(rightVelocity);
 
 		// If prompted, raise inputs to the default power.
 		if (poweredInputs) {

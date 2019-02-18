@@ -32,6 +32,8 @@ public class Spark implements MotorController {
     double previousPosition, previousJoystick;
     boolean controlWithJoystick;
 
+    boolean usingLimitSwitch;
+
 
     /**
      * Constructor for Spark class.
@@ -61,7 +63,7 @@ public class Spark implements MotorController {
      * @param portNumber pass the CAN network ID for this motor controller
      * @param brushlessMotor pass true if using a neo brushless motor
      */
-    public Spark(int portNumber, boolean brushlessMotor, double rampRate, String name,
+    public Spark(int portNumber, boolean brushlessMotor, double rampRate, String name, boolean useLimitSwitch,
     double kP, double kI, double kD, double kIZ, double kFF, double kMinOut, double kMaxOut) {
         this(portNumber, brushlessMotor, rampRate);
 
@@ -71,14 +73,18 @@ public class Spark implements MotorController {
         this.putConstantsOnDashboard(name, kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
 
         //If intitialPosition = -100, lower limit switch has not been pressed.
-        initialPosition = -100;
-        previousPosition = -100;
+        this.initialPosition = -100;
+        this.previousPosition = -100;
 
-        previousJoystick = 0.0;
-        controlWithJoystick = false;
+        this.previousJoystick = 0.0;
+        this.controlWithJoystick = false;
 
         this.name = name;
-        
+
+        this.usingLimitSwitch = useLimitSwitch;
+        if (!useLimitSwitch) {
+            this.setInitialPosition();
+        }
     }
 
     /**
@@ -261,18 +267,21 @@ public class Spark implements MotorController {
      * Sets the motor to the designated encoder postition
      * @param joystickControl if the encoder has not been set yet it will move via joystick control
      * @param position the place where to set the target postiton to
+     * @param feedForward The amount of feed forward to give the motor, measured in volts (hopefully)
      */
     public void setToPosition(double joystickControl, double position, double feedForward) {
 
         //getting the updated pid values from the smartdashboard, then prints the postion to the smartdashboard
-        this.getConstantsFromDashboard();
+        this.getConstantsFromDashboard();// eventually comment this out
         this.printEncoderPosition();
-        SmartDashboard.putNumber("intended numerical position", position);
+        SmartDashboard.putNumber(name + " intended numerical position", position);
         
         // if the lower limit switch is pressed it means we are at the bottom which is setting the encoder postiton to zero
-        SmartDashboard.putBoolean("lower limit switch", isLowerLimitPressed(true));
-        if (isLowerLimitPressed(true)) {
-            this.setInitialPosition();
+        if (this.usingLimitSwitch) {
+            SmartDashboard.putBoolean(name + " lower limit switch", isLowerLimitPressed(true));
+            if (isLowerLimitPressed(true)) {
+                this.setInitialPosition();
+            }
         }
 
         //Takes in the joystick value and makes sure it is above the threshold value set in singdrive
