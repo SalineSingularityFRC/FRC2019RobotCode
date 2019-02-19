@@ -11,7 +11,7 @@ public class Elevator {
     //These for the moment are just placeholder values, they need to be adjusted for our robot.
     public final double kP = 0.01, kI = 1e-6, kD = 1e-4, kIZ = 0, kFF = 0, kMaxOut = 1, kMinOut = -1;
     //Rate that the motor speeds up at
-    public final double rampRate = 0.2;
+    public final double rampRate = 0.4;
 
     //The ElevatorPosition enum lets us set the elevator to each of the desired positions to deliver hatch panels & cargo or to pick things up.
     public enum ElevatorPosition {
@@ -40,7 +40,7 @@ public class Elevator {
     //This also sets coast mode to false (therefor to brake), so the elevator stays in place when not being moved
     public Elevator(int motorPort, boolean brushlessMotor) {
         m_motor = new Spark(motorPort, brushlessMotor, this.rampRate, "Elevator", true, kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
-        m_motor.setCoastMode(false);
+        m_motor.setCoastMode(true);
     }
 
     //Basic function using the setToPosition function in the Spark class to move the encoder to a specified point (position).

@@ -155,10 +155,10 @@ public abstract class SingDrive {
 		this.velocityMultiplier = this.normalSpeedConstant;
 
 		// Ramp the voltage of the motor output before normal driving (can be changed for auton, or special circumstances).
-		//this.rampDefaultVoltage();
+		this.rampDefaultVoltage();
 
 		// Set all drive motor controllers to coast to limit wear and tear.
-		//this.setDriveToCoast(true);
+		this.setDriveToCoast(true);
 	}
 
 
