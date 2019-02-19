@@ -140,7 +140,7 @@ public class Spark implements MotorController {
 
     public void watchEncoderWithJoystick(double percentOutput) {
 
-        SmartDashboard.putBoolean("lower limit switch", isLowerLimitPressed(true));
+        SmartDashboard.putBoolean(name + " lower limit switch", isLowerLimitPressed(true));
         if (isLowerLimitPressed(true)) {
             this.setInitialPosition();
         }
@@ -275,11 +275,13 @@ public class Spark implements MotorController {
         this.getConstantsFromDashboard();// eventually comment this out
         this.printEncoderPosition();
         SmartDashboard.putNumber(name + " intended numerical position", position);
+
+        boolean limitSwitchPressed = this.isLowerLimitPressed(true);
         
         // if the lower limit switch is pressed it means we are at the bottom which is setting the encoder postiton to zero
         if (this.usingLimitSwitch) {
-            SmartDashboard.putBoolean(name + " lower limit switch", isLowerLimitPressed(true));
-            if (isLowerLimitPressed(true)) {
+            SmartDashboard.putBoolean(name + " lower limit switch", limitSwitchPressed);
+            if (limitSwitchPressed) {
                 this.setInitialPosition();
             }
         }

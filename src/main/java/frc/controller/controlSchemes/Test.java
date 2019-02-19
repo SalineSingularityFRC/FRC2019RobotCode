@@ -41,7 +41,7 @@ public class Test extends ControlScheme{
 
     }
     public void elevator(Elevator elevator){
-        elevator.setSpeed(armController.getRS_Y());
+        elevator.setSpeed(0.5 * armController.getRS_Y());
     }
     public void wrist(Wrist wrist){
         wrist.setSpeed(armController.getLS_Y());

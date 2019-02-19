@@ -166,7 +166,7 @@ public class ArcadeDrive extends ControlScheme {
 
         SmartDashboard.putString("elevator intended position", "" + elevatorPosition);
 
-        elevator.setPositionWithEnum(elevatorPosition, armController.getLS_Y());
+        elevator.setPositionWithEnum(elevatorPosition, 0.3 * armController.getLS_Y());
     }
     
 

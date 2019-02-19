@@ -89,23 +89,23 @@ public class Robot extends TimedRobot {
     setDefaultProperties();
 
     //initialize our driving scheme to a basic arcade drive
-    currentScheme = new Test(XBOX_PORT, XBOX_PORT +1);
+    currentScheme = new ArcadeDrive(XBOX_PORT, XBOX_PORT +1);
     
     //initialize mechanisms
     drive = new BasicDrive(driveLeft1, driveLeft2, driveLeft3, driveRight1, driveRight2, driveRight3);
     drivePneumatics = new DrivePneumatics(drivePneu1, drivePneu2);
 
     //intake = new Intake(intakeMotor);
-    //claw = new Claw(clawMotor1);
+    claw = new Claw(clawLeftMotor, clawRightMotor);
 
-    //elevator = new Elevator(elevatorMotor, true);
-    //wrist = new Wrist(wristMotor, true);
+    elevator = new Elevator(elevatorMotor, true);
+    wrist = new Wrist(wristMotor, true, claw);
     
     //ejectorPneu = new PneumaticEjector(ejectorPneuPush, ejectorPneuHold);
     
-    //vision = new Vision();
+    vision = new Vision();
     //DO NOT REMOVE PLZ
-    //CameraServer.getInstance().startAutomaticCapture();
+    CameraServer.getInstance().startAutomaticCapture();
     //CameraServer.getInstance().startAutomaticCapture();
 
     gyro = new AHRS(SPI.Port.kMXP);
@@ -181,11 +181,12 @@ public class Robot extends TimedRobot {
     // (we shouldn't need to change this too often- other than commenting)
     currentScheme.drive(drive, drivePneumatics);
     // partial autonomy via vision
-    //currentScheme.visionDrive(vision, drive, drivePneumatics, gyro, ultra);
-    //currentScheme.elevator(elevator);
-    //currentScheme.wrist(wrist);
+    currentScheme.visionDrive(vision, drive, drivePneumatics, gyro, ultra);
+    currentScheme.elevator(elevator);
+    currentScheme.wrist(wrist);
     //currentScheme.controlClaw(claw);
     compressor.start();
+    
   }
 
   /**

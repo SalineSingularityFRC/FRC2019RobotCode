@@ -45,7 +45,7 @@ public class Wrist {
 
     // Constants for converting position to angle and vice versa
     private final double positionScalar = 0.0;// FIND THIS VALUE
-    private final double positionTranslator = 60.0;// FIND THIS VALUE
+    private final double positionTranslator = 152;// FIND THIS VALUE
 
     private final double hatchMassAddition = 1.04;
     private final double hatchCMAddition = 0.03;
