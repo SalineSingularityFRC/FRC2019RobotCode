@@ -39,7 +39,7 @@ public class Elevator {
     //Constructor for Elevator Class, takes in the port the motor is plugged in to and whether the motor is brushless or not, along with the PID values
     //This also sets coast mode to false (therefor to brake), so the elevator stays in place when not being moved
     public Elevator(int motorPort, boolean brushlessMotor) {
-        m_motor = new Spark(motorPort, brushlessMotor, this.rampRate, "Elevator", true, kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
+        m_motor = new Spark(motorPort, brushlessMotor, this.rampRate, "Elevator", true, false, kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
         m_motor.setCoastMode(true);
     }
 

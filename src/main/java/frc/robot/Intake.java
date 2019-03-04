@@ -19,7 +19,7 @@ public class Intake {
 
     public Intake(int rotatePort) {
         intake = new Spark(rotatePort, false, 0.05);
-        intake.setCoastMode(false);
+        intake.setCoastMode(true);
     }
 
     public void controlIntake(boolean intakeOn, boolean intakeReverse) {

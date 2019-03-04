@@ -31,12 +31,15 @@ public class Claw {
         this.m_motorLeft = new Spark(clawLeftPort, false, rampRate);
         this.m_motorRight = new Spark(clawRightPort, false, rampRate);
 
+        this.m_motorLeft.setCoastMode(false);
+        this.m_motorRight.setCoastMode(false);
+
         hatchAcquired = false;
     }
 
     public void controlClawMotor(double power) {
         m_motorLeft.setSpeed(power);
-        m_motorRight.setSpeed(power);
+        m_motorRight.setSpeed(-power);
 
         if (power > .15) {
             hatchAcquired = true;

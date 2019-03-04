@@ -120,6 +120,7 @@ public class ArcadeDrive extends ControlScheme {
         SmartDashboard.putString("Wrist Intended Position", "" + wristPosition);
         //wrist.setPositionWithEnum(wristPosition, armController.getRS_Y());
 
+        wrist.driveWithFF(armController.getRS_Y());
 
     }
 
@@ -166,11 +167,13 @@ public class ArcadeDrive extends ControlScheme {
 
         SmartDashboard.putString("elevator intended position", "" + elevatorPosition);
 
-        elevator.setPositionWithEnum(elevatorPosition, 0.3 * armController.getLS_Y());
+        ///elevator.setPositionWithEnum(elevatorPosition, 0.7 * armController.getLS_Y());\
+        elevator.setSpeed(armController.getLS_Y());
     }
     
 
     public void controlClaw(Claw claw) {
+        
         
         if(armController.getRB()){
             //claw.controlServo(grabClawAngle);
@@ -183,6 +186,8 @@ public class ArcadeDrive extends ControlScheme {
         else {
             claw.controlClawMotor(0.0);
         }
+
+        //claw.controlClawMotor(armController.getTriggerRight() - armController.getTriggerLeft());
         
         
     }

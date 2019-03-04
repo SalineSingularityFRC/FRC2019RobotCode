@@ -32,7 +32,7 @@ public class Spark implements MotorController {
     double previousPosition, previousJoystick;
     boolean controlWithJoystick;
 
-    boolean usingLimitSwitch;
+    boolean usingLimitSwitch, upperLimit;
 
 
     /**
@@ -63,7 +63,7 @@ public class Spark implements MotorController {
      * @param portNumber pass the CAN network ID for this motor controller
      * @param brushlessMotor pass true if using a neo brushless motor
      */
-    public Spark(int portNumber, boolean brushlessMotor, double rampRate, String name, boolean useLimitSwitch,
+    public Spark(int portNumber, boolean brushlessMotor, double rampRate, String name, boolean useLimitSwitch, boolean useUpperLimitSwitch,
     double kP, double kI, double kD, double kIZ, double kFF, double kMinOut, double kMaxOut) {
         this(portNumber, brushlessMotor, rampRate);
 
@@ -85,6 +85,7 @@ public class Spark implements MotorController {
         if (!useLimitSwitch) {
             this.setInitialPosition();
         }
+        this.upperLimit = useUpperLimitSwitch;
     }
 
     /**
@@ -140,13 +141,16 @@ public class Spark implements MotorController {
 
     public void watchEncoderWithJoystick(double percentOutput) {
 
-        SmartDashboard.putBoolean(name + " lower limit switch", isLowerLimitPressed(true));
+        SmartDashboard.putBoolean(name + " lower limit switch", isUpperLimitPressed(true));
         if (isLowerLimitPressed(true)) {
             this.setInitialPosition();
         }
 
         this.printEncoderPosition();
 
+        percentOutput = SingDrive.threshold(percentOutput);
+
+        SmartDashboard.putNumber(name + " percent output", percentOutput);
         this.setSpeed(percentOutput);
     }
 
@@ -276,10 +280,18 @@ public class Spark implements MotorController {
         this.printEncoderPosition();
         SmartDashboard.putNumber(name + " intended numerical position", position);
 
-        boolean limitSwitchPressed = this.isLowerLimitPressed(true);
+        
+        
         
         // if the lower limit switch is pressed it means we are at the bottom which is setting the encoder postiton to zero
         if (this.usingLimitSwitch) {
+
+            boolean limitSwitchPressed = this.isLowerLimitPressed(true);
+        
+            if (upperLimit) {
+                limitSwitchPressed = this.isUpperLimitPressed(true);
+            }
+
             SmartDashboard.putBoolean(name + " lower limit switch", limitSwitchPressed);
             if (limitSwitchPressed) {
                 this.setInitialPosition();
@@ -306,6 +318,7 @@ public class Spark implements MotorController {
         if (this.initialPosition == -100) {
             DriverStation.reportWarning("We do not know the position of the " + name +
             "; Please move this mechanism to a limit switch manually", true);
+            SmartDashboard.putNumber(name + " initial position", initialPosition);
             controlWithJoystick = true;
         }
 
