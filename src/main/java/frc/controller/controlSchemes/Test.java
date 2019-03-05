@@ -24,7 +24,8 @@ public class Test extends ControlScheme{
         
     }
 	public void controlClaw(Claw claw) {
-        claw.controlClawMotor(SingDrive.threshold(driveController.getLS_Y()));
+        claw.rightControlClawMotor(SingDrive.threshold(driveController.getLS_Y()));
+        claw.leftControlClawMotor(SingDrive.threshold(driveController.getLS_Y()));
         /*
         if(driveController.getRB()){
             claw.controlServo(grabClawAngle);
