@@ -176,15 +176,24 @@ public class ArcadeDrive extends ControlScheme {
         
         
         if(armController.getRB()){
-            //claw.controlServo(grabClawAngle);
-            claw.controlClawMotor(clawSpeed);
+
+            claw.rightControlClawMotor(clawSpeed);
         }
         else if(armController.getLB()){
-            //claw.controlServo(releaseClawAngle);
-            claw.controlClawMotor(-clawSpeed);
+            
+            claw.leftControlClawMotor(-clawSpeed);
         }
+        else if(armController.getTriggerRight() > .5){
+            claw.rightControlClawMotor(-clawSpeed);
+
+        }
+        else if(armController.getTriggerLeft() > .5){
+            claw.leftControlClawMotor(clawSpeed);
+        }
+
         else {
-            claw.controlClawMotor(0.0);
+            claw.leftControlClawMotor(0.0);
+            claw.rightControlClawMotor(0.0);
         }
 
         //claw.controlClawMotor(armController.getTriggerRight() - armController.getTriggerLeft());
@@ -194,11 +203,11 @@ public class ArcadeDrive extends ControlScheme {
 
     public void intake(Intake intake) {
 
-        if(armController.getTriggerRight() > 0.2) {
+        if(armController.getAButton()) {
             intake.intakeOn();
         }
 
-        else if(armController.getTriggerLeft() > 0.2) {
+        else if(armController.getBButton()) {
             intake.intakeReverse();
         }
         else {
