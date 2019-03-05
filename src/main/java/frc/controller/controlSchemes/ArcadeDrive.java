@@ -11,7 +11,7 @@ import frc.robot.Elevator.ElevatorPosition;
 import frc.robot.Wrist.WristPosition;
 import frc.singularityDrive.SingDrive;
 import frc.singularityDrive.SingDrive.SpeedMode;
-
+import edu.wpi.first.wpilibj.Controller;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import com.kauailabs.navx.frc.AHRS;
@@ -43,6 +43,7 @@ public class ArcadeDrive extends ControlScheme {
 
     double tx, tv;
     double ultraIn;
+
 
     //Need to be adjusted for our robot
     final double driveSpeedConstant = 0.3;
@@ -286,6 +287,14 @@ public class ArcadeDrive extends ControlScheme {
 
         else {
             usingVision = false;
+        }
+    }
+    public void ledMode( Vision vision ){
+        if(driveController.getXButton() || driveController.getYButton()){
+            vision.ledMode.setDouble(3.0);
+        }
+        else{
+            vision.ledMode.setDouble(1.0);
         }
     }
 

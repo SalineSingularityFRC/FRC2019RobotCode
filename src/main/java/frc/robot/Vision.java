@@ -7,7 +7,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 public class Vision{
 
     public NetworkTable table;
-    public NetworkTableEntry tx, ty, ta, tv;
+    public NetworkTableEntry tx, ty, ta, tv, ledMode;
 
     public Vision() {
         table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -15,6 +15,7 @@ public class Vision{
         ty = table.getEntry("ty");
         ta = table.getEntry("ta");
         tv = table.getEntry("tv");
+        ledMode = table.getEntry("ledMode");
         
     }
 }

@@ -181,13 +181,12 @@ public class Robot extends TimedRobot {
     // (we shouldn't need to change this too often- other than commenting)
     currentScheme.drive(drive, drivePneumatics);
     // partial autonomy via vision
-    //currentScheme.visionDrive(vision, drive, drivePneumatics, gyro, ultra);
+    currentScheme.visionDrive(vision, drive, drivePneumatics, gyro, ultra);
     //currentScheme.elevator(elevator);
     currentScheme.wrist(wrist);
     currentScheme.controlClaw(claw);
     currentScheme.intake(intake);
-
-    compressor.start();
+    currentScheme.ledMode(vision);
     
   }
 

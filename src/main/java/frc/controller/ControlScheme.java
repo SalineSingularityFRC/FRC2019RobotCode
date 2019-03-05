@@ -26,6 +26,7 @@ public abstract class ControlScheme {
 	public abstract void visionDrive(Vision vision, SingDrive drive, DrivePneumatics dPneumatics, AHRS gyro, Ultrasonic ultra);
 	public abstract void elevator(Elevator elevator);
 	public abstract void wrist(Wrist wrist);
+	public abstract void ledMode(Vision vision);
 	
 	/**
 	 * 
