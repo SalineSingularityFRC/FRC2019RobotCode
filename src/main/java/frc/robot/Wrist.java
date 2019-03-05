@@ -131,14 +131,14 @@ public class Wrist {
 
     public void driveWithFF(double speed) {
 
-        double ff = this.getFeedForward() / 50;
+        double ff = this.getFeedForward() / 10;
         double spd = -0.5 * speed;
 
         if (Math.abs(spd + ff) > 1) {
-            this.m_motor.setSpeed(speed);
+            this.m_motor.watchEncoderWithJoystick(speed);
         }
         else {
-            this.m_motor.setSpeed(speed + ff);
+            this.m_motor.watchEncoderWithJoystick(speed - ff);
         }
 
         //this.m_motor.setSpeed(speed - this.getFeedForward());

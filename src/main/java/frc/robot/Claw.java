@@ -37,9 +37,19 @@ public class Claw {
         hatchAcquired = false;
     }
 
-    public void controlClawMotor(double power) {
-        m_motorLeft.setSpeed(power);
+    public void rightControlClawMotor(double power) {
         m_motorRight.setSpeed(-power);
+
+        if (power > .15) {
+            hatchAcquired = true;
+        }
+        else if (power < -.15) {
+            hatchAcquired = false;
+        }
+        SmartDashboard.putBoolean("hatch acquired", hatchAcquired);
+    }
+    public void leftControlClawMotor(double power) {
+        m_motorLeft.setSpeed(power);
 
         if (power > .15) {
             hatchAcquired = true;
