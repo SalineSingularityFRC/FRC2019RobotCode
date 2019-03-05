@@ -18,7 +18,7 @@ public class Intake {
     public static boolean haveBall;
 
     public Intake(int rotatePort) {
-        intake = new Spark(rotatePort, false, 0.05);
+        intake = new Spark(rotatePort, true, 0.05);
         intake.setCoastMode(true);
     }
 
