@@ -46,4 +46,7 @@ public class Test extends ControlScheme{
     public void wrist(Wrist wrist){
         wrist.setSpeed(armController.getLS_Y());
     }
+    public void ledMode(Vision vision){
+        
+    }
 }
