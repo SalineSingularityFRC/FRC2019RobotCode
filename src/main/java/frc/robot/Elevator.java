@@ -107,7 +107,7 @@ public class Elevator {
         //m_motor.setSpeed(speed);
         //m_motor.printEncoderPosition();
 
-        m_motor.watchEncoderWithJoystick(0 - speed);
+        m_motor.setSpeed(speed);
     }
 
 }

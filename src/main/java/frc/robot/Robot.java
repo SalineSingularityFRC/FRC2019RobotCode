@@ -160,7 +160,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    
+    currentScheme.drive(drive, drivePneumatics);
+    // partial autonomy via vision
+    currentScheme.visionDrive(vision, drive, drivePneumatics, gyro, ultra);
+    currentScheme.elevator(elevator);
+    currentScheme.wrist(wrist);
+    //currentScheme.controlClaw(claw);
+    currentScheme.intake(intake);
+    currentScheme.ledMode(vision);
   }
 
   @Override
@@ -182,9 +189,9 @@ public class Robot extends TimedRobot {
     currentScheme.drive(drive, drivePneumatics);
     // partial autonomy via vision
     currentScheme.visionDrive(vision, drive, drivePneumatics, gyro, ultra);
-    //currentScheme.elevator(elevator);
+    currentScheme.elevator(elevator);
     currentScheme.wrist(wrist);
-    currentScheme.controlClaw(claw);
+    //currentScheme.controlClaw(claw);
     currentScheme.intake(intake);
     currentScheme.ledMode(vision);
     
@@ -224,8 +231,8 @@ public class Robot extends TimedRobot {
 
     //Pneumatics
     
-    drivePneu1 = 1;
-    drivePneu2 = 2;
+    drivePneu1 = 3;
+    drivePneu2 = 4;
     //ejectorPneuPush = 3;
     //ejectorPneuHold = 4;
     //hatchMechDown = 5;

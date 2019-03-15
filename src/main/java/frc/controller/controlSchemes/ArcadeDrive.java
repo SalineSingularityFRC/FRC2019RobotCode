@@ -59,7 +59,7 @@ public class ArcadeDrive extends ControlScheme {
         armController = new XboxController(armControllerPort);
 
         lowGear = true;
-        speedMode = SpeedMode.FAST;
+        speedMode = SpeedMode.SLOW;
 
         usingVision = false;
 
@@ -74,24 +74,42 @@ public class ArcadeDrive extends ControlScheme {
     public void drive(SingDrive drive, DrivePneumatics pneumatics) {
 
         //Set speed mode based on the dpad on the driveController
-        if(driveController.getPOVDown()){
+        if(driveController.getLB()){
             speedMode = SpeedMode.SLOW;
+
         }
-        else if(driveController.getPOVUp()){
+        else if(driveController.getRB()){
             speedMode = SpeedMode.FAST;
         }
+        SmartDashboard.putString("Speed Mode", ""+ speedMode);
 
         //driving arcade drive based on right joystick on driveController
         //changed boolean poweredInputs from false to true, change back if robot encounters issues
         //ADDED USINGVISION, SO IF THINGS ARE ACTING WEIRD COME BACK TO THIS
-        if (!usingVision) {
+        if(driveController.getPOVLeft()) {
+            drive.arcadeDrive(0, -0.1, 0.0, false, SpeedMode.FAST);
+        }
+
+        else if (driveController.getPOVUp()) {
+            drive.arcadeDrive(0.1, 0, 0.0, false, SpeedMode.FAST);
+        }
+
+        else if (driveController.getPOVRight()) {
+            drive.arcadeDrive(0.0, 0.1, 0.0, false, SpeedMode.FAST);
+        }
+        
+        else if (driveController.getPOVDown()) {
+            drive.arcadeDrive(-0.1, 0.0, 0.0, false, SpeedMode.FAST);
+        }
+
+        else if (!usingVision) {
             drive.arcadeDrive(driveController.getLS_Y(), driveController.getRS_X(), 0.0, true, speedMode);
         }
 
-        if(driveController.getLB()) {
+        if(driveController.getBackButton()) {
            lowGear = true;
         }
-        else if(driveController.getRB()) {
+        else if(driveController.getStartButton()) {
             lowGear = false;
         }
 
@@ -121,7 +139,7 @@ public class ArcadeDrive extends ControlScheme {
         SmartDashboard.putString("Wrist Intended Position", "" + wristPosition);
         //wrist.setPositionWithEnum(wristPosition, armController.getRS_Y());
 
-        wrist.driveWithFF(armController.getRS_Y());
+        wrist.driveWithFF(0.2 * armController.getRS_Y());
 
     }
 
@@ -168,8 +186,13 @@ public class ArcadeDrive extends ControlScheme {
 
         SmartDashboard.putString("elevator intended position", "" + elevatorPosition);
 
+        double multiplier = 0.4;
+        if (armController.getLS_Y() < -0.04) {
+            multiplier *= 0.4;
+        }
+
         ///elevator.setPositionWithEnum(elevatorPosition, 0.7 * armController.getLS_Y());\
-        elevator.setSpeed(armController.getLS_Y());
+        elevator.setSpeed(multiplier * armController.getLS_Y() - 0.025);
     }
     
 
@@ -204,15 +227,15 @@ public class ArcadeDrive extends ControlScheme {
 
     public void intake(Intake intake) {
 
-        if(armController.getAButton()) {
+        if(driveController.getTriggerRight() >= .4) {
             intake.intakeOn();
         }
 
-        else if(armController.getBButton()) {
+        else if((driveController.getTriggerLeft() >= .4)) {
             intake.intakeReverse();
         }
         else {
-            intake.intakeOff();
+            intake.intakeConstantSpeed();
         }
     }
 
@@ -227,11 +250,6 @@ public class ArcadeDrive extends ControlScheme {
         tx = vision.tx.getDouble(0.0);
         tv = vision.tv.getDouble(0.0);
 
-        //ultraIn = ultra.getRangeInches();
-
-        // Pastes values into smart dashboard
-        SmartDashboard.putNumber("tx", tx);
-        SmartDashboard.putNumber("tv", tv);
         //SmartDashboard.putNumber("Inches", ultraIn);
 
         // Declaring and instantiating buttons used for enabling vision drive
@@ -288,8 +306,6 @@ public class ArcadeDrive extends ControlScheme {
             right_command -= steering_adjust;
             drive.tankDrive(left_command, right_command, 0.0, false, SpeedMode.FAST);
             
-            SmartDashboard.putNumber("Left_command", left_command);
-            SmartDashboard.putNumber("Right_command", right_command);
 
             usingVision = true;
         } // end of if statement

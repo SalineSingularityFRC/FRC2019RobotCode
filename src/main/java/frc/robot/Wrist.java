@@ -31,8 +31,8 @@ public class Wrist {
     // These at the moment are just placeholder values, need to be tested for our robot.
     public final double startPosition = 0.0;
     public final double hatchPosition = 3.0;
-    public final double cargoPosition = 9.476;
-    public final double intakePosition = 9.476;
+    public final double cargoPosition = 35;
+    public final double intakePosition = 40;
 
     // Constants for Feed Forward control to counteract gravity
     // PID control is not the best for holding a position against gravity
@@ -45,8 +45,8 @@ public class Wrist {
     private final double kTorque = 1 / (this.kT * gearRatio);// m*N
 
     // Constants for converting position to angle and vice versa
-    private final double positionScalar = -152/9.476;// FIND THIS VALUE
-    private final double positionTranslator = 152;// FIND THIS VALUE
+    private final double positionScalar = -152/30;// FIND THIS VALUE
+    private final double positionTranslator = -30;// FIND THIS VALUE
 
     private final double hatchMassAddition = 1.04;
     private final double hatchCMAddition = 0.03;
@@ -107,7 +107,7 @@ public class Wrist {
     }
 
     private double getAngle() {
-        return this.m_motor.getCurrentPosition() * this.positionScalar + this.positionTranslator;
+        return (this.m_motor.getCurrentPosition() + this.positionTranslator) * this.positionScalar;
     }
 
     private double getFeedForward() {
@@ -131,15 +131,17 @@ public class Wrist {
 
     public void driveWithFF(double speed) {
 
-        double ff = this.getFeedForward() / 10;
+        double ff = -(this.m_motor.getCurrentPosition() - 15) * .001;
         double spd = -0.5 * speed;
 
-        if (Math.abs(spd + ff) > 1) {
-            this.m_motor.watchEncoderWithJoystick(speed);
-        }
-        else {
-            this.m_motor.watchEncoderWithJoystick(speed - ff);
-        }
+
+
+        //if (Math.abs(spd + ff) > 1) {
+            this.m_motor.watchEncoderWithJoystick(speed + ff);
+        //}
+        //else {
+        //    this.m_motor.watchEncoderWithJoystick(speed - ff);
+        //}
 
         //this.m_motor.setSpeed(speed - this.getFeedForward());
 

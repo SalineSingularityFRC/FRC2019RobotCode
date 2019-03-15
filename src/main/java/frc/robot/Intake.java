@@ -12,14 +12,15 @@ public class Intake {
     
 
 
-    private final double intakeSpeed = 0.5;
-    private final double intakeReverseSpeed = -1.0;
+    private final double intakeSpeed = -0.5;
+    private final double intakeReverseSpeed = 1.0;
+    private final double constantSpeed = -0.1;
 
     public static boolean haveBall;
 
     public Intake(int rotatePort) {
-        intake = new Spark(rotatePort, true, 0.05);
-        intake.setCoastMode(true);
+        intake = new Spark(rotatePort, true, 0.00);
+        intake.setCoastMode(false);
     }
 
     public void controlIntake(boolean intakeOn, boolean intakeReverse) {
@@ -31,7 +32,7 @@ public class Intake {
             intake.setSpeed(intakeReverseSpeed);
         }
         else {
-            intake.setSpeed(0.0);
+            intake.setSpeed(constantSpeed);
         }
     }
 
@@ -39,8 +40,8 @@ public class Intake {
         intake.setSpeed(intakeSpeed);
     }
 
-    public void intakeOff() {
-        intake.setSpeed(0.0);
+    public void intakeConstantSpeed() {
+        intake.setSpeed(constantSpeed);
     }
 
     public void intakeReverse() {
