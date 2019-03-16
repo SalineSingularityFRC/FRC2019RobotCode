@@ -40,7 +40,8 @@ public class Robot extends TimedRobot {
   //int hatchMechDown, hatchMechUp;
 
   int intakeMotor;
-  int elevatorMotor;
+  int elevatorMotorUp;
+  int elevatorMotorDown;
   int wristMotor;
   int clawLeftMotor, clawRightMotor;
   
@@ -98,7 +99,7 @@ public class Robot extends TimedRobot {
     intake = new Intake(intakeMotor);
     claw = new Claw(clawLeftMotor, clawRightMotor);
 
-    elevator = new Elevator(elevatorMotor, true);
+    elevator = new Elevator(elevatorMotorUp, true, elevatorMotorDown, true);
     wrist = new Wrist(wristMotor, true, claw);
     
     //ejectorPneu = new PneumaticEjector(ejectorPneuPush, ejectorPneuHold);
@@ -223,7 +224,8 @@ public class Robot extends TimedRobot {
     driveRight1 = 4;
     driveRight2 = 5;
     driveRight3 = 6;
-    elevatorMotor = 7;
+    elevatorMotorUp = 7;
+    elevatorMotorDown = 12;
     wristMotor = 8;
     intakeMotor = 9;
     clawLeftMotor = 10; //don't known this yet

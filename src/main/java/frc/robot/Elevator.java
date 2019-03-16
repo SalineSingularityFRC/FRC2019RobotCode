@@ -5,7 +5,8 @@ import frc.controller.motorControllers.Spark;
 public class Elevator {
 
     //Declaring new motor using a spark motor controller and our Spark class
-    Spark m_motor;
+    Spark m_motorUp;
+    Spark m_motorDown;
 
     //PID values used by the encoder on the Spark motor controller, these still need to be adjusted for our robot.
     //These for the moment are just placeholder values, they need to be adjusted for our robot.
@@ -38,15 +39,18 @@ public class Elevator {
 
     //Constructor for Elevator Class, takes in the port the motor is plugged in to and whether the motor is brushless or not, along with the PID values
     //This also sets coast mode to false (therefor to brake), so the elevator stays in place when not being moved
-    public Elevator(int motorPort, boolean brushlessMotor) {
-        m_motor = new Spark(motorPort, brushlessMotor, this.rampRate, "Elevator", true, false, kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
-        m_motor.setCoastMode(true);
+    public Elevator(int motorPortUp, boolean brushlessMotorUp, int motorPortDown, boolean brushlessMotorDown) {
+        m_motorUp = new Spark(motorPortUp, brushlessMotorUp, this.rampRate, "Elevator", true, false, kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
+        m_motorUp.setCoastMode(true);
+        m_motorDown = new Spark(motorPortDown, brushlessMotorDown, this.rampRate, "Elevator", true, false, kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
+        m_motorDown.setCoastMode(true);
     }
 
     //Basic function using the setToPosition function in the Spark class to move the encoder to a specified point (position).
     //This also takes in a joystick value, and as defined in Spark if the motor hasn't moved yet it will use joystick control until it hits the bottom endstop
     public void setPosition(double position, double joystickControl) {
-        m_motor.setToPosition(joystickControl, position, 0.0);
+        m_motorUp.setToPosition(joystickControl, position, 0.0);
+        m_motorDown.setToPosition(-1 * (joystickControl), position, 0.0);
     }
 
     /*
@@ -94,7 +98,8 @@ public class Elevator {
                 break;
         }
 
-        this.m_motor.setToPosition(0 - joystickControl, position, 0.0);
+        this.m_motorUp.setToPosition(0 - joystickControl, position, 0.0);
+        this.m_motorDown.setToPosition(0 + joystickControl, position, 0.0);
 
     }
 
@@ -104,10 +109,11 @@ public class Elevator {
     dashboard using the printEncoderPosition() function from the Spark class.
     */
     public void setSpeed(double speed) {
-        //m_motor.setSpeed(speed);
-        //m_motor.printEncoderPosition();
+        //m_motorUp1.setSpeed(speed);
+        //m_motorUp1.printEncoderPosition();
 
-        m_motor.setSpeed(speed);
+        m_motorUp.setSpeed(speed);
+        m_motorDown.setSpeed(-speed);
     }
 
 }
