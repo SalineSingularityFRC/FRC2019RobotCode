@@ -6,6 +6,7 @@ public class Elevator {
 
     //Declaring new motor using a spark motor controller and our Spark class
     Spark m_motor;
+    Spark m_motor2;
 
     //PID values used by the encoder on the Spark motor controller, these still need to be adjusted for our robot.
     //These for the moment are just placeholder values, they need to be adjusted for our robot.
@@ -39,8 +40,11 @@ public class Elevator {
     //Constructor for Elevator Class, takes in the port the motor is plugged in to and whether the motor is brushless or not, along with the PID values
     //This also sets coast mode to false (therefor to brake), so the elevator stays in place when not being moved
     public Elevator(int motorPort, boolean brushlessMotor) {
-        m_motor = new Spark(motorPort, brushlessMotor, this.rampRate, "Elevator", true, false, kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
-        m_motor.setCoastMode(true);
+        m_motor = new Spark(motorPort, brushlessMotor, this.rampRate, "Elevator Motor 1", true, false, kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
+        m_motor.setCoastMode(false);
+
+        m_motor2 = new Spark(motorPort, brushlessMotor, this.rampRate, "Elevator Motor 2", true, false, kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
+        m_motor2.setCoastMode(false);
     }
 
     //Basic function using the setToPosition function in the Spark class to move the encoder to a specified point (position).
@@ -104,10 +108,18 @@ public class Elevator {
     dashboard using the printEncoderPosition() function from the Spark class.
     */
     public void setSpeed(double speed) {
-        //m_motor.setSpeed(speed);
-        //m_motor.printEncoderPosition();
-
         m_motor.setSpeed(speed);
+        m_motor.printEncoderPosition();
+    }
+
+    public void setSpeedWithTwoMotors(double speed) {
+        if(speed > 0) {
+            m_motor.setSpeed(speed);
+        }
+        if(speed < 0) {
+            m_motor2.setSpeed(speed);
+            //m_motor.setSpeed(Math.abs(speed))
+        }
     }
 
 }
