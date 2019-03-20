@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.controller.motorControllers.Spark;
 
 public class Elevator {
@@ -45,7 +46,9 @@ public class Elevator {
 
         m_motor2 = new Spark(motorPort, brushlessMotor, this.rampRate, "Elevator Motor 2", true, false, kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
         m_motor2.setCoastMode(false);
+
     }
+
 
     //Basic function using the setToPosition function in the Spark class to move the encoder to a specified point (position).
     //This also takes in a joystick value, and as defined in Spark if the motor hasn't moved yet it will use joystick control until it hits the bottom endstop
@@ -104,7 +107,7 @@ public class Elevator {
 
     /*
     For testing purposes to figure out the correct encoder values, or as a backup, the elevator can manually
-    being controlled using the setSpeed function. It also adds the current encoder position to the smart
+    be controlled using the setSpeed function. It also adds the current encoder position to the smart
     dashboard using the printEncoderPosition() function from the Spark class.
     */
     public void setSpeed(double speed) {
@@ -112,14 +115,35 @@ public class Elevator {
         m_motor.printEncoderPosition();
     }
 
-    public void setSpeedWithTwoMotors(double speed) {
+    //For using the elevator with two motors, one up and one down 
+    public void setSpeedWithTwoMotorsLowSpeed(double speed) {
         if(speed > 0) {
             m_motor.setSpeed(speed);
+            m_motor2.setSpeed(0.01);
         }
         if(speed < 0) {
             m_motor2.setSpeed(speed);
+            m_motor.setSpeed(0.01);
             //m_motor.setSpeed(Math.abs(speed))
         }
+
+        else {
+            m_motor.setSpeed(0);
+            m_motor2.setSpeed(0);        }
+
+    }
+
+    public void setSpeedWithTwoMotorsPercent(double speed) {
+        if(speed >= 0) {
+            m_motor.setSpeed(speed);
+            m_motor2.setSpeed(speed / 2);
+        }
+        if(speed < 0) {
+            m_motor2.setSpeed(speed);
+            m_motor.setSpeed(speed / 2);
+        }
+            //m_motor.setSpeed(Math.abs(speed))
+        
     }
 
 }

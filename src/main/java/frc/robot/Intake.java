@@ -12,7 +12,7 @@ public class Intake {
     
 
 
-    private final double intakeSpeed = -0.5;
+    private final double intakeSpeed = -1;
     private final double intakeReverseSpeed = 1.0;
     private final double constantSpeed = -0.1;
 

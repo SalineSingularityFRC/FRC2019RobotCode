@@ -192,8 +192,9 @@ public class ArcadeDrive extends ControlScheme {
         }
 
         ///elevator.setPositionWithEnum(elevatorPosition, 0.7 * armController.getLS_Y());\
-        elevator.setSpeed(multiplier * armController.getLS_Y() - 0.025);
-        //elevator.setSpeedWithTwoMotors(multiplier * armController.getLS_Y() - 0.025);
+        //elevator.setSpeed(multiplier * armController.getLS_Y() - 0.025);
+        //elevator.setSpeedWithTwoMotorsLowPower(multiplier * armController.getLS_Y());
+        elevator.setSpeedWithTwoMotorsPercent(multiplier * armController.getLS_Y());
     }
     
 
