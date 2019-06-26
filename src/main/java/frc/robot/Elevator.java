@@ -1,6 +1,7 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DigitalInput;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controller.motorControllers.Spark;
 
 public class Elevator {
@@ -40,11 +41,12 @@ public class Elevator {
 
     //Constructor for Elevator Class, takes in the port the motor is plugged in to and whether the motor is brushless or not, along with the PID values
     //This also sets coast mode to false (therefor to brake), so the elevator stays in place when not being moved
-    public Elevator(int motorPort, boolean brushlessMotor) {
+    public Elevator(int motorPort, boolean brushlessMotor, int motorPort2, boolean brushlessMotor2) {
         m_motor = new Spark(motorPort, brushlessMotor, this.rampRate, "Elevator Motor 1", true, false, kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
         m_motor.setCoastMode(false);
+        
 
-        m_motor2 = new Spark(motorPort, brushlessMotor, this.rampRate, "Elevator Motor 2", true, false, kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
+        m_motor2 = new Spark(motorPort2, brushlessMotor2, this.rampRate, "Elevator Motor 2", true, false, kP, kI, kD, kIZ, kFF, kMinOut, kMaxOut);
         m_motor2.setCoastMode(false);
 
     }
@@ -117,32 +119,51 @@ public class Elevator {
 
     //For using the elevator with two motors, one up and one down 
     public void setSpeedWithTwoMotorsLowSpeed(double speed) {
-        if(speed > 0) {
-            m_motor.setSpeed(speed);
-            m_motor2.setSpeed(0.01);
-        }
-        if(speed < 0) {
-            m_motor2.setSpeed(speed);
-            m_motor.setSpeed(0.01);
-            //m_motor.setSpeed(Math.abs(speed))
+        if (m_motor.isLowerLimitPressed(true) && speed < 0) {
+            m_motor.setSpeed(0);
+            m_motor2.setSpeed(0);
         }
 
         else {
-            m_motor.setSpeed(0);
-            m_motor2.setSpeed(0);        }
-
+            if(speed > 0) {
+                m_motor.setSpeed(speed);
+                m_motor2.setSpeed(0.01);
+            
+            }
+            if(speed < 0) {
+                m_motor2.setSpeed(speed);
+                m_motor.setSpeed(0.01);
+                //m_motor.setSpeed(Math.abs(speed))
+            }
+            else {
+                m_motor.setSpeed(0);
+                m_motor2.setSpeed(0);        
+            }
+        }
     }
 
     public void setSpeedWithTwoMotorsPercent(double speed) {
-        if(speed >= 0) {
-            m_motor.setSpeed(speed);
-            m_motor2.setSpeed(speed / 2);
-        }
-        if(speed < 0) {
-            m_motor2.setSpeed(speed);
-            m_motor.setSpeed(speed / 2);
-        }
-            //m_motor.setSpeed(Math.abs(speed))
+        //if (m_motor2.isLowerLimitPressed(true) && speed < 0){
+        //    m_motor.setSpeed(0);
+        //    m_motor2.setSpeed(0);
+        //}
+        //else {
+            if(speed > 0.1) {
+                m_motor.setSpeed(speed);
+                m_motor2.setSpeed(speed / 4);
+                SmartDashboard.putNumber("Elevator Speed", speed);
+            }
+            else if(speed < -0.1) {
+                m_motor2.setSpeed(speed);
+                m_motor.setSpeed(speed / 4);
+                SmartDashboard.putNumber("Elevator Speed", speed);
+            }
+            else {
+                m_motor.setSpeed(0.01);
+                m_motor2.setSpeed(-0.01);
+                SmartDashboard.putNumber("Elevator Speed", speed);
+            }
+        //}
         
     }
 

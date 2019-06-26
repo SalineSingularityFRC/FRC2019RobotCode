@@ -36,7 +36,7 @@ public class Wrist {
 
     // Constants for Feed Forward control to counteract gravity
     // PID control is not the best for holding a position against gravity
-    private final double mass = 7.48;// kg
+    private final double mass = 3.18;// kg
     private final double gravity = 9.80665;// m/s^2
     private final double distanceToCM = .368;// m
     private final double kT = .216667;// N*m
@@ -45,7 +45,7 @@ public class Wrist {
     private final double kTorque = 1 / (this.kT * gearRatio);// m*N
 
     // Constants for converting position to angle and vice versa
-    private final double positionScalar = -152/30;// FIND THIS VALUE
+    private final double positionScalar = -100/30;// FIND THIS VALUE
     private final double positionTranslator = -30;// FIND THIS VALUE
 
     private final double hatchMassAddition = 1.04;
@@ -130,14 +130,20 @@ public class Wrist {
     }
 
     public void driveWithFF(double speed) {
+        double ff = 0;
+        double spd = 0;
+        if (this.m_motor.getCurrentPosition() > 5) {
+            ff = -Math.pow(this.m_motor.getCurrentPosition(), 0.4) * .012;
 
-        double ff = -(this.m_motor.getCurrentPosition() - 15) * .001;
-        double spd = -0.5 * speed;
+        }
+        if (this.m_motor.getCurrentPosition() > 0 && speed < 0) {
+            spd = -0.5 * speed;
+        }
 
 
 
         //if (Math.abs(spd + ff) > 1) {
-            this.m_motor.watchEncoderWithJoystick(speed + ff);
+            this.m_motor.watchEncoderWithJoystick(speed); // speed + ff
         //}
         //else {
         //    this.m_motor.watchEncoderWithJoystick(speed - ff);

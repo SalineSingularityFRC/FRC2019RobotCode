@@ -47,9 +47,11 @@ public class ArcadeDrive extends ControlScheme {
 
     //Need to be adjusted for our robot
     final double driveSpeedConstant = 0.3;
-    final double txkP = 0.025;
-    final double angleDifferencekP = 0.012;
+    final double txkP = 0.022;
+    final double angleDifferencekP = 0.011;
     final double endDistance = 2.0;
+
+    boolean bButtonNow, bButtonPrev, driveMulti;
 
     // Constructor for the ArcadeDrive class
 
@@ -64,6 +66,12 @@ public class ArcadeDrive extends ControlScheme {
         usingVision = false;
 
         wristPosition = WristPosition.START;
+
+        driveMulti = false;
+        bButtonNow = false;
+        bButtonPrev = false;
+
+
         
     }
 
@@ -82,6 +90,14 @@ public class ArcadeDrive extends ControlScheme {
             speedMode = SpeedMode.FAST;
         }
         SmartDashboard.putString("Speed Mode", ""+ speedMode);
+
+        
+        bButtonNow = driveController.getBButton();
+        if(bButtonNow && !bButtonPrev) {
+            driveMulti = !driveMulti;
+        }
+        bButtonPrev = bButtonNow;
+
 
         //driving arcade drive based on right joystick on driveController
         //changed boolean poweredInputs from false to true, change back if robot encounters issues
@@ -103,8 +119,15 @@ public class ArcadeDrive extends ControlScheme {
         }
 
         else if (!usingVision) {
-            drive.arcadeDrive(driveController.getLS_Y(), driveController.getRS_X(), 0.0, true, speedMode);
+            if (driveMulti) {
+                drive.arcadeDrive((-1 * driveController.getLS_Y()), driveController.getRS_X(), 0.0, true, speedMode);
+            }
+            else {
+                drive.arcadeDrive(driveController.getLS_Y(), driveController.getRS_X(), 0.0, true, speedMode);
+            }
+            
         }
+
 
         if(driveController.getBackButton()) {
            lowGear = true;
@@ -139,7 +162,7 @@ public class ArcadeDrive extends ControlScheme {
         SmartDashboard.putString("Wrist Intended Position", "" + wristPosition);
         //wrist.setPositionWithEnum(wristPosition, armController.getRS_Y());
 
-        wrist.driveWithFF(0.2 * armController.getRS_Y());
+        wrist.driveWithFF(0.5 * (-1 * armController.getRS_Y()));
 
     }
 
@@ -186,15 +209,17 @@ public class ArcadeDrive extends ControlScheme {
 
         SmartDashboard.putString("elevator intended position", "" + elevatorPosition);
 
+        double input = armController.getLS_Y();
+
         double multiplier = 0.4;
-        if (armController.getLS_Y() < -0.04) {
-            multiplier *= 0.4;
+        if (input > -0.06 && input < 0.06) {
+            input = 0;
         }
 
         ///elevator.setPositionWithEnum(elevatorPosition, 0.7 * armController.getLS_Y());\
         //elevator.setSpeed(multiplier * armController.getLS_Y() - 0.025);
         //elevator.setSpeedWithTwoMotorsLowPower(multiplier * armController.getLS_Y());
-        elevator.setSpeedWithTwoMotorsPercent(multiplier * armController.getLS_Y());
+        elevator.setSpeedWithTwoMotorsPercent(input);
     }
     
 

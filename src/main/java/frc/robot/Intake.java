@@ -12,9 +12,9 @@ public class Intake {
     
 
 
-    private final double intakeSpeed = -1;
-    private final double intakeReverseSpeed = 1.0;
-    private final double constantSpeed = -0.1;
+    private final double intakeSpeed = -0.8;
+    private final double intakeReverseSpeed = 0.5;
+    private final double constantSpeed = -0.01;
 
     public static boolean haveBall;
 
